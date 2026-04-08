@@ -31,6 +31,18 @@ const COMPRESSED_EXTENSIONS = new Set([
   ".cbr",
 ]);
 
+const IMAGE_EXTENSIONS = new Set([
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".gif",
+  ".bmp",
+  ".webp",
+  ".svg",
+  ".tiff",
+  ".ico",
+]);
+
 module.exports = {
   APP_DATA,
   APP_NAME,
@@ -39,4 +51,5 @@ module.exports = {
   CONFIG_DIR,
   CONFIG_FILENAME,
   CONFIG_FILEPATH,
+  IMAGE_EXTENSIONS,
 };

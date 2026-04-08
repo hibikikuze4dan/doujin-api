@@ -5,6 +5,8 @@ const { deleteFolderContents } = require("./deleteFolderContents");
 const { fileExists } = require("./fileExists");
 const { getCompressedFiles } = require("./getCompressedFiles");
 const { getCompressedFilepaths } = require("./getCompressedFilepaths");
+const { getCompressedFileEntries } = require("./getCompressedFileEntries");
+const { getCompressedFileImages } = require("./getCompressedFileImages");
 const { getFiles } = require("./getFiles");
 const { getFileStats } = require("./getFileStats");
 const { readFile } = require("./readFile");
@@ -19,6 +21,8 @@ module.exports = {
   fileExists,
   getCompressedFiles,
   getCompressedFilepaths,
+  getCompressedFileEntries,
+  getCompressedFileImages,
   getFiles,
   getFileStats,
   readFile,
