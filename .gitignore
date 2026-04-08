@@ -1,0 +1,6 @@
+.yarn
+public/doujins/*
+*.cjs
+*.mjs
+*.db*
+*NOTES*
