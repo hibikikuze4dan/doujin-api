@@ -18,6 +18,14 @@ const CONFIG_FILENAME = `.${APP_NAME}rc.json`;
 
 const CONFIG_FILEPATH = path.join(CONFIG_DIR, CONFIG_FILENAME);
 
+const TEMP_IMAGE_DIRECTORY_PATH = path.resolve(
+  path.join(__dirname, "public", "images", "temp"),
+);
+
+const THUMBNAIL_IMAGE_DIRECTORY_PATH = path.resolve(
+  path.join(__dirname, "public", "images", "thumbs"),
+);
+
 const COMPRESSED_EXTENSIONS = new Set([
   ".zip",
   ".tar",
@@ -52,4 +60,6 @@ module.exports = {
   CONFIG_FILENAME,
   CONFIG_FILEPATH,
   IMAGE_EXTENSIONS,
+  TEMP_IMAGE_DIRECTORY_PATH,
+  THUMBNAIL_IMAGE_DIRECTORY_PATH,
 };
