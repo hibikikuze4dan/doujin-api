@@ -44,7 +44,7 @@ const createDoujinEntry = ({
 }) => {
   const statement = db.prepare(`
   INSERT INTO doujins (name, filepath, tags, date_created, pagecount, size)
-  VALUES (@name, @tags, @date_created, @pagecount, @size)
+  VALUES (@name, @filepath, @tags, @date_created, @pagecount, @size)
 `);
 
   const result = statement.run({

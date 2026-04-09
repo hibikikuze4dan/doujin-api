@@ -1,5 +1,6 @@
 .yarn
 public/doujins/*
+public/images/*
 *.cjs
 *.mjs
 *.db*
