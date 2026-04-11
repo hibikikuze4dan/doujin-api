@@ -10,18 +10,13 @@ exports.unzipFileContents = async (
   }
 
   try {
-    const zip = new StreamZip({ file: filepath });
+    const zip = new StreamZip.async({ file: filepath });
 
-    zip.on("ready", () => {
-      zip.extract(null, outputdir, (err, count) => {
-        console.log(
-          err
-            ? `Extract error for ${filepath}:\n${err}`
-            : `Extracted ${count} files for ${filepath}`,
-        );
-        zip.close();
-      });
-    });
+    const filecount = await zip.extract(null, outputdir);
+
+    console.log(`Extracted ${filecount} files for ${filepath}`);
+
+    await zip.close();
 
     return;
   } catch (error) {
