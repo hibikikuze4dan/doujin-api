@@ -1,5 +1,5 @@
-const { postDoujinsUpdate } = require("./postDoujinsUpdate");
+const { postDoujinsAdd } = require("./postDoujinsAdd");
 
 module.exports = {
-  postDoujinsUpdate,
+  postDoujinsAdd,
 };

@@ -18,7 +18,7 @@ const {
   THUMBNAIL_IMAGE_DIRECTORY_PATH,
 } = require("../../constants");
 
-exports.postDoujinsUpdate = async () => {
+exports.postDoujinsAdd = async () => {
   try {
     const userConfig = await getUserConfigs();
     const content_directory = userConfig?.content_directory;
