@@ -1,4 +1,5 @@
 const StreamZip = require("node-stream-zip");
+const { createDirectory } = require("./createDirectory");
 
 exports.unzipFileContents = async (
   filepath = "",
@@ -10,6 +11,8 @@ exports.unzipFileContents = async (
   }
 
   try {
+    await createDirectory(outputdir, { recursive: true });
+
     const zip = new StreamZip.async({ file: filepath });
 
     const filecount = await zip.extract(null, outputdir);
