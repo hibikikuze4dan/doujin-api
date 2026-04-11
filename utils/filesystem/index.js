@@ -11,6 +11,7 @@ const { getCompressedFileEntries } = require("./getCompressedFileEntries");
 const { getCompressedFileImages } = require("./getCompressedFileImages");
 const { getFiles } = require("./getFiles");
 const { getFileStats } = require("./getFileStats");
+const { getImageFiles } = require("./getImageFiles");
 const { readFile } = require("./readFile");
 const { readJSONFile } = require("./readJSONFile");
 const { unzipFileContents } = require("./unzipFileContents");
@@ -29,6 +30,7 @@ module.exports = {
   getCompressedFileImages,
   getFiles,
   getFileStats,
+  getImageFiles,
   readFile,
   readJSONFile,
   unzipFileContents,
