@@ -14,13 +14,17 @@ exports.getDoujinsIdPages = async (id) => {
 
   try {
     const doujin = getDoujinById(id);
+    const doujinImagesOutputDirectory = path.join(
+      DOUJIN_IMAGES_DIRECTORY_PATH,
+      `${id}`,
+    );
 
-    await deleteFolderContents(DOUJIN_IMAGES_DIRECTORY_PATH);
-    await unzipFileContents(doujin?.filepath, DOUJIN_IMAGES_DIRECTORY_PATH);
-    const imageFiles = await getImageFiles(DOUJIN_IMAGES_DIRECTORY_PATH);
+    await deleteFolderContents(doujinImagesOutputDirectory);
+    await unzipFileContents(doujin?.filepath, doujinImagesOutputDirectory);
+    const imageFiles = await getImageFiles(doujinImagesOutputDirectory);
 
     const imageLinks = imageFiles.map((file) => {
-      return path.join("/", "images", "doujin", file.name);
+      return path.join("/", "images", "doujin", `${id}`, file.name);
     });
 
     return imageLinks;
