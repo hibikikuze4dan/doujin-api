@@ -4,16 +4,47 @@ const {
   unzipFileContents,
   getFiles,
   deleteFolderContents,
-} = require("../utils/filesystem");
+  getCompressedFilepaths,
+  getFileStats,
+  getCompressedFileImages,
+  extractFirstImage,
+  createThumbnail,
+  postDoujinsAdd,
+  getImageFiles,
+  getDoujinsIdPages,
+} = require("../utils");
 const { getUserConfigs } = require("../utils/configuration");
+const {
+  createDoujinEntry,
+  getAllDoujins,
+  getDoujinById,
+} = require("../repositories");
+const {
+  TEMP_IMAGE_DIRECTORY_PATH,
+  THUMBNAIL_IMAGE_DIRECTORY_PATH,
+  DOUJIN_IMAGES_DIRECTORY_PATH,
+  IMAGE_EXTENSIONS,
+} = require("../constants");
 
 var router = express.Router();
 
 /* GET users listing. */
 router.get("/", async (req, res, next) => {
-  const data = await getUserConfigs();
+  res.json({});
+});
 
-  res.json(data);
+router.get("/:id/pages", async (req, res, next) => {
+  const id = req.params.id;
+
+  const imageLinks = await getDoujinsIdPages(id);
+
+  res.json(imageLinks);
+});
+
+router.post("/add", async (req, res, next) => {
+  const doujins = await postDoujinsAdd();
+
+  res.json(doujins);
 });
 
 module.exports = router;
