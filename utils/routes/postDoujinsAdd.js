@@ -3,6 +3,7 @@ const {
   getDoujinByFilepath,
   getAllDoujins,
   createDoujinEntry,
+  getDoujinById,
 } = require("../../repositories");
 const { getUserConfigs } = require("../configuration");
 const {
@@ -19,10 +20,13 @@ const {
 } = require("../../constants");
 
 exports.postDoujinsAdd = async () => {
+  const newDoujins = [];
+
   try {
     const userConfig = await getUserConfigs();
     const content_directory = userConfig?.content_directory;
 
+    const newRowIds = [];
     const tempImageData = [];
     const filepaths = await getCompressedFilepaths(content_directory);
 
@@ -30,7 +34,6 @@ exports.postDoujinsAdd = async () => {
       const fileStats = await getFileStats(filepath);
 
       const doujinEntry = getDoujinByFilepath(filepath);
-
       if (!doujinEntry) {
         const newRowId = createDoujinEntry({
           name: path.basename(filepath),
@@ -46,7 +49,8 @@ exports.postDoujinsAdd = async () => {
           TEMP_IMAGE_DIRECTORY_PATH,
         );
 
-        if (tempImagePath) {
+        if (tempImagePath && newRowId) {
+          newRowIds.push(newRowId);
           tempImageData.push({ rowId: newRowId, imagePath: tempImagePath });
         }
       }
@@ -66,11 +70,16 @@ exports.postDoujinsAdd = async () => {
       await deleteFile(data?.imagePath);
     }
 
-    const doujins = getAllDoujins();
+    for (const id of newRowIds) {
+      const doujin = getDoujinById(id);
 
-    return doujins;
+      if (doujin) {
+        newDoujins.push(doujin);
+      }
+    }
+
+    return newDoujins;
   } catch (error) {
-    const doujins = getAllDoujins();
-    return doujins;
+    return newDoujins;
   }
 };
