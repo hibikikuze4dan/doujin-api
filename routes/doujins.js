@@ -12,12 +12,15 @@ const {
   postDoujinsAdd,
   getImageFiles,
   getDoujinsIdPages,
+  deleteFile,
+  deleteDoujinsId,
 } = require("../utils");
 const { getUserConfigs } = require("../utils/configuration");
 const {
   createDoujinEntry,
   getAllDoujins,
   getDoujinById,
+  removeDoujinEntry,
 } = require("../repositories");
 const {
   TEMP_IMAGE_DIRECTORY_PATH,
@@ -45,6 +48,14 @@ router.post("/add", async (req, res, next) => {
   const doujins = await postDoujinsAdd();
 
   res.json(doujins);
+});
+
+router.delete("/:id", async (req, res, next) => {
+  const id = req.params.id;
+
+  const doujin = await deleteDoujinsId(id);
+
+  res.json(doujin);
 });
 
 module.exports = router;
