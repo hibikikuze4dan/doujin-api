@@ -37,6 +37,12 @@ router.get("/", async (req, res, next) => {
   res.json({});
 });
 
+router.get("/all", async (req, res, next) => {
+  const doujins = getAllDoujins();
+
+  res.json(doujins);
+});
+
 router.get("/random", async (req, res, next) => {
   const count = req?.query?.count ?? 5;
 
@@ -61,8 +67,9 @@ router.post("/add", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   const id = req.params.id;
+  const deleteFile = req?.body?.deleteFile;
 
-  const doujin = await deleteDoujinsId(id);
+  const doujin = await deleteDoujinsId(id, deleteFile);
 
   res.json(doujin);
 });
