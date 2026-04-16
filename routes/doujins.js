@@ -21,6 +21,7 @@ const {
   getAllDoujins,
   getDoujinById,
   removeDoujinEntry,
+  getRandomEntries,
 } = require("../repositories");
 const {
   TEMP_IMAGE_DIRECTORY_PATH,
@@ -34,6 +35,14 @@ var router = express.Router();
 /* GET users listing. */
 router.get("/", async (req, res, next) => {
   res.json({});
+});
+
+router.get("/random", async (req, res, next) => {
+  const count = req?.query?.count ?? 5;
+
+  const doujins = getRandomEntries(count);
+
+  res.json(doujins);
 });
 
 router.get("/:id/pages", async (req, res, next) => {
