@@ -1,7 +1,7 @@
 const { getDoujinById, removeDoujinEntry } = require("../../repositories");
-const { deleteFile: deleteFileUtility } = require("../");
+const { deleteFile } = require("../filesystem");
 
-exports.deleteDoujinsId = async (id, deleteFile = false) => {
+exports.deleteDoujinsId = async (id, shouldDeleteFile = false) => {
   if (!id) {
     return null;
   }
@@ -9,8 +9,8 @@ exports.deleteDoujinsId = async (id, deleteFile = false) => {
   const doujin = getDoujinById(id);
   const removalSuccessful = removeDoujinEntry(id);
 
-  if (removalSuccessful && deleteFile) {
-    await deleteFileUtility(doujin?.filepath);
+  if (removalSuccessful && shouldDeleteFile) {
+    await deleteFile(doujin?.filepath);
   }
 
   return doujin ?? null;
