@@ -34,6 +34,15 @@ const getDoujinsByTags = (tags) => {
   return doujins;
 };
 
+const getRandomEntries = (count) => {
+  const statement = db.prepare(
+    "SELECT * FROM doujins ORDER BY RANDOM() LIMIT ?",
+  );
+  const rows = statement.all(count);
+
+  return rows;
+};
+
 const createDoujinEntry = ({
   name,
   filepath,
@@ -101,6 +110,7 @@ module.exports = {
   getDoujinById,
   getDoujinsByName,
   getDoujinsByTags,
+  getRandomEntries,
   removeDoujinEntry,
   removeDoujinByFilepath,
   updateDoujin,
