@@ -18,6 +18,10 @@ const {
   TEMP_IMAGE_DIRECTORY_PATH,
   THUMBNAIL_IMAGE_DIRECTORY_PATH,
 } = require("../../constants");
+const {
+  getLanraragiDatabaseBackup,
+  getTagsForFilename,
+} = require("../tagging");
 
 exports.postDoujinsAdd = async () => {
   const newDoujins = [];
@@ -25,6 +29,11 @@ exports.postDoujinsAdd = async () => {
   try {
     const userConfig = await getUserConfigs();
     const content_directory = userConfig?.content_directory;
+
+    let lanraragiBackupData = await getLanraragiDatabaseBackup();
+
+    const archives = lanraragiBackupData?.archives;
+    lanraragiBackupData = null;
 
     const newRowIds = [];
     const tempImageData = [];
@@ -35,10 +44,15 @@ exports.postDoujinsAdd = async () => {
 
       const doujinEntry = getDoujinByFilepath(filepath);
       if (!doujinEntry) {
+        const filename = path.basename(filepath);
+        const filenameWithoutExtension = path.parse(filepath).name;
         const newRowId = createDoujinEntry({
-          name: path.basename(filepath),
+          name: filename,
           filepath,
-          tags: "",
+          tags: getTagsForFilename({
+            archives,
+            filename: filenameWithoutExtension,
+          }),
           date_created: fileStats.birthtime.toISOString(),
           pagecount: (await getCompressedFileImages(filepath)).length,
           size: fileStats.size,
