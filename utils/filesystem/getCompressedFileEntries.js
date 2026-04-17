@@ -19,6 +19,6 @@ exports.getCompressedFileEntries = async (filepath = "") => {
     );
     return [];
   } finally {
-    zip?.close();
+    await zip?.close();
   }
 };

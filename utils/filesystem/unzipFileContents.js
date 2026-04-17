@@ -10,10 +10,12 @@ exports.unzipFileContents = async (
     return;
   }
 
+  let zip;
+
   try {
     await createDirectory(outputdir, { recursive: true });
 
-    const zip = new StreamZip.async({ file: filepath });
+    zip = new StreamZip.async({ file: filepath });
 
     const filecount = await zip.extract(null, outputdir);
 
@@ -26,6 +28,8 @@ exports.unzipFileContents = async (
     console.error(
       `Something went wrong while trying to extract the contents of ${filepath}:\n${error}`,
     );
+
+    await zip?.close();
     return;
   }
 };
