@@ -7,6 +7,7 @@ const APP_DATA = process.env.APP_DATA;
 
 const CONFIG_DEFAULTS = {
   content_directory: "",
+  lrr_database_backup_path: "",
   thumbnail_directory: "",
 };
 
