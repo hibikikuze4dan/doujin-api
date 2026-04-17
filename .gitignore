@@ -6,3 +6,4 @@ public/images/*
 *.db*
 *NOTES*
 node_modules
+backup.json
