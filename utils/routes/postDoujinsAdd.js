@@ -46,13 +46,24 @@ exports.postDoujinsAdd = async () => {
       if (!doujinEntry) {
         const filename = path.basename(filepath);
         const filenameWithoutExtension = path.parse(filepath).name;
+
+        let tags = "";
+
+        if (archives) {
+          tags = getLanraragiTagsByFilename({
+            archives,
+            filename: filenameWithoutExtension,
+          });
+        }
+
+        if (!tags) {
+          // TODO: Build tag getter that gets tags from metadata file in cbz or zip files.
+        }
+
         const newRowId = createDoujinEntry({
           name: filename,
           filepath,
-          tags: getLanraragiTagsByFilename({
-            archives,
-            filename: filenameWithoutExtension,
-          }),
+          tags,
           date_created: fileStats.birthtime.toISOString(),
           pagecount: (await getCompressedFileImages(filepath)).length,
           size: fileStats.size,
