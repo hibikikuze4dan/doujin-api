@@ -1,4 +1,4 @@
-exports.getTagsForFilename = ({ archives, filename }) => {
+exports.getLanraragiTagsByFilename = ({ archives, filename }) => {
   if (!archives?.length || !filename) {
     return "";
   }

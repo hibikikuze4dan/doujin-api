@@ -1,7 +1,7 @@
 const { getLanraragiDatabaseBackup } = require("./getLanraragiDatabaseBackup");
-const { getTagsForFilename } = require("./getTagsForFilename");
+const { getLanraragiTagsByFilename } = require("./getLanraragiTagsByFilename");
 
 module.exports = {
   getLanraragiDatabaseBackup,
-  getTagsForFilename,
+  getLanraragiTagsByFilename,
 };

@@ -20,7 +20,7 @@ const {
 } = require("../../constants");
 const {
   getLanraragiDatabaseBackup,
-  getTagsForFilename,
+  getLanraragiTagsByFilename,
 } = require("../tagging");
 
 exports.postDoujinsAdd = async () => {
@@ -49,7 +49,7 @@ exports.postDoujinsAdd = async () => {
         const newRowId = createDoujinEntry({
           name: filename,
           filepath,
-          tags: getTagsForFilename({
+          tags: getLanraragiTagsByFilename({
             archives,
             filename: filenameWithoutExtension,
           }),
