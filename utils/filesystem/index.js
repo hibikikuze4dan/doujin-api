@@ -7,6 +7,9 @@ const { extractFirstImage } = require("./extractFirstImage");
 const { fileExists } = require("./fileExists");
 const { getCompressedFiles } = require("./getCompressedFiles");
 const { getCompressedFilepaths } = require("./getCompressedFilepaths");
+const {
+  getCompressedFileEntryBufferString,
+} = require("./getCompressedFileEntryBufferString");
 const { getCompressedFileEntries } = require("./getCompressedFileEntries");
 const { getCompressedFileImages } = require("./getCompressedFileImages");
 const { getFiles } = require("./getFiles");
@@ -26,6 +29,7 @@ module.exports = {
   fileExists,
   getCompressedFiles,
   getCompressedFilepaths,
+  getCompressedFileEntryBufferString,
   getCompressedFileEntries,
   getCompressedFileImages,
   getFiles,

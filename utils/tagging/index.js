@@ -1,9 +1,11 @@
-const { findMetadataEntry } = require("./findMetadataEntry");
+const { getDoujinMetadata } = require("./getDoujinMetadata");
 const { getLanraragiDatabaseBackup } = require("./getLanraragiDatabaseBackup");
 const { getLanraragiTagsByFilename } = require("./getLanraragiTagsByFilename");
+const { getMetadataEntryAndConfig } = require("./getMetadataEntryAndConfig");
 
 module.exports = {
-  findMetadataEntry,
+  getDoujinMetadata,
   getLanraragiDatabaseBackup,
   getLanraragiTagsByFilename,
+  getMetadataEntryAndConfig,
 };
