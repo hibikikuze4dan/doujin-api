@@ -9,6 +9,22 @@ const CONFIG_DEFAULTS = {
   content_directory: "",
   lrr_database_backup_path: "",
   thumbnail_directory: "",
+  tagging: [
+    {
+      name: "gallery-dl",
+      filename: "info.json",
+      data: ["tags", "eh_category", "language"],
+    },
+    {
+      name: "HDoujin Downloader - tags.txt",
+      filename: "tags.txt",
+    },
+    {
+      name: "ComicInfo.xml",
+      filename: "ComicInfo.xml",
+      data: ["ComicInfo.Genre"],
+    },
+  ],
 };
 
 const CONFIG_DIR = APP_DATA
