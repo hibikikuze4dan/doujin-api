@@ -1,0 +1,1 @@
+exports.getTaggingConfigForFile = async (filepath = "") => {};
