@@ -21,6 +21,7 @@ const {
 const {
   getLanraragiDatabaseBackup,
   getLanraragiTagsByFilename,
+  getDoujinTags,
 } = require("../tagging");
 
 exports.postDoujinsAdd = async () => {
@@ -57,7 +58,7 @@ exports.postDoujinsAdd = async () => {
         }
 
         if (!tags) {
-          // TODO: Build tag getter that gets tags from metadata file in cbz or zip files.
+          tags = await getDoujinTags(filepath);
         }
 
         const newRowId = createDoujinEntry({
