@@ -6,7 +6,7 @@ exports.getCompressedFileEntryBufferString = async (filepath = "", entry) => {
   }
 
   try {
-    const zip = new StreamZip.async({ file: archivePath });
+    const zip = new StreamZip.async({ file: filepath });
 
     const buffer = await zip.entryData(entry.name);
     await zip.close();
