@@ -23,6 +23,7 @@ const {
   getLanraragiTagsByFilename,
   getDoujinTags,
 } = require("../tagging");
+const { createThumbnailForDoujin } = require("../doujins");
 
 exports.postDoujinsAdd = async () => {
   const newDoujins = [];
@@ -70,30 +71,8 @@ exports.postDoujinsAdd = async () => {
           size: fileStats.size,
         });
 
-        const tempImagePath = await extractFirstImage(
-          filepath,
-          TEMP_IMAGE_DIRECTORY_PATH,
-        );
-
-        if (tempImagePath && newRowId) {
-          newRowIds.push(newRowId);
-          tempImageData.push({ rowId: newRowId, imagePath: tempImagePath });
-        }
+        await createThumbnailForDoujin(newRowId, filepath);
       }
-    }
-
-    for (const data of tempImageData) {
-      await createThumbnail(
-        path.join(data?.imagePath),
-        THUMBNAIL_IMAGE_DIRECTORY_PATH,
-        {
-          filename: data?.rowId,
-          height: 500,
-          prefix: "",
-        },
-      );
-
-      await deleteFile(data?.imagePath);
     }
 
     for (const id of newRowIds) {
