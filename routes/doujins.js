@@ -14,6 +14,10 @@ const {
   getDoujinsIdPages,
   deleteFile,
   deleteDoujinsId,
+  getLanraragiDatabaseBackup,
+  getDoujinTags,
+  fileExists,
+  createThumbnailForDoujin,
 } = require("../utils");
 const { getUserConfigs } = require("../utils/configuration");
 const {
@@ -32,9 +36,10 @@ const {
 
 var router = express.Router();
 
-/* GET users listing. */
 router.get("/", async (req, res, next) => {
-  res.json({});
+  const data = await getLanraragiDatabaseBackup();
+  const tags = await getDoujinTags("");
+  res.json(tags);
 });
 
 router.get("/all", async (req, res, next) => {
@@ -57,6 +62,22 @@ router.get("/:id/pages", async (req, res, next) => {
   const imageLinks = await getDoujinsIdPages(id);
 
   res.json(imageLinks);
+});
+
+router.get("/:id/thumbnail", async (req, res, next) => {
+  const id = req.params.id;
+
+  const doujin = getDoujinById(id);
+  const doujinThumbnailImagePath = path.join(
+    THUMBNAIL_IMAGE_DIRECTORY_PATH,
+    `${doujin?.id}.jpeg`,
+  );
+
+  if (!(await fileExists(doujinThumbnailImagePath))) {
+    await createThumbnailForDoujin(doujin?.id, doujin?.filepath);
+  }
+
+  res.json(doujinThumbnailImagePath);
 });
 
 router.post("/add", async (req, res, next) => {
