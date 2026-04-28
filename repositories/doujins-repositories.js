@@ -1,74 +1,63 @@
-const db = require("../db");
-
-const getAllDoujins = () => {
-  const statement = db.prepare("SELECT * FROM doujins");
-  const doujins = statement.all();
-  return doujins;
+const getAllDoujins = (db) => {
+  const stmt = db.prepare(`SELECT * FROM doujins`);
+  return () => stmt.all();
 };
 
-const getDoujinById = (id) => {
-  const statement = db.prepare("SELECT * FROM doujins WHERE id = ?");
-  const doujin = statement.get(id);
-  return doujin;
+const getDoujinById = (db) => {
+  const stmt = db.prepare(`SELECT * FROM doujins WHERE id = ?`);
+  return (id) => stmt.get(id);
 };
 
-const getDoujinByFilepath = (filepath) => {
-  const statement = db.prepare(`SELECT * FROM doujins WHERE filepath = ?`);
-  const doujin = statement.get(filepath);
-  return doujin;
+const getDoujinByFilepath = (db) => {
+  const stmt = db.prepare(`SELECT * FROM doujins WHERE filepath = ?`);
+  return (filepath) => stmt.get(filepath);
 };
 
-const getDoujinsByName = (name) => {
-  const statement = db.prepare(`SELECT * FROM doujins WHERE name LIKE ?`);
-  const doujins = statement.all(`%${name}%`);
-  return doujins;
+const getDoujinsByName = (db) => {
+  const stmt = db.prepare(`SELECT * FROM doujins WHERE name LIKE ?`);
+  return (name) => stmt.all(`%${name}%`);
 };
 
-const getDoujinsByTags = (tags) => {
-  const tagList = Array.isArray(tags) ? tags : [tags];
-  const conditions = tagList.map(() => `tags LIKE ?`).join(" AND ");
-  const params = tagList.map((tag) => `%${tag}%`);
-
-  const statement = db.prepare(`SELECT * FROM doujins WHERE ${conditions}`);
-  const doujins = statement.all(...params);
-  return doujins;
+const getRandomEntries = (db) => {
+  const stmt = db.prepare(`SELECT * FROM doujins ORDER BY RANDOM() LIMIT ?`);
+  return (count) => stmt.all(count);
 };
 
-const getRandomEntries = (count) => {
-  const statement = db.prepare(
-    "SELECT * FROM doujins ORDER BY RANDOM() LIMIT ?",
-  );
-  const rows = statement.all(count);
-
-  return rows;
+const createDoujinEntry = (db) => {
+  const stmt = db.prepare(`
+    INSERT INTO doujins (name, filepath, tags, date_created, pagecount, size)
+    VALUES (@name, @filepath, @tags, @date_created, @pagecount, @size)
+  `);
+  return ({ name, filepath, tags, date_created, pagecount, size }) =>
+    stmt.run({ name, filepath, tags, date_created, pagecount, size })
+      .lastInsertRowid;
 };
 
-const createDoujinEntry = ({
-  name,
-  filepath,
-  tags,
-  date_created,
-  pagecount,
-  size,
-}) => {
-  const statement = db.prepare(`
-  INSERT INTO doujins (name, filepath, tags, date_created, pagecount, size)
-  VALUES (@name, @filepath, @tags, @date_created, @pagecount, @size)
-`);
-
-  const result = statement.run({
-    name,
-    filepath,
-    tags,
-    date_created,
-    pagecount,
-    size,
-  });
-
-  return result.lastInsertRowid;
+const removeDoujinEntry = (db) => {
+  const stmt = db.prepare(`DELETE FROM doujins WHERE id = ?`);
+  return (id) => stmt.run(id).changes > 0;
 };
 
-const updateDoujin = (id, fields) => {
+const removeDoujinByFilepath = (db) => {
+  const stmt = db.prepare(`DELETE FROM doujins WHERE filepath = ?`);
+  return (filepath) => stmt.run(filepath).changes > 0;
+};
+
+// These two cannot pre-compile a single statement since the query shape
+// changes based on input, so they prepare on each invocation instead.
+
+const getDoujinsByTags = (db) => {
+  return (tags) => {
+    const tagList = Array.isArray(tags) ? tags : [tags];
+    const conditions = tagList.map(() => `tags LIKE ?`).join(" AND ");
+    const params = tagList.map((tag) => `%${tag}%`);
+    return db
+      .prepare(`SELECT * FROM doujins WHERE ${conditions}`)
+      .all(...params);
+  };
+};
+
+const updateDoujin = (db) => {
   const allowed = [
     "name",
     "filepath",
@@ -77,41 +66,28 @@ const updateDoujin = (id, fields) => {
     "pagecount",
     "size",
   ];
-  const updates = Object.keys(fields).filter((key) => allowed.includes(key));
-
-  if (updates.length === 0)
-    throw new Error("No valid fields provided to update.");
-
-  const setClause = updates.map((key) => `${key} = @${key}`).join(", ");
-  const statement = db.prepare(
-    `UPDATE doujins SET ${setClause} WHERE id = @id`,
-  );
-
-  const result = statement.run({ ...fields, id });
-  return result.changes > 0;
+  return (id, fields) => {
+    const updates = Object.keys(fields).filter((key) => allowed.includes(key));
+    if (updates.length === 0)
+      throw new Error("No valid fields provided to update.");
+    const setClause = updates.map((key) => `${key} = @${key}`).join(", ");
+    return (
+      db
+        .prepare(`UPDATE doujins SET ${setClause} WHERE id = @id`)
+        .run({ ...fields, id }).changes > 0
+    );
+  };
 };
 
-const removeDoujinEntry = (id) => {
-  const statement = db.prepare("DELETE FROM doujins WHERE id = ?");
-  const result = statement.run(id);
-  return result.changes > 0;
-};
-
-const removeDoujinByFilepath = (filepath) => {
-  const statement = db.prepare(`DELETE FROM doujins WHERE filepath = ?`);
-  const result = statement.run(filepath);
-  return result.changes > 0;
-};
-
-module.exports = {
-  createDoujinEntry,
-  getAllDoujins,
-  getDoujinByFilepath,
-  getDoujinById,
-  getDoujinsByName,
-  getDoujinsByTags,
-  getRandomEntries,
-  removeDoujinEntry,
-  removeDoujinByFilepath,
-  updateDoujin,
-};
+exports.initDoujinQueries = (db) => ({
+  getAllDoujins: getAllDoujins(db),
+  getDoujinById: getDoujinById(db),
+  getDoujinByFilepath: getDoujinByFilepath(db),
+  getDoujinsByName: getDoujinsByName(db),
+  getDoujinsByTags: getDoujinsByTags(db),
+  getRandomEntries: getRandomEntries(db),
+  createDoujinEntry: createDoujinEntry(db),
+  updateDoujin: updateDoujin(db),
+  removeDoujinEntry: removeDoujinEntry(db),
+  removeDoujinByFilepath: removeDoujinByFilepath(db),
+});

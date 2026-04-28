@@ -1,11 +1,11 @@
 const path = require("path");
 const { DOUJIN_IMAGES_DIRECTORY_PATH } = require("../../constants");
-const { getDoujinById } = require("../../repositories");
 const {
   deleteFolderContents,
   unzipFileContents,
   getImageFiles,
 } = require("../filesystem");
+const { doujinsQueries } = require("../../db");
 
 exports.getDoujinsIdPages = async (id) => {
   if (!id) {
@@ -13,7 +13,7 @@ exports.getDoujinsIdPages = async (id) => {
   }
 
   try {
-    const doujin = getDoujinById(id);
+    const doujin = doujinsQueries.getDoujinById(id);
     const doujinImagesOutputDirectory = path.join(
       DOUJIN_IMAGES_DIRECTORY_PATH,
       `${id}`,

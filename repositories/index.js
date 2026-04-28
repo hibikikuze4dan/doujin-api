@@ -1,5 +1,7 @@
-const doujinRepositories = require("./doujins-repositories");
+const { initCollectionQueries } = require("./collections-repositories");
+const { initDoujinQueries } = require("./doujins-repositories");
 
 module.exports = {
-  ...doujinRepositories,
+  initCollectionQueries,
+  initDoujinQueries,
 };

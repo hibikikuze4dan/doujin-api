@@ -1,10 +1,4 @@
 const path = require("path");
-const {
-  getDoujinByFilepath,
-  getAllDoujins,
-  createDoujinEntry,
-  getDoujinById,
-} = require("../../repositories");
 const { getUserConfigs } = require("../configuration");
 const {
   getCompressedFilepaths,
@@ -24,6 +18,7 @@ const {
   getDoujinTags,
 } = require("../tagging");
 const { createThumbnailForDoujin } = require("../doujins");
+const { doujinsQueries } = require("../../db");
 
 exports.postDoujinsAdd = async () => {
   const newDoujins = [];
@@ -44,7 +39,7 @@ exports.postDoujinsAdd = async () => {
     for (const filepath of filepaths) {
       const fileStats = await getFileStats(filepath);
 
-      const doujinEntry = getDoujinByFilepath(filepath);
+      const doujinEntry = doujinsQueries.getDoujinByFilepath(filepath);
       if (!doujinEntry) {
         const filename = path.basename(filepath);
         const filenameWithoutExtension = path.parse(filepath).name;
@@ -62,7 +57,7 @@ exports.postDoujinsAdd = async () => {
           tags = await getDoujinTags(filepath);
         }
 
-        const newRowId = createDoujinEntry({
+        const newRowId = doujinsQueries.createDoujinEntry({
           name: filename,
           filepath,
           tags,
@@ -71,12 +66,13 @@ exports.postDoujinsAdd = async () => {
           size: fileStats.size,
         });
 
+        newRowIds.push(newRowId);
         await createThumbnailForDoujin(newRowId, filepath);
       }
     }
 
     for (const id of newRowIds) {
-      const doujin = getDoujinById(id);
+      const doujin = doujinsQueries.getDoujinById(id);
 
       if (doujin) {
         newDoujins.push(doujin);

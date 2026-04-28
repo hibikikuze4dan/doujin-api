@@ -1,6 +1,4 @@
-const db = require("./index");
-
-db.exec(`
+const DOUJINS_MIGRATION = `
   CREATE TABLE IF NOT EXISTS doujins (
     id          INTEGER PRIMARY KEY,
     name        TEXT    NOT NULL,
@@ -11,6 +9,28 @@ db.exec(`
     pagecount   INTEGER NOT NULL,
     size        INTEGER NOT NULL
   )
-`);
+`;
 
-console.log("Migrations complete");
+const COLLECTIONS_MIGRATION = `
+  CREATE TABLE IF NOT EXISTS collections (
+    id          INTEGER PRIMARY KEY,
+    name        TEXT    NOT NULL UNIQUE,
+    description TEXT    NOT NULL DEFAULT '',
+    date_added  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+  );
+`;
+
+const COLLECTION_DOUJINS_MIGRATION = `
+  CREATE TABLE IF NOT EXISTS collection_doujins (
+    collection_id INTEGER NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
+    doujin_id     INTEGER NOT NULL REFERENCES doujins(id)     ON DELETE CASCADE,
+    date_added    TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+    PRIMARY KEY (collection_id, doujin_id)
+  );
+`;
+
+module.exports = {
+  DOUJINS_MIGRATION,
+  COLLECTIONS_MIGRATION,
+  COLLECTION_DOUJINS_MIGRATION,
+};

@@ -18,6 +18,7 @@ const {
   getDoujinTags,
   fileExists,
   createThumbnailForDoujin,
+  getDoujinsIdThumbnail,
 } = require("../utils");
 const { getUserConfigs } = require("../utils/configuration");
 const {
@@ -33,6 +34,7 @@ const {
   DOUJIN_IMAGES_DIRECTORY_PATH,
   IMAGE_EXTENSIONS,
 } = require("../constants");
+const { doujinsQueries } = require("../db");
 
 var router = express.Router();
 
@@ -43,7 +45,7 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/all", async (req, res, next) => {
-  const doujins = getAllDoujins();
+  const doujins = doujinsQueries.getAllDoujins();
 
   res.json(doujins);
 });
@@ -51,7 +53,7 @@ router.get("/all", async (req, res, next) => {
 router.get("/random", async (req, res, next) => {
   const count = req?.query?.count ?? 5;
 
-  const doujins = getRandomEntries(count);
+  const doujins = doujinsQueries.getRandomEntries(count);
 
   res.json(doujins);
 });
@@ -67,15 +69,11 @@ router.get("/:id/pages", async (req, res, next) => {
 router.get("/:id/thumbnail", async (req, res, next) => {
   const id = req.params.id;
 
-  const doujin = getDoujinById(id);
-  const doujinThumbnailImagePath = path.join(
-    THUMBNAIL_IMAGE_DIRECTORY_PATH,
-    `${doujin?.id}.jpeg`,
+  const doujin = doujinsQueries.getDoujinById(id);
+  const doujinThumbnailImagePath = await getDoujinsIdThumbnail(
+    doujin?.id,
+    doujin?.filepath,
   );
-
-  if (!(await fileExists(doujinThumbnailImagePath))) {
-    await createThumbnailForDoujin(doujin?.id, doujin?.filepath);
-  }
 
   res.json(doujinThumbnailImagePath);
 });
