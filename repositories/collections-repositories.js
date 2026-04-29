@@ -11,6 +11,11 @@ const getAllCollections = (db) => {
   return () => stmt.all();
 };
 
+const getCollectionById = (db) => {
+  const stmt = db.prepare(`SELECT * FROM collections WHERE id = ?`);
+  return (id) => stmt.get(id);
+};
+
 const addDoujinToCollection = (db) => {
   const stmt = db.prepare(`
     INSERT INTO collection_doujins (collection_id, doujin_id)
@@ -49,6 +54,7 @@ exports.initCollectionQueries = (db) => ({
   addDoujinToCollection: addDoujinToCollection(db),
   createCollection: createCollection(db),
   getAllCollections: getAllCollections(db),
+  getCollectionById: getCollectionById(db),
   getCollectionsForDoujin: getCollectionsForDoujin(db),
   getDoujinsInCollection: getDoujinsInCollection(db),
   removeDoujinFromCollection: removeDoujinFromCollection(db),
