@@ -9,6 +9,7 @@ const { configCreation } = require("./utils");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var doujinsRouter = require("./routes/doujins");
+var collectionsRouter = require("./routes/collections");
 
 var app = express();
 configCreation();
@@ -26,6 +27,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/doujins", doujinsRouter);
+app.use("/collections", collectionsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
