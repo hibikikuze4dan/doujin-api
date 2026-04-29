@@ -6,6 +6,11 @@ const createCollection = (db) => {
   return (name, description = "") => stmt.run(name, description);
 };
 
+const getAllCollections = (db) => {
+  const stmt = db.prepare(`SELECT * FROM collections`);
+  return () => stmt.all();
+};
+
 const addDoujinToCollection = (db) => {
   const stmt = db.prepare(`
     INSERT INTO collection_doujins (collection_id, doujin_id)
@@ -41,9 +46,10 @@ const getCollectionsForDoujin = (db) => {
 };
 
 exports.initCollectionQueries = (db) => ({
-  createCollection: createCollection(db),
   addDoujinToCollection: addDoujinToCollection(db),
-  removeDoujinFromCollection: removeDoujinFromCollection(db),
-  getDoujinsInCollection: getDoujinsInCollection(db),
+  createCollection: createCollection(db),
+  getAllCollections: getAllCollections(db),
   getCollectionsForDoujin: getCollectionsForDoujin(db),
+  getDoujinsInCollection: getDoujinsInCollection(db),
+  removeDoujinFromCollection: removeDoujinFromCollection(db),
 });
