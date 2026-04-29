@@ -35,4 +35,28 @@ router.post("/add", (req, res, next) => {
   res.status(400).send("Something went wrong");
 });
 
+router.post("/:collectionId/add", (req, res, next) => {
+  const { collectionId = "" } = req?.params ?? {};
+  const { arcid = "" } = req?.body ?? {};
+
+  if (collectionId && arcid) {
+    const { changes = 0, lastInsertRowid = 0 } =
+      collectionsQueries?.addDoujinToCollection(collectionId, arcid);
+
+    if (changes && lastInsertRowid) {
+      const collection = collectionsQueries?.getCollectionById(collectionId);
+      const archives = collectionsQueries?.getDoujinsInCollection(collectionId);
+
+      res.json({
+        ...collection,
+        archives: archives,
+      });
+
+      return;
+    }
+  }
+
+  res.status(404).send("Error");
+});
+
 module.exports = router;
