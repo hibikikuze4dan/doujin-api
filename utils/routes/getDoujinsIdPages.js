@@ -5,7 +5,7 @@ const {
   unzipFileContents,
   getImageFiles,
 } = require("../filesystem");
-const { doujinsQueries } = require("../../db");
+const { doujinsQueries, historyQueries } = require("../../db");
 
 exports.getDoujinsIdPages = async (id) => {
   if (!id) {
@@ -27,6 +27,7 @@ exports.getDoujinsIdPages = async (id) => {
       return path.join("/", "images", "doujin", `${id}`, file.name);
     });
 
+    historyQueries.createHistoryEntry({ doujin_id: doujin?.id, last_page: 1 });
     return imageLinks;
   } catch (error) {
     return [];
