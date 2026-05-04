@@ -6,7 +6,11 @@ const {
   DOUJINS_MIGRATION,
   DOUJIN_HISTORY_MIGRATION,
 } = require("./migrate");
-const { initDoujinQueries, initCollectionQueries } = require("../repositories");
+const {
+  initDoujinQueries,
+  initCollectionQueries,
+  initHistoryQueries,
+} = require("../repositories");
 
 // TODO: Create database at user supplied location
 const db = new Database(path.join(__dirname, "../data.db"));
@@ -21,9 +25,11 @@ console.log("Migrations complete");
 
 const collections = initCollectionQueries(db);
 const doujins = initDoujinQueries(db);
+const history = initHistoryQueries(db);
 
 module.exports = {
   database: db,
   doujinsQueries: doujins,
   collectionsQueries: collections,
+  historyQueries: initHistoryQueries,
 };
