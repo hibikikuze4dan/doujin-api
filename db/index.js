@@ -31,5 +31,5 @@ module.exports = {
   database: db,
   doujinsQueries: doujins,
   collectionsQueries: collections,
-  historyQueries: initHistoryQueries,
+  historyQueries: history,
 };
