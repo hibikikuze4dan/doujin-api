@@ -4,6 +4,7 @@ const {
   COLLECTIONS_MIGRATION,
   COLLECTION_DOUJINS_MIGRATION,
   DOUJINS_MIGRATION,
+  DOUJIN_HISTORY_MIGRATION,
 } = require("./migrate");
 const { initDoujinQueries, initCollectionQueries } = require("../repositories");
 
@@ -11,6 +12,7 @@ const { initDoujinQueries, initCollectionQueries } = require("../repositories");
 const db = new Database(path.join(__dirname, "../data.db"));
 
 db.exec(DOUJINS_MIGRATION);
+db.exec(DOUJIN_HISTORY_MIGRATION);
 db.exec(COLLECTIONS_MIGRATION);
 db.exec(COLLECTION_DOUJINS_MIGRATION);
 db.pragma("journal_mode = WAL");
