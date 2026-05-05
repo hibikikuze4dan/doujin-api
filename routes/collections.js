@@ -25,7 +25,7 @@ router.post("/:collectionId/add", async (req, res, next) => {
   const { collectionId = "" } = req?.params ?? {};
   const { arcid = "" } = req?.body ?? {};
 
-  const collectionData = postCollectionsIdAdd({
+  const collectionData = await postCollectionsIdAdd({
     collectionId,
     archiveId: arcid,
   });
