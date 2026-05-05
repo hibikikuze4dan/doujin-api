@@ -1,11 +1,11 @@
-exports.postCollectionsIdAdd = async ({ collectionId, arcId } = {}) => {
-  if (!collectionId || !arcId) {
+exports.postCollectionsIdAdd = async ({ collectionId, archiveId } = {}) => {
+  if (!collectionId || !archiveId) {
     return null;
   }
 
   try {
     const { changes = 0, lastInsertRowid = 0 } =
-      collectionsQueries?.addDoujinToCollection(collectionId, arcId);
+      collectionsQueries?.addDoujinToCollection(collectionId, archiveId);
 
     if (changes && lastInsertRowid) {
       const collection = collectionsQueries?.getCollectionById(collectionId);

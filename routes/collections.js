@@ -1,5 +1,6 @@
 const express = require("express");
 const { collectionsQueries } = require("../db");
+const { postCollectionsIdAdd } = require("../utils/routes");
 
 const router = express.Router();
 
@@ -35,28 +36,20 @@ router.post("/add", (req, res, next) => {
   res.status(400).send("Something went wrong");
 });
 
-router.post("/:collectionId/add", (req, res, next) => {
+router.post("/:collectionId/add", async (req, res, next) => {
   const { collectionId = "" } = req?.params ?? {};
   const { arcid = "" } = req?.body ?? {};
 
-  if (collectionId && arcid) {
-    const { changes = 0, lastInsertRowid = 0 } =
-      collectionsQueries?.addDoujinToCollection(collectionId, arcid);
+  const collectionData = postCollectionsIdAdd({
+    collectionId,
+    archiveId: arcid,
+  });
 
-    if (changes && lastInsertRowid) {
-      const collection = collectionsQueries?.getCollectionById(collectionId);
-      const archives = collectionsQueries?.getDoujinsInCollection(collectionId);
-
-      res.json({
-        ...collection,
-        archives: archives,
-      });
-
-      return;
-    }
+  if (collectionData) {
+    res.json(collectionData);
+  } else {
+    res.status(404).send("Error");
   }
-
-  res.status(404).send("Error");
 });
 
 module.exports = router;
