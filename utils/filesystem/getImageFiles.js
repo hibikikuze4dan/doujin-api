@@ -21,7 +21,7 @@ exports.getImageFiles = async (dirpath = "", options = DEFAULT_OPTIONS) => {
 
     return imageFiles;
   } catch (error) {
-    console.error(`Error occured while trying to get files:\n${error}`);
+    console.error(`Error occured while trying to get image files:\n${error}`);
     return [];
   }
 };
