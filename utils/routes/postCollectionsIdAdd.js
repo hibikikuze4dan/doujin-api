@@ -1,3 +1,7 @@
+const {
+  getCollectionWithArchives,
+} = require("../database/getCollectionWithArchives");
+
 exports.postCollectionsIdAdd = async ({ collectionId, archiveId } = {}) => {
   if (!collectionId || !archiveId) {
     return null;
@@ -8,18 +12,13 @@ exports.postCollectionsIdAdd = async ({ collectionId, archiveId } = {}) => {
       collectionsQueries?.addDoujinToCollection(collectionId, archiveId);
 
     if (changes && lastInsertRowid) {
-      const collection = collectionsQueries?.getCollectionById(collectionId);
-      const archives = collectionsQueries?.getDoujinsInCollection(collectionId);
-
-      return {
-        ...collection,
-        archives: archives,
-      };
+      const collectionData = await getCollectionWithArchives(collectionId);
+      return collectionData;
     } else {
       return null;
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
     return null;
   }
 };
