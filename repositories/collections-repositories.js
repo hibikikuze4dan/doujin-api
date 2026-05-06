@@ -50,6 +50,22 @@ const getCollectionsForDoujin = (db) => {
   return (doujinId) => stmt.all(doujinId);
 };
 
+const removeCollectionById = (db) => {
+  const stmt = db.prepare(`
+    DELETE FROM collections WHERE id = ?
+  `);
+
+  return (collectionId) => stmt.run(collectionId);
+};
+
+const removeCollectionByName = (db) => {
+  const stmt = db.prepare(`
+    DELETE FROM collections WHERE name = ?
+  `);
+
+  return (collectionName) => stmt.run(collectionName);
+};
+
 exports.initCollectionQueries = (db) => ({
   addDoujinToCollection: addDoujinToCollection(db),
   createCollection: createCollection(db),
@@ -57,5 +73,7 @@ exports.initCollectionQueries = (db) => ({
   getCollectionById: getCollectionById(db),
   getCollectionsForDoujin: getCollectionsForDoujin(db),
   getDoujinsInCollection: getDoujinsInCollection(db),
+  removeCollectionById: removeCollectionById(db),
+  removeCollectionByName: removeCollectionByName(db),
   removeDoujinFromCollection: removeDoujinFromCollection(db),
 });
