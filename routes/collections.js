@@ -1,12 +1,26 @@
 const express = require("express");
 const { collectionsQueries } = require("../db");
 const { postCollectionsIdAdd, postCollectionsAdd } = require("../utils/routes");
+const {
+  getCollectionWithArchives,
+} = require("../utils/database/getCollectionWithArchives");
 
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
+router.get("/all", async (req, res, next) => {
   const collections = collectionsQueries.getAllCollections();
-  res.json(collections);
+
+  const collectionsWithDoujins = [];
+
+  for (col of collections) {
+    const data = await getCollectionWithArchives(col?.id);
+
+    if (data) {
+      collectionsWithDoujins.push(data);
+    }
+  }
+
+  res.json(collectionsWithDoujins);
 });
 
 router.post("/add", async (req, res, next) => {
@@ -34,6 +48,36 @@ router.post("/:collectionId/add", async (req, res, next) => {
     res.json(collectionData);
   } else {
     res.status(404).send("Error");
+  }
+});
+
+router.put("/:collectionId/remove", async (req, res, next) => {
+  const collectionId = req?.params?.collectionId;
+  const archiveId = req?.body?.arcid;
+
+  const { changes, lastInsertRowid } =
+    collectionsQueries.removeDoujinFromCollection(collectionId, archiveId);
+
+  const collection = await getCollectionWithArchives(collectionId);
+
+  res.json(collection);
+});
+
+router.delete("", async (req, res, next) => {
+  const { id: collectionId } = req?.body ?? {};
+
+  const collection = await getCollectionWithArchives(collectionId);
+  const { changes, lastInsertRowid } =
+    collectionsQueries.removeCollectionById(collectionId);
+
+  if (changes && lastInsertRowid) {
+    res.json({
+      status: "success",
+      message: "Successfully removed collection",
+      data: collection,
+    });
+  } else {
+    res.status(400).send("Error");
   }
 });
 
