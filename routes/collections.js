@@ -63,7 +63,7 @@ router.put("/:collectionId/remove", async (req, res, next) => {
   res.json(collection);
 });
 
-router.delete("", async (req, res, next) => {
+router.delete("/", async (req, res, next) => {
   const { id: collectionId } = req?.body ?? {};
 
   const collection = await getCollectionWithArchives(collectionId);
