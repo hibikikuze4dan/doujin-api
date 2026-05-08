@@ -36,9 +36,18 @@ const getHistoryByDoujinId = (db) => {
   return (doujin_id) => stmt.all(doujin_id);
 };
 
+const removeAllHistory = (db) => {
+  const stmt = db.prepare(`
+    DELETE FROM doujin_history;  
+  `);
+
+  return () => stmt.run();
+};
+
 exports.initHistoryQueries = (db) => ({
   createHistoryEntry: createHistoryEntry(db),
   getAllHistory: getAllHistory(db),
   getHistoryByDoujinId: getHistoryByDoujinId(db),
   getHistorySortedByAccessedAt: getHistorySortedByAccessedAt(db),
+  removeAllHistory: removeAllHistory(db),
 });

@@ -26,4 +26,16 @@ router.get("/all", async (req, res, next) => {
   res.json(history);
 });
 
+router.delete("/", async (req, res, next) => {
+  const history = historyQueries.getAllHistory();
+
+  const { changes } = historyQueries.removeAllHistory();
+
+  res.json({
+    status: "success",
+    message: `Successfully deleted ${changes} history entries!`,
+    data: [],
+  });
+});
+
 module.exports = router;
