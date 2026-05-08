@@ -11,6 +11,17 @@ const DOUJINS_MIGRATION = `
   )
 `;
 
+const TAGS_MIGRATION = `
+  CREATE TABLE IF NOT EXISTS tags (
+    id          INTEGER PRIMARY KEY,
+    doujin_id   INTEGER NOT NULL,
+    name        TEXT    NOT NULL,
+    namespace   TEXT    NOT NULL DEFAULT '',
+    FOREIGN KEY (doujin_id) REFERENCES doujins(id) ON DELETE CASCADE,
+    UNIQUE (doujin_id, name, namespace)
+  )
+`;
+
 const DOUJIN_HISTORY_MIGRATION = `
   CREATE TABLE IF NOT EXISTS doujin_history (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
