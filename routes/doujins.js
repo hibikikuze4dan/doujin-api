@@ -53,6 +53,21 @@ router.get("/all", async (req, res, next) => {
   res.json(doujins);
 });
 
+router.get("/search", async (req, res, next) => {
+  const { query = "" } = req?.query ?? {};
+
+  let results;
+  if (!query) {
+    results = doujinsQueries.getAllDoujins();
+  } else {
+    results = doujinsQueries.getDoujinsByNameOrTags(query)?.results ?? [];
+  }
+
+  const doujins = results?.map((archive) => getArchiveWithTags(archive?.id));
+
+  res.json(doujins);
+});
+
 router.get("/random", async (req, res, next) => {
   const count = req?.query?.count ?? 5;
 

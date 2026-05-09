@@ -18,6 +18,53 @@ const getDoujinsByName = (db) => {
   return (name) => stmt.all(`%${name}%`);
 };
 
+const getDoujinsByNameOrTags =
+  (db) =>
+  (query = "") => {
+    const terms = query.trim().split(",").filter(Boolean).slice(0, 10);
+
+    if (terms.length === 0) {
+      return { results: [], total: 0 };
+    }
+
+    const termClause = () => `
+    (
+      d.name     LIKE '%' || ? || '%' COLLATE NOCASE OR
+      d.filepath LIKE '%' || ? || '%' COLLATE NOCASE OR
+      t.name     LIKE '%' || ? || '%' COLLATE NOCASE OR
+      (t.namespace || ':' || t.name) LIKE '%' || ? || '%' COLLATE NOCASE
+    )`;
+
+    const whereClause = terms.map(() => termClause()).join("\n  AND ");
+
+    // Each term appears 4 times in its clause (once per OR branch)
+    const termParams = terms.flatMap((term) => [term, term, term, term]);
+
+    const baseQuery = `
+    SELECT DISTINCT
+      d.id,
+      d.name,
+      d.filepath,
+      d.date_added,
+      d.date_created,
+      d.pagecount,
+      d.size
+    FROM doujins d
+    LEFT JOIN tags t ON t.doujin_id = d.id
+    WHERE ${whereClause}
+  `;
+
+    const total = db
+      .prepare(`SELECT COUNT(*) AS total FROM (${baseQuery})`)
+      .get(termParams).total;
+
+    const results = db
+      .prepare(`${baseQuery} ORDER BY d.name`)
+      .all([...termParams]);
+
+    return { results, total };
+  };
+
 const getRandomEntries = (db) => {
   const stmt = db.prepare(`SELECT * FROM doujins ORDER BY RANDOM() LIMIT ?`);
   return (count) => stmt.all(count);
@@ -62,6 +109,7 @@ exports.initDoujinQueries = (db) => ({
   getDoujinById: getDoujinById(db),
   getDoujinByFilepath: getDoujinByFilepath(db),
   getDoujinsByName: getDoujinsByName(db),
+  getDoujinsByNameOrTags: getDoujinsByNameOrTags(db),
   getRandomEntries: getRandomEntries(db),
   createDoujinEntry: createDoujinEntry(db),
   updateDoujin: updateDoujin(db),
