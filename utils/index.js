@@ -4,6 +4,7 @@ const doujins = require("./doujins");
 const filesystem = require("./filesystem");
 const routes = require("./routes");
 const startup = require("./startup");
+const strings = require("./strings");
 const tagging = require("./tagging");
 
 module.exports = {
@@ -13,5 +14,6 @@ module.exports = {
   ...filesystem,
   ...routes,
   ...startup,
+  ...strings,
   ...tagging,
 };
