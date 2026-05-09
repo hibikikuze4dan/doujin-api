@@ -10,6 +10,7 @@ const {
   initDoujinQueries,
   initCollectionQueries,
   initHistoryQueries,
+  initTagsQueries,
 } = require("../repositories");
 
 // TODO: Create database at user supplied location
@@ -26,10 +27,12 @@ console.log("Migrations complete");
 const collections = initCollectionQueries(db);
 const doujins = initDoujinQueries(db);
 const history = initHistoryQueries(db);
+const tags = initTagsQueries(db);
 
 module.exports = {
   database: db,
   doujinsQueries: doujins,
   collectionsQueries: collections,
   historyQueries: history,
+  tagsQueries: tags,
 };
