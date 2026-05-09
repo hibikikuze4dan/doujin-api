@@ -5,7 +5,7 @@ exports.getArchiveWithTags = (archiveId) => {
   const tagsArray = tagsQueries.getTagsByDoujinId(archiveId) ?? [];
 
   const tagsString = tagsArray
-    .map(({ name, namespace }) => (namespace ? `${namespace}: ${name}` : name))
+    .map(({ name, namespace }) => (namespace ? `${namespace}:${name}` : name))
     .join(", ");
 
   return {
