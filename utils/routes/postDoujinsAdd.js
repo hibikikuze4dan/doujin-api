@@ -16,9 +16,11 @@ const {
   getLanraragiDatabaseBackup,
   getLanraragiTagsByFilename,
   getDoujinTags,
+  createTagsDatabaseInsertArray,
 } = require("../tagging");
 const { createThumbnailForDoujin } = require("../doujins");
-const { doujinsQueries } = require("../../db");
+const { doujinsQueries, tagsQueries } = require("../../db");
+const { getArchiveWithTags } = require("../database");
 
 exports.postDoujinsAdd = async () => {
   const newDoujins = [];
@@ -60,19 +62,22 @@ exports.postDoujinsAdd = async () => {
         const newRowId = doujinsQueries.createDoujinEntry({
           name: filename,
           filepath,
-          tags,
           date_created: fileStats.birthtime.toISOString(),
           pagecount: (await getCompressedFileImages(filepath)).length,
           size: fileStats.size,
         });
 
         newRowIds.push(newRowId);
+
+        const tagsArray = createTagsDatabaseInsertArray(newRowId, tags);
+        tagsQueries.addTags(tagsArray);
+
         await createThumbnailForDoujin(newRowId, filepath);
       }
     }
 
     for (const id of newRowIds) {
-      const doujin = doujinsQueries.getDoujinById(id);
+      const doujin = getArchiveWithTags(id);
 
       if (doujin) {
         newDoujins.push(doujin);

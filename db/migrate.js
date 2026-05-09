@@ -3,7 +3,6 @@ const DOUJINS_MIGRATION = `
     id          INTEGER PRIMARY KEY,
     name        TEXT    NOT NULL,
     filepath     TEXT    NOT NULL UNIQUE,
-    tags        TEXT    NOT NULL DEFAULT '',
     date_added  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
     date_created TEXT   NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
     pagecount   INTEGER NOT NULL,
@@ -51,8 +50,9 @@ const COLLECTION_DOUJINS_MIGRATION = `
 `;
 
 module.exports = {
+  COLLECTION_DOUJINS_MIGRATION,
+  COLLECTIONS_MIGRATION,
   DOUJINS_MIGRATION,
   DOUJIN_HISTORY_MIGRATION,
-  COLLECTIONS_MIGRATION,
-  COLLECTION_DOUJINS_MIGRATION,
+  TAGS_MIGRATION,
 };

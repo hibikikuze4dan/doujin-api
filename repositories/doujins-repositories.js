@@ -25,12 +25,11 @@ const getRandomEntries = (db) => {
 
 const createDoujinEntry = (db) => {
   const stmt = db.prepare(`
-    INSERT INTO doujins (name, filepath, tags, date_created, pagecount, size)
-    VALUES (@name, @filepath, @tags, @date_created, @pagecount, @size)
+    INSERT INTO doujins (name, filepath, date_created, pagecount, size)
+    VALUES (@name, @filepath, @date_created, @pagecount, @size)
   `);
-  return ({ name, filepath, tags, date_created, pagecount, size }) =>
-    stmt.run({ name, filepath, tags, date_created, pagecount, size })
-      .lastInsertRowid;
+  return ({ name, filepath, date_created, pagecount, size }) =>
+    stmt.run({ name, filepath, date_created, pagecount, size }).lastInsertRowid;
 };
 
 const removeDoujinEntry = (db) => {
@@ -43,29 +42,8 @@ const removeDoujinByFilepath = (db) => {
   return (filepath) => stmt.run(filepath).changes > 0;
 };
 
-// These two cannot pre-compile a single statement since the query shape
-// changes based on input, so they prepare on each invocation instead.
-
-const getDoujinsByTags = (db) => {
-  return (tags) => {
-    const tagList = Array.isArray(tags) ? tags : [tags];
-    const conditions = tagList.map(() => `tags LIKE ?`).join(" AND ");
-    const params = tagList.map((tag) => `%${tag}%`);
-    return db
-      .prepare(`SELECT * FROM doujins WHERE ${conditions}`)
-      .all(...params);
-  };
-};
-
 const updateDoujin = (db) => {
-  const allowed = [
-    "name",
-    "filepath",
-    "tags",
-    "date_created",
-    "pagecount",
-    "size",
-  ];
+  const allowed = ["name", "filepath", "date_created", "pagecount", "size"];
   return (id, fields) => {
     const updates = Object.keys(fields).filter((key) => allowed.includes(key));
     if (updates.length === 0)
@@ -84,7 +62,6 @@ exports.initDoujinQueries = (db) => ({
   getDoujinById: getDoujinById(db),
   getDoujinByFilepath: getDoujinByFilepath(db),
   getDoujinsByName: getDoujinsByName(db),
-  getDoujinsByTags: getDoujinsByTags(db),
   getRandomEntries: getRandomEntries(db),
   createDoujinEntry: createDoujinEntry(db),
   updateDoujin: updateDoujin(db),

@@ -19,6 +19,7 @@ const {
   fileExists,
   createThumbnailForDoujin,
   getDoujinsIdThumbnail,
+  getArchiveWithTags,
 } = require("../utils");
 const { getUserConfigs } = require("../utils/configuration");
 const {
@@ -45,7 +46,9 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/all", async (req, res, next) => {
-  const doujins = doujinsQueries.getAllDoujins();
+  const doujins = doujinsQueries
+    .getAllDoujins()
+    ?.map((archive) => getArchiveWithTags(archive?.id));
 
   res.json(doujins);
 });
@@ -53,7 +56,9 @@ router.get("/all", async (req, res, next) => {
 router.get("/random", async (req, res, next) => {
   const count = req?.query?.count ?? 5;
 
-  const doujins = doujinsQueries.getRandomEntries(count);
+  const doujins = doujinsQueries
+    .getRandomEntries(count)
+    ?.map((archive) => getArchiveWithTags(archive?.id));
 
   res.json(doujins);
 });

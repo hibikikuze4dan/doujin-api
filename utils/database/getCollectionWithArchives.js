@@ -1,4 +1,5 @@
 const { collectionsQueries } = require("../../db");
+const { getArchiveWithTags } = require("./getArchiveWithTags");
 
 exports.getCollectionWithArchives = async (collectionId) => {
   if (!collectionId) {
@@ -7,7 +8,9 @@ exports.getCollectionWithArchives = async (collectionId) => {
 
   try {
     const collection = collectionsQueries?.getCollectionById(collectionId);
-    const archives = collectionsQueries?.getDoujinsInCollection(collectionId);
+    const archives = collectionsQueries
+      ?.getDoujinsInCollection(collectionId)
+      ?.map((arc) => getArchiveWithTags(arc?.id));
 
     return {
       ...collection,

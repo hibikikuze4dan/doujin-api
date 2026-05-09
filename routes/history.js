@@ -4,6 +4,7 @@ const { postCollectionsIdAdd, postCollectionsAdd } = require("../utils/routes");
 const {
   getCollectionWithArchives,
 } = require("../utils/database/getCollectionWithArchives");
+const { getArchiveWithTags } = require("../utils");
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.get("/all", async (req, res, next) => {
     ? history.map((his) => {
         return {
           ...his,
-          archive: doujinsQueries.getDoujinById(his?.doujin_id),
+          archive: getArchiveWithTags(his?.doujin_id),
         };
       })
     : history;

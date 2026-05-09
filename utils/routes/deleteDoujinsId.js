@@ -1,4 +1,5 @@
 const { doujinsQueries } = require("../../db");
+const { getArchiveWithTags } = require("../database");
 const { deleteFile } = require("../filesystem");
 
 exports.deleteDoujinsId = async (id, shouldDeleteFile = false) => {
@@ -6,7 +7,7 @@ exports.deleteDoujinsId = async (id, shouldDeleteFile = false) => {
     return null;
   }
 
-  const doujin = doujinsQueries.getDoujinById(id);
+  const doujin = getArchiveWithTags(id);
   const removalSuccessful = doujinsQueries.removeDoujinEntry(id);
 
   if (removalSuccessful && shouldDeleteFile) {

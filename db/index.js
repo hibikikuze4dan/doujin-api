@@ -5,6 +5,7 @@ const {
   COLLECTION_DOUJINS_MIGRATION,
   DOUJINS_MIGRATION,
   DOUJIN_HISTORY_MIGRATION,
+  TAGS_MIGRATION,
 } = require("./migrate");
 const {
   initDoujinQueries,
@@ -20,6 +21,7 @@ db.exec(DOUJINS_MIGRATION);
 db.exec(DOUJIN_HISTORY_MIGRATION);
 db.exec(COLLECTIONS_MIGRATION);
 db.exec(COLLECTION_DOUJINS_MIGRATION);
+db.exec(TAGS_MIGRATION);
 db.pragma("journal_mode = WAL");
 db.pragma("foreign_keys = ON");
 console.log("Migrations complete");
