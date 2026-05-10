@@ -1,7 +1,5 @@
 const { collectionsQueries } = require("../../db");
-const {
-  getCollectionWithArchives,
-} = require("../database/getCollectionWithArchives");
+const { getCollectionWithArchives } = require("../../db-utils");
 
 exports.postCollectionsIdAdd = async ({ collectionId, archiveId } = {}) => {
   if (!collectionId || !archiveId) {

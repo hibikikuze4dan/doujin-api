@@ -4,7 +4,7 @@ const {
   deleteFolderContents,
   unzipFileContents,
   getImageFiles,
-} = require("../filesystem");
+} = require("../../utils/filesystem");
 const { doujinsQueries, historyQueries } = require("../../db");
 
 exports.getDoujinsIdPages = async (id) => {

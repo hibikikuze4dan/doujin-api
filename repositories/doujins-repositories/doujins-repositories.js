@@ -1,3 +1,5 @@
+const { searchDoujins } = require("./search-doujins");
+
 const getAllDoujins = (db) => {
   const stmt = db.prepare(`SELECT * FROM doujins`);
   return () => stmt.all();
@@ -115,4 +117,5 @@ exports.initDoujinQueries = (db) => ({
   updateDoujin: updateDoujin(db),
   removeDoujinEntry: removeDoujinEntry(db),
   removeDoujinByFilepath: removeDoujinByFilepath(db),
+  searchDoujins: searchDoujins(db),
 });

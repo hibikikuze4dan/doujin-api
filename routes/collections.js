@@ -1,9 +1,7 @@
 const express = require("express");
 const { collectionsQueries } = require("../db");
-const { postCollectionsIdAdd, postCollectionsAdd } = require("../utils/routes");
-const {
-  getCollectionWithArchives,
-} = require("../utils/database/getCollectionWithArchives");
+const { postCollectionsIdAdd, postCollectionsAdd } = require("./utils");
+const { getCollectionWithArchives } = require("../db-utils");
 
 const router = express.Router();
 

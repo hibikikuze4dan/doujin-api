@@ -1,34 +1,6 @@
 const express = require("express");
 const path = require("path");
-const {
-  unzipFileContents,
-  getFiles,
-  deleteFolderContents,
-  getCompressedFilepaths,
-  getFileStats,
-  getCompressedFileImages,
-  extractFirstImage,
-  createThumbnail,
-  postDoujinsAdd,
-  getImageFiles,
-  getDoujinsIdPages,
-  deleteFile,
-  deleteDoujinsId,
-  getLanraragiDatabaseBackup,
-  getDoujinTags,
-  fileExists,
-  createThumbnailForDoujin,
-  getDoujinsIdThumbnail,
-  getArchiveWithTags,
-} = require("../utils");
 const { getUserConfigs } = require("../utils/configuration");
-const {
-  createDoujinEntry,
-  getAllDoujins,
-  getDoujinById,
-  removeDoujinEntry,
-  getRandomEntries,
-} = require("../repositories");
 const {
   TEMP_IMAGE_DIRECTORY_PATH,
   THUMBNAIL_IMAGE_DIRECTORY_PATH,
@@ -36,6 +8,14 @@ const {
   IMAGE_EXTENSIONS,
 } = require("../constants");
 const { doujinsQueries } = require("../db");
+const { getLanraragiDatabaseBackup, getDoujinTags } = require("../utils");
+const { getArchiveWithTags } = require("../db-utils");
+const {
+  getDoujinsIdPages,
+  getDoujinsIdThumbnail,
+  postDoujinsAdd,
+  deleteDoujinsId,
+} = require("./utils");
 
 var router = express.Router();
 
@@ -54,13 +34,42 @@ router.get("/all", async (req, res, next) => {
 });
 
 router.get("/search", async (req, res, next) => {
-  const { query = "" } = req?.query ?? {};
+  const {
+    q,
+    q_mode,
+    tag,
+    tag_mode,
+    min_pages,
+    max_pages,
+    min_size,
+    max_size,
+    added_after,
+    added_before,
+    created_after,
+    created_before,
+    collection,
+  } = req?.query ?? {};
 
   let results;
   if (!query) {
     results = doujinsQueries.getAllDoujins();
   } else {
-    results = doujinsQueries.getDoujinsByNameOrTags(query)?.results ?? [];
+    results =
+      doujinsQueries.searchDoujins({
+        q,
+        q_mode,
+        tag,
+        tag_mode,
+        min_pages,
+        max_pages,
+        min_size,
+        max_size,
+        added_after,
+        added_before,
+        created_after,
+        created_before,
+        collection,
+      })?.results ?? [];
   }
 
   const doujins = results?.map((archive) => getArchiveWithTags(archive?.id));

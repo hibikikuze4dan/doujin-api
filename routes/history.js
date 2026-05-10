@@ -1,10 +1,10 @@
 const express = require("express");
 const { collectionsQueries, historyQueries, doujinsQueries } = require("../db");
-const { postCollectionsIdAdd, postCollectionsAdd } = require("../utils/routes");
+const { postCollectionsIdAdd, postCollectionsAdd } = require("./utils");
 const {
+  getArchiveWithTags,
   getCollectionWithArchives,
-} = require("../utils/database/getCollectionWithArchives");
-const { getArchiveWithTags } = require("../utils");
+} = require("../db-utils");
 
 const router = express.Router();
 

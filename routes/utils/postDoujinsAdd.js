@@ -1,5 +1,5 @@
 const path = require("path");
-const { getUserConfigs } = require("../configuration");
+const { getUserConfigs } = require("../../utils/configuration");
 const {
   getCompressedFilepaths,
   getFileStats,
@@ -7,7 +7,7 @@ const {
   createThumbnail,
   deleteFile,
   getCompressedFileImages,
-} = require("../filesystem");
+} = require("../../utils/filesystem");
 const {
   TEMP_IMAGE_DIRECTORY_PATH,
   THUMBNAIL_IMAGE_DIRECTORY_PATH,
@@ -17,10 +17,10 @@ const {
   getLanraragiTagsByFilename,
   getDoujinTags,
   createTagsDatabaseInsertArray,
-} = require("../tagging");
-const { createThumbnailForDoujin } = require("../doujins");
+} = require("../../utils/tagging");
+const { createThumbnailForDoujin } = require("../../utils/doujins");
 const { doujinsQueries, tagsQueries } = require("../../db");
-const { getArchiveWithTags } = require("../database");
+const { getArchiveWithTags } = require("../../db-utils");
 
 exports.postDoujinsAdd = async () => {
   const newDoujins = [];

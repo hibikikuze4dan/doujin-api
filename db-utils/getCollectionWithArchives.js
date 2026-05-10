@@ -1,4 +1,4 @@
-const { collectionsQueries } = require("../../db");
+const { collectionsQueries } = require("../db");
 const { getArchiveWithTags } = require("./getArchiveWithTags");
 
 exports.getCollectionWithArchives = async (collectionId) => {

@@ -1,6 +1,6 @@
 const { doujinsQueries } = require("../../db");
-const { getArchiveWithTags } = require("../database");
-const { deleteFile } = require("../filesystem");
+const { getArchiveWithTags } = require("../../db-utils");
+const { deleteFile } = require("../../utils/filesystem");
 
 exports.deleteDoujinsId = async (id, shouldDeleteFile = false) => {
   if (!id) {
