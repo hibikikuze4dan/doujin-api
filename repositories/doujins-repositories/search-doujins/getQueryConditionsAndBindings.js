@@ -10,10 +10,9 @@ exports.getQueryConditionsAndBindings = ({
 
   if (terms.length > 0) {
     const termClauses = terms.map(() => {
-      bindings.push(...Array(4).fill(null)); // placeholder, filled below
+      bindings.push(...Array(3).fill(null)); // placeholder, filled below
       return `(
         d.name     LIKE '%' || ? || '%' COLLATE NOCASE OR
-        d.filepath LIKE '%' || ? || '%' COLLATE NOCASE OR
         t.name     LIKE '%' || ? || '%' COLLATE NOCASE OR
         (t.namespace || ':' || t.name) LIKE '%' || ? || '%' COLLATE NOCASE
       )`;
@@ -25,8 +24,7 @@ exports.getQueryConditionsAndBindings = ({
       bindings[bindingIndex] = term;
       bindings[bindingIndex + 1] = term;
       bindings[bindingIndex + 2] = term;
-      bindings[bindingIndex + 3] = term;
-      bindingIndex += 4;
+      bindingIndex += 3;
     }
 
     const joinWord = q_mode === "or" ? " OR " : " AND ";

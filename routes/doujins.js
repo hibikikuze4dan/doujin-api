@@ -51,7 +51,7 @@ router.get("/search", async (req, res, next) => {
   } = req?.query ?? {};
 
   let results;
-  if (!query) {
+  if (!q && !tag) {
     results = doujinsQueries.getAllDoujins();
   } else {
     results =
