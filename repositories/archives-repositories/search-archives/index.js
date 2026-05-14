@@ -88,7 +88,7 @@ const searchArchives = (db) => {
     if (collection !== undefined) {
       conditions.push(`
       EXISTS (
-        SELECT 1 FROM collection_doujins cd
+        SELECT 1 FROM collection_archives cd
         WHERE cd.archive_id = d.id
         AND cd.collection_id = ?
       )

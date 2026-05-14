@@ -8,7 +8,7 @@ exports.postCollectionsIdAdd = async ({ collectionId, archiveId } = {}) => {
 
   try {
     const { changes = 0, lastInsertRowid = 0 } =
-      collectionsQueries?.addDoujinToCollection(collectionId, archiveId);
+      collectionsQueries?.addArchiveToCollection(collectionId, archiveId);
 
     if (changes && lastInsertRowid) {
       const collectionData = await getCollectionWithArchives(collectionId);

@@ -16,38 +16,38 @@ const getCollectionById = (db) => {
   return (id) => stmt.get(id);
 };
 
-const addDoujinToCollection = (db) => {
+const addArchiveToCollection = (db) => {
   const stmt = db.prepare(`
-    INSERT INTO collection_doujins (collection_id, archive_id)
+    INSERT INTO collection_archives (collection_id, archive_id)
     VALUES (?, ?)
   `);
-  return (collectionId, doujinId) => stmt.run(collectionId, doujinId);
+  return (collectionId, archiveId) => stmt.run(collectionId, archiveId);
 };
 
-const removeDoujinFromCollection = (db) => {
+const removeArchiveFromCollection = (db) => {
   const stmt = db.prepare(`
-    DELETE FROM collection_doujins
+    DELETE FROM collection_archives
     WHERE collection_id = ? AND archive_id = ?
   `);
-  return (collectionId, doujinId) => stmt.run(collectionId, doujinId);
+  return (collectionId, archiveId) => stmt.run(collectionId, archiveId);
 };
 
-const getDoujinsInCollection = (db) => {
+const getArchivesInCollection = (db) => {
   const stmt = db.prepare(`
-    SELECT d.* FROM doujins d
-    JOIN collection_doujins cd ON cd.archive_id = d.id
+    SELECT d.* FROM archives d
+    JOIN collection_archives cd ON cd.archive_id = d.id
     WHERE cd.collection_id = ?
   `);
   return (collectionId) => stmt.all(collectionId);
 };
 
-const getCollectionsForDoujin = (db) => {
+const getCollectionsForArchive = (db) => {
   const stmt = db.prepare(`
     SELECT c.* FROM collections c
-    JOIN collection_doujins cd ON cd.collection_id = c.id
+    JOIN collection_archives cd ON cd.collection_id = c.id
     WHERE cd.archive_id = ?
   `);
-  return (doujinId) => stmt.all(doujinId);
+  return (archiveId) => stmt.all(archiveId);
 };
 
 const removeCollectionById = (db) => {
@@ -67,13 +67,13 @@ const removeCollectionByName = (db) => {
 };
 
 exports.initCollectionQueries = (db) => ({
-  addDoujinToCollection: addDoujinToCollection(db),
+  addArchiveToCollection: addArchiveToCollection(db),
   createCollection: createCollection(db),
   getAllCollections: getAllCollections(db),
   getCollectionById: getCollectionById(db),
-  getCollectionsForDoujin: getCollectionsForDoujin(db),
-  getDoujinsInCollection: getDoujinsInCollection(db),
+  getCollectionsForArchive: getCollectionsForArchive(db),
+  getArchivesInCollection: getArchivesInCollection(db),
   removeCollectionById: removeCollectionById(db),
   removeCollectionByName: removeCollectionByName(db),
-  removeDoujinFromCollection: removeDoujinFromCollection(db),
+  removeArchiveFromCollection: removeArchiveFromCollection(db),
 });

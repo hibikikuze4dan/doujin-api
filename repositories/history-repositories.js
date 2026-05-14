@@ -1,6 +1,6 @@
 const getAllHistory = (db) => {
   const stmt = db.prepare(`
-    SELECT * FROM doujin_history
+    SELECT * FROM archive_history
     ORDER BY accessed_at DESC
   `);
   return () => stmt.all();
@@ -8,7 +8,7 @@ const getAllHistory = (db) => {
 
 const createHistoryEntry = (db) => {
   const stmt = db.prepare(`
-    INSERT INTO doujin_history (archive_id, last_page)
+    INSERT INTO archive_history (archive_id, last_page)
     VALUES (@archive_id, @last_page)
   `);
 
@@ -20,7 +20,7 @@ const createHistoryEntry = (db) => {
 // Should limit be an option for all utils where it makes sense?
 const getHistorySortedByAccessedAt = (db) => {
   const stmt = db.prepare(`
-  SELECT * FROM doujin_history
+  SELECT * FROM archive_history
   ORDER BY accessed_at DESC
   LIMIT ?
 `);
@@ -30,7 +30,7 @@ const getHistorySortedByAccessedAt = (db) => {
 
 const getHistoryByDoujinId = (db) => {
   const stmt = db.prepare(`
-    SELECT * FROM doujin_history WHERE archive_id = ?
+    SELECT * FROM archive_history WHERE archive_id = ?
     ORDER BY accessed_at DESC
   `);
   return (archive_id) => stmt.all(archive_id);
@@ -38,7 +38,7 @@ const getHistoryByDoujinId = (db) => {
 
 const removeAllHistory = (db) => {
   const stmt = db.prepare(`
-    DELETE FROM doujin_history;  
+    DELETE FROM archive_history;  
   `);
 
   return () => stmt.run();

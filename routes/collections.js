@@ -54,7 +54,7 @@ router.put("/:collectionId/remove", async (req, res, next) => {
   const archiveId = req?.body?.arcid;
 
   const { changes, lastInsertRowid } =
-    collectionsQueries.removeDoujinFromCollection(collectionId, archiveId);
+    collectionsQueries.removeArchiveFromCollection(collectionId, archiveId);
 
   const collection = await getCollectionWithArchives(collectionId);
 

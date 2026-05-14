@@ -9,7 +9,7 @@ exports.getCollectionWithArchives = async (collectionId) => {
   try {
     const collection = collectionsQueries?.getCollectionById(collectionId);
     const archives = collectionsQueries
-      ?.getDoujinsInCollection(collectionId)
+      ?.getArchivesInCollection(collectionId)
       ?.map((arc) => getArchiveWithTags(arc?.id));
 
     return {
