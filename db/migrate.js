@@ -1,5 +1,5 @@
 const DOUJINS_MIGRATION = `
-  CREATE TABLE IF NOT EXISTS doujins (
+  CREATE TABLE IF NOT EXISTS archives (
     id          INTEGER PRIMARY KEY,
     name        TEXT    NOT NULL,
     filepath     TEXT    NOT NULL UNIQUE,
@@ -16,7 +16,7 @@ const TAGS_MIGRATION = `
     doujin_id   INTEGER NOT NULL,
     name        TEXT    NOT NULL,
     namespace   TEXT    NOT NULL DEFAULT '',
-    FOREIGN KEY (doujin_id) REFERENCES doujins(id) ON DELETE CASCADE,
+    FOREIGN KEY (doujin_id) REFERENCES archives(id) ON DELETE CASCADE,
     UNIQUE (doujin_id, name, namespace)
   )
 `;
@@ -27,7 +27,7 @@ const DOUJIN_HISTORY_MIGRATION = `
     doujin_id   INTEGER NOT NULL,
     last_page   INTEGER NOT NULL DEFAULT 1,
     accessed_at TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
-    FOREIGN KEY (doujin_id) REFERENCES doujins(id) ON DELETE CASCADE
+    FOREIGN KEY (doujin_id) REFERENCES archives(id) ON DELETE CASCADE
   )
 `;
 
@@ -41,9 +41,9 @@ const COLLECTIONS_MIGRATION = `
 `;
 
 const COLLECTION_DOUJINS_MIGRATION = `
-  CREATE TABLE IF NOT EXISTS collection_doujins (
+  CREATE TABLE IF NOT EXISTS collection_archives (
     collection_id INTEGER NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
-    doujin_id     INTEGER NOT NULL REFERENCES doujins(id)     ON DELETE CASCADE,
+    doujin_id     INTEGER NOT NULL REFERENCES archives(id)     ON DELETE CASCADE,
     date_added    TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
     PRIMARY KEY (collection_id, doujin_id)
   );

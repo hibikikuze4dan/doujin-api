@@ -55,7 +55,7 @@ router.get("/search", async (req, res, next) => {
     results = doujinsQueries.getAllDoujins();
   } else {
     results =
-      doujinsQueries.searchDoujins({
+      doujinsQueries.searchArchives({
         q,
         q_mode,
         tag,

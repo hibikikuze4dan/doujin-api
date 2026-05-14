@@ -1,22 +1,22 @@
-const { searchDoujins } = require("./search-doujins");
+const { searchArchives } = require("./search-doujins");
 
 const getAllDoujins = (db) => {
-  const stmt = db.prepare(`SELECT * FROM doujins`);
+  const stmt = db.prepare(`SELECT * FROM archives`);
   return () => stmt.all();
 };
 
 const getDoujinById = (db) => {
-  const stmt = db.prepare(`SELECT * FROM doujins WHERE id = ?`);
+  const stmt = db.prepare(`SELECT * FROM archives WHERE id = ?`);
   return (id) => stmt.get(id);
 };
 
 const getDoujinByFilepath = (db) => {
-  const stmt = db.prepare(`SELECT * FROM doujins WHERE filepath = ?`);
+  const stmt = db.prepare(`SELECT * FROM archives WHERE filepath = ?`);
   return (filepath) => stmt.get(filepath);
 };
 
 const getDoujinsByName = (db) => {
-  const stmt = db.prepare(`SELECT * FROM doujins WHERE name LIKE ?`);
+  const stmt = db.prepare(`SELECT * FROM archives WHERE name LIKE ?`);
   return (name) => stmt.all(`%${name}%`);
 };
 
@@ -51,7 +51,7 @@ const getDoujinsByNameOrTags =
       d.date_created,
       d.pagecount,
       d.size
-    FROM doujins d
+    FROM archives d
     LEFT JOIN tags t ON t.doujin_id = d.id
     WHERE ${whereClause}
   `;
@@ -68,13 +68,13 @@ const getDoujinsByNameOrTags =
   };
 
 const getRandomEntries = (db) => {
-  const stmt = db.prepare(`SELECT * FROM doujins ORDER BY RANDOM() LIMIT ?`);
+  const stmt = db.prepare(`SELECT * FROM archives ORDER BY RANDOM() LIMIT ?`);
   return (count) => stmt.all(count);
 };
 
 const createDoujinEntry = (db) => {
   const stmt = db.prepare(`
-    INSERT INTO doujins (name, filepath, date_created, pagecount, size)
+    INSERT INTO archives (name, filepath, date_created, pagecount, size)
     VALUES (@name, @filepath, @date_created, @pagecount, @size)
   `);
   return ({ name, filepath, date_created, pagecount, size }) =>
@@ -82,12 +82,12 @@ const createDoujinEntry = (db) => {
 };
 
 const removeDoujinEntry = (db) => {
-  const stmt = db.prepare(`DELETE FROM doujins WHERE id = ?`);
+  const stmt = db.prepare(`DELETE FROM archives WHERE id = ?`);
   return (id) => stmt.run(id).changes > 0;
 };
 
 const removeDoujinByFilepath = (db) => {
-  const stmt = db.prepare(`DELETE FROM doujins WHERE filepath = ?`);
+  const stmt = db.prepare(`DELETE FROM archives WHERE filepath = ?`);
   return (filepath) => stmt.run(filepath).changes > 0;
 };
 
@@ -100,7 +100,7 @@ const updateDoujin = (db) => {
     const setClause = updates.map((key) => `${key} = @${key}`).join(", ");
     return (
       db
-        .prepare(`UPDATE doujins SET ${setClause} WHERE id = @id`)
+        .prepare(`UPDATE archives SET ${setClause} WHERE id = @id`)
         .run({ ...fields, id }).changes > 0
     );
   };
@@ -117,5 +117,5 @@ exports.initDoujinQueries = (db) => ({
   updateDoujin: updateDoujin(db),
   removeDoujinEntry: removeDoujinEntry(db),
   removeDoujinByFilepath: removeDoujinByFilepath(db),
-  searchDoujins: searchDoujins(db),
+  searchArchives: searchArchives(db),
 });

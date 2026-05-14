@@ -5,7 +5,7 @@ const {
   getTagsConditionsAndBindings,
 } = require("./getTagsConditionsAndBindings");
 
-const searchDoujins = (db) => {
+const searchArchives = (db) => {
   const func = (parameters = {}) => {
     const {
       q,
@@ -108,7 +108,7 @@ const searchDoujins = (db) => {
       d.date_created,
       d.pagecount,
       d.size
-    FROM doujins d
+    FROM archives d
     LEFT JOIN tags t ON t.doujin_id = d.id
     ${whereClause}
     ORDER BY d.name
@@ -121,4 +121,4 @@ const searchDoujins = (db) => {
   return func;
 };
 
-exports.searchDoujins = searchDoujins;
+exports.searchArchives = searchArchives;
