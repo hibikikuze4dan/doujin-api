@@ -8,7 +8,7 @@ exports.deleteDoujinsId = async (id, shouldDeleteFile = false) => {
   }
 
   const doujin = getArchiveWithTags(id);
-  const removalSuccessful = doujinsQueries.removeDoujinEntry(id);
+  const removalSuccessful = doujinsQueries.removeArchiveEntry(id);
 
   if (removalSuccessful && shouldDeleteFile) {
     await deleteFile(doujin?.filepath);

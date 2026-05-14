@@ -1,26 +1,26 @@
 const { searchArchives } = require("./search-archives");
 
-const getAllDoujins = (db) => {
+const getAllArchives = (db) => {
   const stmt = db.prepare(`SELECT * FROM archives`);
   return () => stmt.all();
 };
 
-const getDoujinById = (db) => {
+const getArchiveById = (db) => {
   const stmt = db.prepare(`SELECT * FROM archives WHERE id = ?`);
   return (id) => stmt.get(id);
 };
 
-const getDoujinByFilepath = (db) => {
+const getArchiveByFilepath = (db) => {
   const stmt = db.prepare(`SELECT * FROM archives WHERE filepath = ?`);
   return (filepath) => stmt.get(filepath);
 };
 
-const getDoujinsByName = (db) => {
+const getArchivesByName = (db) => {
   const stmt = db.prepare(`SELECT * FROM archives WHERE name LIKE ?`);
   return (name) => stmt.all(`%${name}%`);
 };
 
-const getDoujinsByNameOrTags =
+const getArchivesByNameOrTags =
   (db) =>
   (query = "") => {
     const terms = query.trim().split(",").filter(Boolean).slice(0, 10);
@@ -72,7 +72,7 @@ const getRandomEntries = (db) => {
   return (count) => stmt.all(count);
 };
 
-const createDoujinEntry = (db) => {
+const createArchiveEntry = (db) => {
   const stmt = db.prepare(`
     INSERT INTO archives (name, filepath, date_created, pagecount, size)
     VALUES (@name, @filepath, @date_created, @pagecount, @size)
@@ -81,17 +81,17 @@ const createDoujinEntry = (db) => {
     stmt.run({ name, filepath, date_created, pagecount, size }).lastInsertRowid;
 };
 
-const removeDoujinEntry = (db) => {
+const removeArchiveEntry = (db) => {
   const stmt = db.prepare(`DELETE FROM archives WHERE id = ?`);
   return (id) => stmt.run(id).changes > 0;
 };
 
-const removeDoujinByFilepath = (db) => {
+const removeArchiveByFilepath = (db) => {
   const stmt = db.prepare(`DELETE FROM archives WHERE filepath = ?`);
   return (filepath) => stmt.run(filepath).changes > 0;
 };
 
-const updateDoujin = (db) => {
+const updateArchive = (db) => {
   const allowed = ["name", "filepath", "date_created", "pagecount", "size"];
   return (id, fields) => {
     const updates = Object.keys(fields).filter((key) => allowed.includes(key));
@@ -107,15 +107,15 @@ const updateDoujin = (db) => {
 };
 
 exports.initDoujinQueries = (db) => ({
-  getAllDoujins: getAllDoujins(db),
-  getDoujinById: getDoujinById(db),
-  getDoujinByFilepath: getDoujinByFilepath(db),
-  getDoujinsByName: getDoujinsByName(db),
-  getDoujinsByNameOrTags: getDoujinsByNameOrTags(db),
+  getAllArchives: getAllArchives(db),
+  getArchiveById: getArchiveById(db),
+  getArchiveByFilepath: getArchiveByFilepath(db),
+  getArchivesByName: getArchivesByName(db),
+  getArchivesByNameOrTags: getArchivesByNameOrTags(db),
   getRandomEntries: getRandomEntries(db),
-  createDoujinEntry: createDoujinEntry(db),
-  updateDoujin: updateDoujin(db),
-  removeDoujinEntry: removeDoujinEntry(db),
-  removeDoujinByFilepath: removeDoujinByFilepath(db),
+  createArchiveEntry: createArchiveEntry(db),
+  updateArchive: updateArchive(db),
+  removeArchiveEntry: removeArchiveEntry(db),
+  removeArchiveByFilepath: removeArchiveByFilepath(db),
   searchArchives: searchArchives(db),
 });

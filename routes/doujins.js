@@ -27,7 +27,7 @@ router.get("/", async (req, res, next) => {
 
 router.get("/all", async (req, res, next) => {
   const doujins = doujinsQueries
-    .getAllDoujins()
+    .getAllArchives()
     ?.map((archive) => getArchiveWithTags(archive?.id));
 
   res.json(doujins);
@@ -52,7 +52,7 @@ router.get("/search", async (req, res, next) => {
 
   let results;
   if (!q && !tag) {
-    results = doujinsQueries.getAllDoujins();
+    results = doujinsQueries.getAllArchives();
   } else {
     results =
       doujinsQueries.searchArchives({
@@ -98,7 +98,7 @@ router.get("/:id/pages", async (req, res, next) => {
 router.get("/:id/thumbnail", async (req, res, next) => {
   const id = req.params.id;
 
-  const doujin = doujinsQueries.getDoujinById(id);
+  const doujin = doujinsQueries.getArchiveById(id);
   const doujinThumbnailImagePath = await getDoujinsIdThumbnail(
     doujin?.id,
     doujin?.filepath,

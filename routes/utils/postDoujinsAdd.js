@@ -41,7 +41,7 @@ exports.postDoujinsAdd = async () => {
     for (const filepath of filepaths) {
       const fileStats = await getFileStats(filepath);
 
-      const doujinEntry = doujinsQueries.getDoujinByFilepath(filepath);
+      const doujinEntry = doujinsQueries.getArchiveByFilepath(filepath);
       if (!doujinEntry) {
         const filename = path.basename(filepath);
         const filenameWithoutExtension = path.parse(filepath).name;
@@ -59,7 +59,7 @@ exports.postDoujinsAdd = async () => {
           tags = await getDoujinTags(filepath);
         }
 
-        const newRowId = doujinsQueries.createDoujinEntry({
+        const newRowId = doujinsQueries.createArchiveEntry({
           name: filename,
           filepath,
           date_created: fileStats.birthtime.toISOString(),
