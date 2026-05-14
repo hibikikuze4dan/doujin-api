@@ -1,5 +1,5 @@
-const { initDoujinQueries } = require("./doujins-repositories");
+const { initArchivesQueries } = require("./archives-repositories");
 
 module.exports = {
-  initDoujinQueries,
+  initArchivesQueries,
 };

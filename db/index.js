@@ -8,7 +8,7 @@ const {
   TAGS_MIGRATION,
 } = require("./migrate");
 const {
-  initDoujinQueries,
+  initArchivesQueries,
   initCollectionQueries,
   initHistoryQueries,
   initTagsQueries,
@@ -27,7 +27,7 @@ db.pragma("foreign_keys = ON");
 console.log("Migrations complete");
 
 const collections = initCollectionQueries(db);
-const doujins = initDoujinQueries(db);
+const doujins = initArchivesQueries(db);
 const history = initHistoryQueries(db);
 const tags = initTagsQueries(db);
 

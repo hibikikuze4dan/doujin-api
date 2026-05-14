@@ -106,7 +106,7 @@ const updateArchive = (db) => {
   };
 };
 
-exports.initDoujinQueries = (db) => ({
+exports.initArchivesQueries = (db) => ({
   getAllArchives: getAllArchives(db),
   getArchiveById: getArchiveById(db),
   getArchiveByFilepath: getArchiveByFilepath(db),
