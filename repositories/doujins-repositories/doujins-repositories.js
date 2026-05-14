@@ -1,4 +1,4 @@
-const { searchArchives } = require("./search-doujins");
+const { searchArchives } = require("./search-archives");
 
 const getAllDoujins = (db) => {
   const stmt = db.prepare(`SELECT * FROM archives`);
