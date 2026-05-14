@@ -7,7 +7,7 @@ const {
   ARCHIVE_IMAGES_DIRECTORY_PATH,
   IMAGE_EXTENSIONS,
 } = require("../constants");
-const { doujinsQueries } = require("../db");
+const { archivesQueries } = require("../db");
 const { getLanraragiDatabaseBackup, getDoujinTags } = require("../utils");
 const { getArchiveWithTags } = require("../db-utils");
 const {
@@ -26,7 +26,7 @@ router.get("/", async (req, res, next) => {
 });
 
 router.get("/all", async (req, res, next) => {
-  const doujins = doujinsQueries
+  const doujins = archivesQueries
     .getAllArchives()
     ?.map((archive) => getArchiveWithTags(archive?.id));
 
@@ -52,10 +52,10 @@ router.get("/search", async (req, res, next) => {
 
   let results;
   if (!q && !tag) {
-    results = doujinsQueries.getAllArchives();
+    results = archivesQueries.getAllArchives();
   } else {
     results =
-      doujinsQueries.searchArchives({
+      archivesQueries.searchArchives({
         q,
         q_mode,
         tag,
@@ -80,7 +80,7 @@ router.get("/search", async (req, res, next) => {
 router.get("/random", async (req, res, next) => {
   const count = req?.query?.count ?? 5;
 
-  const doujins = doujinsQueries
+  const doujins = archivesQueries
     .getRandomEntries(count)
     ?.map((archive) => getArchiveWithTags(archive?.id));
 
@@ -98,7 +98,7 @@ router.get("/:id/pages", async (req, res, next) => {
 router.get("/:id/thumbnail", async (req, res, next) => {
   const id = req.params.id;
 
-  const doujin = doujinsQueries.getArchiveById(id);
+  const doujin = archivesQueries.getArchiveById(id);
   const doujinThumbnailImagePath = await getDoujinsIdThumbnail(
     doujin?.id,
     doujin?.filepath,

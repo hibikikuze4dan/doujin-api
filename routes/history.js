@@ -1,5 +1,9 @@
 const express = require("express");
-const { collectionsQueries, historyQueries, doujinsQueries } = require("../db");
+const {
+  collectionsQueries,
+  historyQueries,
+  archivesQueries,
+} = require("../db");
 const { postCollectionsIdAdd, postCollectionsAdd } = require("./utils");
 const {
   getArchiveWithTags,

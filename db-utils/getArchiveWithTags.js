@@ -1,7 +1,7 @@
-const { doujinsQueries, tagsQueries } = require("../db");
+const { archivesQueries, tagsQueries } = require("../db");
 
 exports.getArchiveWithTags = (archiveId) => {
-  const archive = doujinsQueries.getArchiveById(archiveId);
+  const archive = archivesQueries.getArchiveById(archiveId);
   const tagsArray = tagsQueries.getTagsByDoujinId(archiveId) ?? [];
 
   const tagsString = tagsArray

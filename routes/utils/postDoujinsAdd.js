@@ -19,7 +19,7 @@ const {
   createTagsDatabaseInsertArray,
 } = require("../../utils/tagging");
 const { createThumbnailForDoujin } = require("../../utils/doujins");
-const { doujinsQueries, tagsQueries } = require("../../db");
+const { archivesQueries, tagsQueries } = require("../../db");
 const { getArchiveWithTags } = require("../../db-utils");
 
 exports.postDoujinsAdd = async () => {
@@ -41,7 +41,7 @@ exports.postDoujinsAdd = async () => {
     for (const filepath of filepaths) {
       const fileStats = await getFileStats(filepath);
 
-      const doujinEntry = doujinsQueries.getArchiveByFilepath(filepath);
+      const doujinEntry = archivesQueries.getArchiveByFilepath(filepath);
       if (!doujinEntry) {
         const filename = path.basename(filepath);
         const filenameWithoutExtension = path.parse(filepath).name;
@@ -59,7 +59,7 @@ exports.postDoujinsAdd = async () => {
           tags = await getDoujinTags(filepath);
         }
 
-        const newRowId = doujinsQueries.createArchiveEntry({
+        const newRowId = archivesQueries.createArchiveEntry({
           name: filename,
           filepath,
           date_created: fileStats.birthtime.toISOString(),

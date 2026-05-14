@@ -27,13 +27,13 @@ db.pragma("foreign_keys = ON");
 console.log("Migrations complete");
 
 const collections = initCollectionQueries(db);
-const doujins = initArchivesQueries(db);
+const archives = initArchivesQueries(db);
 const history = initHistoryQueries(db);
 const tags = initTagsQueries(db);
 
 module.exports = {
   database: db,
-  doujinsQueries: doujins,
+  archivesQueries: archives,
   collectionsQueries: collections,
   historyQueries: history,
   tagsQueries: tags,

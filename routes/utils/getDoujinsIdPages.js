@@ -5,7 +5,7 @@ const {
   unzipFileContents,
   getImageFiles,
 } = require("../../utils/filesystem");
-const { doujinsQueries, historyQueries } = require("../../db");
+const { archivesQueries, historyQueries } = require("../../db");
 
 exports.getDoujinsIdPages = async (id) => {
   if (!id) {
@@ -13,7 +13,7 @@ exports.getDoujinsIdPages = async (id) => {
   }
 
   try {
-    const doujin = doujinsQueries.getArchiveById(id);
+    const doujin = archivesQueries.getArchiveById(id);
     const doujinImagesOutputDirectory = path.join(
       ARCHIVE_IMAGES_DIRECTORY_PATH,
       `${id}`,
