@@ -35,8 +35,8 @@ const CONFIG_FILENAME = `.${APP_NAME}rc.json`;
 
 const CONFIG_FILEPATH = path.join(CONFIG_DIR, CONFIG_FILENAME);
 
-const DOUJIN_IMAGES_DIRECTORY_PATH = path.resolve(
-  path.join(__dirname, "public", "images", "doujin"),
+const ARCHIVE_IMAGES_DIRECTORY_PATH = path.resolve(
+  path.join(__dirname, "public", "images", "archive"),
 );
 
 const TEMP_IMAGE_DIRECTORY_PATH = path.resolve(
@@ -80,7 +80,7 @@ module.exports = {
   CONFIG_DIR,
   CONFIG_FILENAME,
   CONFIG_FILEPATH,
-  DOUJIN_IMAGES_DIRECTORY_PATH,
+  ARCHIVE_IMAGES_DIRECTORY_PATH,
   IMAGE_EXTENSIONS,
   TEMP_IMAGE_DIRECTORY_PATH,
   THUMBNAIL_IMAGE_DIRECTORY_PATH,

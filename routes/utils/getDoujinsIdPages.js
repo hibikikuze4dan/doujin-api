@@ -1,5 +1,5 @@
 const path = require("path");
-const { DOUJIN_IMAGES_DIRECTORY_PATH } = require("../../constants");
+const { ARCHIVE_IMAGES_DIRECTORY_PATH } = require("../../constants");
 const {
   deleteFolderContents,
   unzipFileContents,
@@ -15,7 +15,7 @@ exports.getDoujinsIdPages = async (id) => {
   try {
     const doujin = doujinsQueries.getArchiveById(id);
     const doujinImagesOutputDirectory = path.join(
-      DOUJIN_IMAGES_DIRECTORY_PATH,
+      ARCHIVE_IMAGES_DIRECTORY_PATH,
       `${id}`,
     );
 

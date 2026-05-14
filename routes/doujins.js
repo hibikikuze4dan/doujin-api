@@ -4,7 +4,7 @@ const { getUserConfigs } = require("../utils/configuration");
 const {
   TEMP_IMAGE_DIRECTORY_PATH,
   THUMBNAIL_IMAGE_DIRECTORY_PATH,
-  DOUJIN_IMAGES_DIRECTORY_PATH,
+  ARCHIVE_IMAGES_DIRECTORY_PATH,
   IMAGE_EXTENSIONS,
 } = require("../constants");
 const { doujinsQueries } = require("../db");
