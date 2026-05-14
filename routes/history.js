@@ -19,7 +19,7 @@ router.get("/all", async (req, res, next) => {
     ? history.map((his) => {
         return {
           ...his,
-          archive: getArchiveWithTags(his?.doujin_id),
+          archive: getArchiveWithTags(his?.archive_id),
         };
       })
     : history;

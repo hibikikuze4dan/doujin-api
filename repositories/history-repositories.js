@@ -8,12 +8,12 @@ const getAllHistory = (db) => {
 
 const createHistoryEntry = (db) => {
   const stmt = db.prepare(`
-    INSERT INTO doujin_history (doujin_id, last_page)
-    VALUES (@doujin_id, @last_page)
+    INSERT INTO doujin_history (archive_id, last_page)
+    VALUES (@archive_id, @last_page)
   `);
 
-  return ({ doujin_id, last_page }) =>
-    stmt.run({ doujin_id, last_page: last_page ?? 1 });
+  return ({ archive_id, last_page }) =>
+    stmt.run({ archive_id, last_page: last_page ?? 1 });
 };
 
 // TODO: Figure out what to do with this redundant function
@@ -30,10 +30,10 @@ const getHistorySortedByAccessedAt = (db) => {
 
 const getHistoryByDoujinId = (db) => {
   const stmt = db.prepare(`
-    SELECT * FROM doujin_history WHERE doujin_id = ?
+    SELECT * FROM doujin_history WHERE archive_id = ?
     ORDER BY accessed_at DESC
   `);
-  return (doujin_id) => stmt.all(doujin_id);
+  return (archive_id) => stmt.all(archive_id);
 };
 
 const removeAllHistory = (db) => {

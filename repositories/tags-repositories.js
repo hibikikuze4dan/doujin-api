@@ -2,17 +2,17 @@
 
 const addTag = (db) => {
   const stmt = db.prepare(`
-    INSERT INTO tags (doujin_id, name, namespace)
-    VALUES (@doujin_id, @name, @namespace)
+    INSERT INTO tags (archive_id, name, namespace)
+    VALUES (@archive_id, @name, @namespace)
   `);
-  return ({ doujin_id, name, namespace = "" }) =>
-    stmt.run({ doujin_id, name, namespace });
+  return ({ archive_id, name, namespace = "" }) =>
+    stmt.run({ archive_id, name, namespace });
 };
 
 const addTags = (db) => {
   const stmt = db.prepare(`
-    INSERT INTO tags (doujin_id, name, namespace)
-    VALUES (@doujin_id, @name, @namespace)
+    INSERT INTO tags (archive_id, name, namespace)
+    VALUES (@archive_id, @name, @namespace)
   `);
   const insertMany = db.transaction((tags) => {
     for (const tag of tags) {
@@ -25,8 +25,8 @@ const addTags = (db) => {
 // READ
 
 const getTagsByDoujinId = (db) => {
-  const stmt = db.prepare(`SELECT * FROM tags WHERE doujin_id = ?`);
-  return (doujin_id) => stmt.all(doujin_id);
+  const stmt = db.prepare(`SELECT * FROM tags WHERE archive_id = ?`);
+  return (archive_id) => stmt.all(archive_id);
 };
 
 const getTagsByName = (db) => {
@@ -65,8 +65,8 @@ const deleteTag = (db) => {
 };
 
 const deleteTagsByDoujinId = (db) => {
-  const stmt = db.prepare(`DELETE FROM tags WHERE doujin_id = ?`);
-  return (doujin_id) => stmt.run(doujin_id);
+  const stmt = db.prepare(`DELETE FROM tags WHERE archive_id = ?`);
+  return (archive_id) => stmt.run(archive_id);
 };
 
 const deleteTagByNameAndNamespace = (db) => {

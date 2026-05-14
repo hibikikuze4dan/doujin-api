@@ -27,7 +27,7 @@ exports.getDoujinsIdPages = async (id) => {
       return path.join("/", "images", "doujin", `${id}`, file.name);
     });
 
-    historyQueries.createHistoryEntry({ doujin_id: doujin?.id, last_page: 1 });
+    historyQueries.createHistoryEntry({ archive_id: doujin?.id, last_page: 1 });
     return imageLinks;
   } catch (error) {
     return [];

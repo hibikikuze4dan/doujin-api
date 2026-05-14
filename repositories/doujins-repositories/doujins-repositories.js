@@ -52,7 +52,7 @@ const getArchivesByNameOrTags =
       d.pagecount,
       d.size
     FROM archives d
-    LEFT JOIN tags t ON t.doujin_id = d.id
+    LEFT JOIN tags t ON t.archive_id = d.id
     WHERE ${whereClause}
   `;
 

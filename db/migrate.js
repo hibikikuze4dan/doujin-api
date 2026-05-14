@@ -13,21 +13,21 @@ const DOUJINS_MIGRATION = `
 const TAGS_MIGRATION = `
   CREATE TABLE IF NOT EXISTS tags (
     id          INTEGER PRIMARY KEY,
-    doujin_id   INTEGER NOT NULL,
+    archive_id   INTEGER NOT NULL,
     name        TEXT    NOT NULL,
     namespace   TEXT    NOT NULL DEFAULT '',
-    FOREIGN KEY (doujin_id) REFERENCES archives(id) ON DELETE CASCADE,
-    UNIQUE (doujin_id, name, namespace)
+    FOREIGN KEY (archive_id) REFERENCES archives(id) ON DELETE CASCADE,
+    UNIQUE (archive_id, name, namespace)
   )
 `;
 
 const DOUJIN_HISTORY_MIGRATION = `
   CREATE TABLE IF NOT EXISTS doujin_history (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    doujin_id   INTEGER NOT NULL,
+    archive_id   INTEGER NOT NULL,
     last_page   INTEGER NOT NULL DEFAULT 1,
     accessed_at TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
-    FOREIGN KEY (doujin_id) REFERENCES archives(id) ON DELETE CASCADE
+    FOREIGN KEY (archive_id) REFERENCES archives(id) ON DELETE CASCADE
   )
 `;
 
@@ -43,9 +43,9 @@ const COLLECTIONS_MIGRATION = `
 const COLLECTION_DOUJINS_MIGRATION = `
   CREATE TABLE IF NOT EXISTS collection_archives (
     collection_id INTEGER NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
-    doujin_id     INTEGER NOT NULL REFERENCES archives(id)     ON DELETE CASCADE,
+    archive_id     INTEGER NOT NULL REFERENCES archives(id)     ON DELETE CASCADE,
     date_added    TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
-    PRIMARY KEY (collection_id, doujin_id)
+    PRIMARY KEY (collection_id, archive_id)
   );
 `;
 

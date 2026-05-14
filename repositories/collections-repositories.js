@@ -18,7 +18,7 @@ const getCollectionById = (db) => {
 
 const addDoujinToCollection = (db) => {
   const stmt = db.prepare(`
-    INSERT INTO collection_doujins (collection_id, doujin_id)
+    INSERT INTO collection_doujins (collection_id, archive_id)
     VALUES (?, ?)
   `);
   return (collectionId, doujinId) => stmt.run(collectionId, doujinId);
@@ -27,7 +27,7 @@ const addDoujinToCollection = (db) => {
 const removeDoujinFromCollection = (db) => {
   const stmt = db.prepare(`
     DELETE FROM collection_doujins
-    WHERE collection_id = ? AND doujin_id = ?
+    WHERE collection_id = ? AND archive_id = ?
   `);
   return (collectionId, doujinId) => stmt.run(collectionId, doujinId);
 };
@@ -35,7 +35,7 @@ const removeDoujinFromCollection = (db) => {
 const getDoujinsInCollection = (db) => {
   const stmt = db.prepare(`
     SELECT d.* FROM doujins d
-    JOIN collection_doujins cd ON cd.doujin_id = d.id
+    JOIN collection_doujins cd ON cd.archive_id = d.id
     WHERE cd.collection_id = ?
   `);
   return (collectionId) => stmt.all(collectionId);
@@ -45,7 +45,7 @@ const getCollectionsForDoujin = (db) => {
   const stmt = db.prepare(`
     SELECT c.* FROM collections c
     JOIN collection_doujins cd ON cd.collection_id = c.id
-    WHERE cd.doujin_id = ?
+    WHERE cd.archive_id = ?
   `);
   return (doujinId) => stmt.all(doujinId);
 };

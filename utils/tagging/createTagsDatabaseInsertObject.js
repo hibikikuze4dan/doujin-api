@@ -6,16 +6,16 @@ exports.createTagsDatabaseInsertObject = (archiveId, tag = "") => {
   const colonIndex = tag.indexOf(":");
 
   if (colonIndex === -1) {
-    return { doujin_id: archiveId, name: tag, namespace: "" };
+    return { archive_id: archiveId, name: tag, namespace: "" };
   }
 
   const namespace = tag.slice(0, colonIndex).trim();
   const name = tag.slice(colonIndex + 1).trim();
 
-  return { doujin_id: archiveId, name, namespace };
+  return { archive_id: archiveId, name, namespace };
 };
 
-const parseTagsString = (doujin_id, tagsString) => {
+const parseTagsString = (archive_id, tagsString) => {
   return tagsString
     .split(",")
     .map((tag) => tag.trim())
@@ -24,12 +24,12 @@ const parseTagsString = (doujin_id, tagsString) => {
       const colonIndex = tag.indexOf(":");
 
       if (colonIndex === -1) {
-        return { doujin_id, name: tag, namespace: "" };
+        return { archive_id, name: tag, namespace: "" };
       }
 
       const namespace = tag.slice(0, colonIndex).trim();
       const name = tag.slice(colonIndex + 1).trim();
 
-      return { doujin_id, name, namespace };
+      return { archive_id, name, namespace };
     });
 };

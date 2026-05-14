@@ -89,7 +89,7 @@ const searchArchives = (db) => {
       conditions.push(`
       EXISTS (
         SELECT 1 FROM collection_doujins cd
-        WHERE cd.doujin_id = d.id
+        WHERE cd.archive_id = d.id
         AND cd.collection_id = ?
       )
     `);
@@ -109,7 +109,7 @@ const searchArchives = (db) => {
       d.pagecount,
       d.size
     FROM archives d
-    LEFT JOIN tags t ON t.doujin_id = d.id
+    LEFT JOIN tags t ON t.archive_id = d.id
     ${whereClause}
     ORDER BY d.name
   `;
