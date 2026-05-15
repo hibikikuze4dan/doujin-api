@@ -1,14 +1,6 @@
 const express = require("express");
-const path = require("path");
-const { getUserConfigs } = require("../utils/configuration");
-const {
-  TEMP_IMAGE_DIRECTORY_PATH,
-  THUMBNAIL_IMAGE_DIRECTORY_PATH,
-  ARCHIVE_IMAGES_DIRECTORY_PATH,
-  IMAGE_EXTENSIONS,
-} = require("../constants");
 const { archivesQueries } = require("../db");
-const { getLanraragiDatabaseBackup, getArchiveTags } = require("../utils");
+const { getArchiveTags } = require("../utils");
 const { getArchiveWithTags } = require("../db-utils");
 const {
   getDoujinsIdPages,
@@ -19,13 +11,13 @@ const {
 
 var router = express.Router();
 
-router.get("/", async (req, res, next) => {
-  const data = await getLanraragiDatabaseBackup();
+// NOTE: TEST ROUTE. NEEDS TO BE CLEANED UP LATER
+router.get("/", async (req, res, _next) => {
   const tags = await getArchiveTags("");
   res.json(tags);
 });
 
-router.get("/all", async (req, res, next) => {
+router.get("/all", async (req, res, _next) => {
   const doujins = archivesQueries
     .getAllArchives()
     ?.map((archive) => getArchiveWithTags(archive?.id));
@@ -33,7 +25,7 @@ router.get("/all", async (req, res, next) => {
   res.json(doujins);
 });
 
-router.get("/search", async (req, res, next) => {
+router.get("/search", async (req, res, _next) => {
   const {
     q,
     q_mode,
@@ -77,7 +69,7 @@ router.get("/search", async (req, res, next) => {
   res.json(doujins);
 });
 
-router.get("/random", async (req, res, next) => {
+router.get("/random", async (req, res, _next) => {
   const count = req?.query?.count ?? 5;
 
   const doujins = archivesQueries
@@ -87,7 +79,7 @@ router.get("/random", async (req, res, next) => {
   res.json(doujins);
 });
 
-router.get("/:id/pages", async (req, res, next) => {
+router.get("/:id/pages", async (req, res, _next) => {
   const id = req.params.id;
 
   const imageLinks = await getDoujinsIdPages(id);
@@ -95,7 +87,7 @@ router.get("/:id/pages", async (req, res, next) => {
   res.json(imageLinks);
 });
 
-router.get("/:id/thumbnail", async (req, res, next) => {
+router.get("/:id/thumbnail", async (req, res, _next) => {
   const id = req.params.id;
 
   const doujin = archivesQueries.getArchiveById(id);
@@ -107,13 +99,13 @@ router.get("/:id/thumbnail", async (req, res, next) => {
   res.json(doujinThumbnailImagePath);
 });
 
-router.post("/add", async (req, res, next) => {
+router.post("/add", async (req, res, _next) => {
   const doujins = await postDoujinsAdd();
 
   res.json(doujins);
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", async (req, res, _next) => {
   const id = req.params.id;
   const deleteFile = req?.body?.deleteFile;
 

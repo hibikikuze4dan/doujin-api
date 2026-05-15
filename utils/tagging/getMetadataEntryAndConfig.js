@@ -24,7 +24,7 @@ exports.getMetadataEntryAndConfig = async (filepath = "", entries) => {
   let taggingConfigToUse;
 
   metadataEntry = Object.values(compressedFileEntries)?.find((entry) => {
-    for (config of taggingConfigs) {
+    for (const config of taggingConfigs) {
       if (config?.filename === entry?.name) {
         taggingConfigToUse = config;
         return true;

@@ -8,7 +8,7 @@ exports.postCollectionsAdd = async ({ name, description } = {}) => {
 
   try {
     const { changes = 0, lastInsertRowid } =
-      collectionsQueries?.createCollection(name, description ?? "");
+      collectionsQueries?.createCollection?.(name, description ?? "") ?? {};
 
     const collection = await getCollectionWithArchives(lastInsertRowid);
 

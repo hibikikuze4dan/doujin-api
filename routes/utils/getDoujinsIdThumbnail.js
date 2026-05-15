@@ -1,6 +1,7 @@
 const path = require("path");
 const { fileExists } = require("../../utils/filesystem");
 const { THUMBNAIL_IMAGE_DIRECTORY_PATH } = require("../../constants");
+const { createThumbnailForArchive } = require("../../utils");
 
 exports.getDoujinsIdThumbnail = async (doujinId = "", doujinFilepath = "") => {
   if (!doujinId || !doujinFilepath) {

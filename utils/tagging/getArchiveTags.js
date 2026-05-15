@@ -26,7 +26,6 @@ exports.getArchiveTags = async (filepath) => {
       filepath,
       metadataEntry,
     );
-    let metadata;
 
     if (metadataEntryExtension === ".json") {
       return createTagsString(

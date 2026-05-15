@@ -1,6 +1,5 @@
 const sharp = require("sharp");
 const path = require("path");
-const fs = require("fs/promises");
 const { createDirectory } = require("./createDirectory");
 
 exports.createThumbnail = async (imagePath, outputDir, options = {}) => {

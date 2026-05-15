@@ -1,18 +1,10 @@
 const express = require("express");
-const {
-  collectionsQueries,
-  historyQueries,
-  archivesQueries,
-} = require("../db");
-const { postCollectionsIdAdd, postCollectionsAdd } = require("./utils");
-const {
-  getArchiveWithTags,
-  getCollectionWithArchives,
-} = require("../db-utils");
+const { historyQueries } = require("../db");
+const { getArchiveWithTags } = require("../db-utils");
 
 const router = express.Router();
 
-router.get("/all", async (req, res, next) => {
+router.get("/all", async (req, res, _next) => {
   const { withdata = "false" } = req?.query ?? {};
 
   const shouldGetData = withdata.toLocaleLowerCase() === "true";
@@ -31,9 +23,7 @@ router.get("/all", async (req, res, next) => {
   res.json(history);
 });
 
-router.delete("/", async (req, res, next) => {
-  const history = historyQueries.getAllHistory();
-
+router.delete("/", async (req, res, _next) => {
   const { changes } = historyQueries.removeAllHistory();
 
   res.json({

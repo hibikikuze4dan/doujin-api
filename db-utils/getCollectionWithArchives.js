@@ -18,7 +18,7 @@ exports.getCollectionWithArchives = async (collectionId) => {
     };
   } catch (err) {
     console.error(
-      `Something went wrong while trying to get the data of collection ${collection}:\n${err}`,
+      `Something went wrong while trying to get the data of collection ${collectionId}:\n${err}`,
     );
     return null;
   }

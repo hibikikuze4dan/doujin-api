@@ -5,12 +5,12 @@ const { getCollectionWithArchives } = require("../db-utils");
 
 const router = express.Router();
 
-router.get("/all", async (req, res, next) => {
+router.get("/all", async (req, res, _next) => {
   const collections = collectionsQueries.getAllCollections();
 
   const collectionsWithArchives = [];
 
-  for (col of collections) {
+  for (const col of collections) {
     const data = await getCollectionWithArchives(col?.id);
 
     if (data) {
@@ -21,7 +21,7 @@ router.get("/all", async (req, res, next) => {
   res.json(collectionsWithArchives);
 });
 
-router.post("/add", async (req, res, next) => {
+router.post("/add", async (req, res, _next) => {
   const { name = "", description = "" } = req?.body ?? {};
 
   const data = await postCollectionsAdd({ name, description });
@@ -33,7 +33,7 @@ router.post("/add", async (req, res, next) => {
   }
 });
 
-router.post("/:collectionId/add", async (req, res, next) => {
+router.post("/:collectionId/add", async (req, res, _next) => {
   const { collectionId = "" } = req?.params ?? {};
   const { arcid = "" } = req?.body ?? {};
 
@@ -49,11 +49,11 @@ router.post("/:collectionId/add", async (req, res, next) => {
   }
 });
 
-router.put("/:collectionId/remove", async (req, res, next) => {
+router.put("/:collectionId/remove", async (req, res, _next) => {
   const collectionId = req?.params?.collectionId;
   const archiveId = req?.body?.arcid;
 
-  const { changes, lastInsertRowid } =
+  const { _changes, _lastInsertRowid } =
     collectionsQueries.removeArchiveFromCollection(collectionId, archiveId);
 
   const collection = await getCollectionWithArchives(collectionId);
@@ -61,7 +61,7 @@ router.put("/:collectionId/remove", async (req, res, next) => {
   res.json(collection);
 });
 
-router.delete("/", async (req, res, next) => {
+router.delete("/", async (req, res, _next) => {
   const { id: collectionId } = req?.body ?? {};
 
   const collection = await getCollectionWithArchives(collectionId);

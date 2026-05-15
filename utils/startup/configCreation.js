@@ -1,4 +1,3 @@
-const fs = require("fs/promises");
 const {
   CONFIG_DIR,
   CONFIG_FILEPATH,

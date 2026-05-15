@@ -8,7 +8,7 @@ exports.fileExists = async (filepath = "") => {
   try {
     await fs.access(filepath, fs.constants.F_OK);
     return true;
-  } catch (_error) {
+  } catch {
     return false;
   }
 };

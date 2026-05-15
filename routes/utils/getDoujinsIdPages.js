@@ -29,7 +29,7 @@ exports.getDoujinsIdPages = async (id) => {
 
     historyQueries.createHistoryEntry({ archive_id: doujin?.id, last_page: 1 });
     return imageLinks;
-  } catch (error) {
+  } catch {
     return [];
   }
 };

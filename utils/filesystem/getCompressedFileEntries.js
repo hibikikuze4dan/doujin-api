@@ -6,11 +6,10 @@ exports.getCompressedFileEntries = async (filepath = "") => {
   }
 
   let zip;
-  let entries = [];
 
   try {
     zip = new StreamZip.async({ file: filepath });
-    entries = await zip?.entries();
+    const entries = await zip?.entries();
 
     return entries;
   } catch (error) {

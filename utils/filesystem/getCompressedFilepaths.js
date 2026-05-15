@@ -1,7 +1,5 @@
-const fs = require("fs/promises");
 const path = require("path");
 
-const { COMPRESSED_EXTENSIONS } = require("../../constants");
 const { getCompressedFiles } = require("./getCompressedFiles");
 
 const getCompressedFilepaths = async (dirpath = "") => {

@@ -3,15 +3,8 @@ const { getUserConfigs } = require("../../utils/configuration");
 const {
   getCompressedFilepaths,
   getFileStats,
-  extractFirstImage,
-  createThumbnail,
-  deleteFile,
   getCompressedFileImages,
 } = require("../../utils/filesystem");
-const {
-  TEMP_IMAGE_DIRECTORY_PATH,
-  THUMBNAIL_IMAGE_DIRECTORY_PATH,
-} = require("../../constants");
 const {
   getLanraragiDatabaseBackup,
   getLanraragiTagsByFilename,
@@ -35,7 +28,6 @@ exports.postDoujinsAdd = async () => {
     lanraragiBackupData = null;
 
     const newRowIds = [];
-    const tempImageData = [];
     const filepaths = await getCompressedFilepaths(content_directory);
 
     for (const filepath of filepaths) {
@@ -85,7 +77,7 @@ exports.postDoujinsAdd = async () => {
     }
 
     return newDoujins;
-  } catch (error) {
+  } catch {
     return newDoujins;
   }
 };
