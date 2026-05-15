@@ -5,7 +5,7 @@ const { getArchiveWithTags } = require("../db-utils");
 const {
   getDoujinsIdPages,
   getDoujinsIdThumbnail,
-  postDoujinsAdd,
+  postArchivesAdd,
   deleteDoujinsId,
 } = require("./utils");
 
@@ -100,7 +100,7 @@ router.get("/:id/thumbnail", async (req, res, _next) => {
 });
 
 router.post("/add", async (req, res, _next) => {
-  const doujins = await postDoujinsAdd();
+  const doujins = await postArchivesAdd();
 
   res.json(doujins);
 });

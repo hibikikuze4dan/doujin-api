@@ -6,3 +6,4 @@ public/images/*
 *NOTES*
 node_modules
 backup.json
+.yarnrc.yml

@@ -15,8 +15,8 @@ const { createThumbnailForArchive } = require("../../utils/archives");
 const { archivesQueries, tagsQueries } = require("../../db");
 const { getArchiveWithTags } = require("../../db-utils");
 
-exports.postDoujinsAdd = async () => {
-  const newDoujins = [];
+exports.postArchivesAdd = async () => {
+  const newArchives = [];
 
   try {
     const userConfig = await getUserConfigs();
@@ -33,8 +33,8 @@ exports.postDoujinsAdd = async () => {
     for (const filepath of filepaths) {
       const fileStats = await getFileStats(filepath);
 
-      const doujinEntry = archivesQueries.getArchiveByFilepath(filepath);
-      if (!doujinEntry) {
+      const archiveEntry = archivesQueries.getArchiveByFilepath(filepath);
+      if (!archiveEntry) {
         const filename = path.basename(filepath);
         const filenameWithoutExtension = path.parse(filepath).name;
 
@@ -69,15 +69,15 @@ exports.postDoujinsAdd = async () => {
     }
 
     for (const id of newRowIds) {
-      const doujin = getArchiveWithTags(id);
+      const archive = getArchiveWithTags(id);
 
-      if (doujin) {
-        newDoujins.push(doujin);
+      if (archive) {
+        newArchives.push(archive);
       }
     }
 
-    return newDoujins;
+    return newArchives;
   } catch {
-    return newDoujins;
+    return newArchives;
   }
 };

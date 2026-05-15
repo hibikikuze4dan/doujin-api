@@ -8,14 +8,14 @@ const {
   deleteFile,
 } = require("../filesystem");
 
-exports.createThumbnailForArchive = async (doujinId, doujinFilepath) => {
-  if (!doujinFilepath) {
+exports.createThumbnailForArchive = async (archiveId, archiveFilepath) => {
+  if (!archiveFilepath) {
     return null;
   }
 
   try {
     const tempImagePath = await extractFirstImage(
-      doujinFilepath,
+      archiveFilepath,
       TEMP_IMAGE_DIRECTORY_PATH,
     );
 
@@ -23,7 +23,7 @@ exports.createThumbnailForArchive = async (doujinId, doujinFilepath) => {
       tempImagePath,
       THUMBNAIL_IMAGE_DIRECTORY_PATH,
       {
-        filename: doujinId,
+        filename: archiveId,
         height: 500,
         prefix: "",
       },
@@ -34,7 +34,7 @@ exports.createThumbnailForArchive = async (doujinId, doujinFilepath) => {
     return thumbnailPath;
   } catch (error) {
     console.error(
-      `Something went wrong while trying to create a thumbnail for the doujin at ${doujinFilepath}:\n${error}`,
+      `Something went wrong while trying to create a thumbnail for the archive at ${archiveFilepath}:\n${error}`,
     );
     return null;
   }
