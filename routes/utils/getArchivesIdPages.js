@@ -14,9 +14,8 @@ exports.getArchivesIdPages = async (id) => {
 
   try {
     const archive = archivesQueries.getArchiveById(id);
-    const archiveImagesOutputDirectory = path.join(
-      ARCHIVE_IMAGES_DIRECTORY_PATH,
-      `${id}`,
+    const archiveImagesOutputDirectory = path.resolve(
+      path.join(ARCHIVE_IMAGES_DIRECTORY_PATH, `${id}`),
     );
 
     await deleteFolderContents(archiveImagesOutputDirectory);

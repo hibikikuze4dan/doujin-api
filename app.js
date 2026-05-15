@@ -10,6 +10,7 @@ var indexRouter = require("./routes/index");
 var collectionsRouter = require("./routes/collections");
 var archivesRouter = require("./routes/archives");
 var historyRouter = require("./routes/history");
+var publicRoter = require("./routes/public");
 var usersRouter = require("./routes/users");
 
 var app = express();
@@ -23,7 +24,12 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "public")));
+
+// NOTE: Add middleware that needs to run before requests accessing static content here
+app.use("/", publicRoter);
+///////////////////////////////////////////////////////////////////////////////////////
+app.use("/", express.static("public"));
+///////////////////////////////////////////////////////////////////////////////////////
 
 app.use("/", indexRouter);
 app.use("/collections", collectionsRouter);
