@@ -8,7 +8,7 @@ var logger = require("morgan");
 const { configCreation } = require("./utils");
 var indexRouter = require("./routes/index");
 var collectionsRouter = require("./routes/collections");
-var doujinsRouter = require("./routes/doujins");
+var archivesRouter = require("./routes/archives");
 var historyRouter = require("./routes/history");
 var usersRouter = require("./routes/users");
 
@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/collections", collectionsRouter);
-app.use("/doujins", doujinsRouter);
+app.use("/archives", archivesRouter);
 app.use("/history", historyRouter);
 app.use("/users", usersRouter);
 

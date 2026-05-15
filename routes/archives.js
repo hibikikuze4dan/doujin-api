@@ -3,10 +3,10 @@ const { archivesQueries } = require("../db");
 const { getArchiveTags } = require("../utils");
 const { getArchiveWithTags } = require("../db-utils");
 const {
-  getDoujinsIdPages,
-  getDoujinsIdThumbnail,
+  getArchivesIdPages,
+  getArchivesIdThumbnail,
   postArchivesAdd,
-  deleteDoujinsId,
+  deleteArchivesId,
 } = require("./utils");
 
 var router = express.Router();
@@ -18,11 +18,11 @@ router.get("/", async (req, res, _next) => {
 });
 
 router.get("/all", async (req, res, _next) => {
-  const doujins = archivesQueries
+  const archives = archivesQueries
     .getAllArchives()
     ?.map((archive) => getArchiveWithTags(archive?.id));
 
-  res.json(doujins);
+  res.json(archives);
 });
 
 router.get("/search", async (req, res, _next) => {
@@ -64,25 +64,25 @@ router.get("/search", async (req, res, _next) => {
       })?.results ?? [];
   }
 
-  const doujins = results?.map((archive) => getArchiveWithTags(archive?.id));
+  const archives = results?.map((archive) => getArchiveWithTags(archive?.id));
 
-  res.json(doujins);
+  res.json(archives);
 });
 
 router.get("/random", async (req, res, _next) => {
   const count = req?.query?.count ?? 5;
 
-  const doujins = archivesQueries
+  const archives = archivesQueries
     .getRandomEntries(count)
     ?.map((archive) => getArchiveWithTags(archive?.id));
 
-  res.json(doujins);
+  res.json(archives);
 });
 
 router.get("/:id/pages", async (req, res, _next) => {
   const id = req.params.id;
 
-  const imageLinks = await getDoujinsIdPages(id);
+  const imageLinks = await getArchivesIdPages(id);
 
   res.json(imageLinks);
 });
@@ -90,28 +90,28 @@ router.get("/:id/pages", async (req, res, _next) => {
 router.get("/:id/thumbnail", async (req, res, _next) => {
   const id = req.params.id;
 
-  const doujin = archivesQueries.getArchiveById(id);
-  const doujinThumbnailImagePath = await getDoujinsIdThumbnail(
-    doujin?.id,
-    doujin?.filepath,
+  const archive = archivesQueries.getArchiveById(id);
+  const archiveThumbnailImagePath = await getArchivesIdThumbnail(
+    archive?.id,
+    archive?.filepath,
   );
 
-  res.json(doujinThumbnailImagePath);
+  res.json(archiveThumbnailImagePath);
 });
 
 router.post("/add", async (req, res, _next) => {
-  const doujins = await postArchivesAdd();
+  const archives = await postArchivesAdd();
 
-  res.json(doujins);
+  res.json(archives);
 });
 
 router.delete("/:id", async (req, res, _next) => {
   const id = req.params.id;
   const deleteFile = req?.body?.deleteFile;
 
-  const doujin = await deleteDoujinsId(id, deleteFile);
+  const archive = await deleteArchivesId(id, deleteFile);
 
-  res.json(doujin);
+  res.json(archive);
 });
 
 module.exports = router;

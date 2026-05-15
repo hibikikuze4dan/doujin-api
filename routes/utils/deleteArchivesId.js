@@ -2,17 +2,17 @@ const { archivesQueries } = require("../../db");
 const { getArchiveWithTags } = require("../../db-utils");
 const { deleteFile } = require("../../utils/filesystem");
 
-exports.deleteDoujinsId = async (id, shouldDeleteFile = false) => {
+exports.deleteArchivesId = async (id, shouldDeleteFile = false) => {
   if (!id) {
     return null;
   }
 
-  const doujin = getArchiveWithTags(id);
+  const archive = getArchiveWithTags(id);
   const removalSuccessful = archivesQueries.removeArchiveEntry(id);
 
   if (removalSuccessful && shouldDeleteFile) {
-    await deleteFile(doujin?.filepath);
+    await deleteFile(archive?.filepath);
   }
 
-  return doujin ?? null;
+  return archive ?? null;
 };
