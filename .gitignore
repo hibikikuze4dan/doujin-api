@@ -2,7 +2,6 @@
 public/doujins/*
 public/images/*
 *.cjs
-*.mjs
 *.db*
 *NOTES*
 node_modules

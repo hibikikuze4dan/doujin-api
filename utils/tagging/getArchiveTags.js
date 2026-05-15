@@ -45,7 +45,7 @@ exports.getArchiveTags = async (filepath) => {
     }
   } catch (error) {
     console.error(
-      `Something went wrong while trying to get the tags for doujin ${filepath}:\n${error}`,
+      `Something went wrong while trying to get the tags for archive ${filepath}:\n${error}`,
     );
     return "";
   }
