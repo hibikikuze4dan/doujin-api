@@ -5,7 +5,7 @@ const {
   createTagsDatabaseInsertObject,
 } = require("./createTagsDatabaseInsertObject");
 const { createTagsString } = require("./createTagsString");
-const { getDoujinTags } = require("./getDoujinTags");
+const { getArchiveTags } = require("./getArchiveTags");
 const { getLanraragiDatabaseBackup } = require("./getLanraragiDatabaseBackup");
 const { getLanraragiTagsByFilename } = require("./getLanraragiTagsByFilename");
 const { getMetadataEntryAndConfig } = require("./getMetadataEntryAndConfig");
@@ -15,7 +15,7 @@ module.exports = {
   createTagsDatabaseInsertArray,
   createTagsDatabaseInsertObject,
   createTagsString,
-  getDoujinTags,
+  getArchiveTags,
   getLanraragiDatabaseBackup,
   getLanraragiTagsByFilename,
   getMetadataEntryAndConfig,

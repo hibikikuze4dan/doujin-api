@@ -7,7 +7,7 @@ const {
 const { getMetadataEntryAndConfig } = require("./getMetadataEntryAndConfig");
 const { createTagsString } = require("./createTagsString");
 
-exports.getDoujinTags = async (filepath) => {
+exports.getArchiveTags = async (filepath) => {
   if (!filepath) {
     return null;
   }

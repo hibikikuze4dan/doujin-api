@@ -28,7 +28,7 @@ const getHistorySortedByAccessedAt = (db) => {
   return (limit = 1000) => stmt.all(limit);
 };
 
-const getHistoryByDoujinId = (db) => {
+const getHistoryByArchiveId = (db) => {
   const stmt = db.prepare(`
     SELECT * FROM archive_history WHERE archive_id = ?
     ORDER BY accessed_at DESC
@@ -47,7 +47,7 @@ const removeAllHistory = (db) => {
 exports.initHistoryQueries = (db) => ({
   createHistoryEntry: createHistoryEntry(db),
   getAllHistory: getAllHistory(db),
-  getHistoryByDoujinId: getHistoryByDoujinId(db),
+  getHistoryByArchiveId: getHistoryByArchiveId(db),
   getHistorySortedByAccessedAt: getHistorySortedByAccessedAt(db),
   removeAllHistory: removeAllHistory(db),
 });

@@ -1,5 +1,5 @@
 const configuration = require("./configuration");
-const doujins = require("./doujins");
+const archives = require("./archives");
 const filesystem = require("./filesystem");
 const search = require("./search");
 const startup = require("./startup");
@@ -8,7 +8,7 @@ const tagging = require("./tagging");
 
 module.exports = {
   ...configuration,
-  ...doujins,
+  ...archives,
   ...filesystem,
   ...search,
   ...startup,

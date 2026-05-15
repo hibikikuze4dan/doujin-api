@@ -8,7 +8,7 @@ const {
   IMAGE_EXTENSIONS,
 } = require("../constants");
 const { archivesQueries } = require("../db");
-const { getLanraragiDatabaseBackup, getDoujinTags } = require("../utils");
+const { getLanraragiDatabaseBackup, getArchiveTags } = require("../utils");
 const { getArchiveWithTags } = require("../db-utils");
 const {
   getDoujinsIdPages,
@@ -21,7 +21,7 @@ var router = express.Router();
 
 router.get("/", async (req, res, next) => {
   const data = await getLanraragiDatabaseBackup();
-  const tags = await getDoujinTags("");
+  const tags = await getArchiveTags("");
   res.json(tags);
 });
 

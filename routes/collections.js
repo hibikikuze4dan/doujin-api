@@ -8,17 +8,17 @@ const router = express.Router();
 router.get("/all", async (req, res, next) => {
   const collections = collectionsQueries.getAllCollections();
 
-  const collectionsWithDoujins = [];
+  const collectionsWithArchives = [];
 
   for (col of collections) {
     const data = await getCollectionWithArchives(col?.id);
 
     if (data) {
-      collectionsWithDoujins.push(data);
+      collectionsWithArchives.push(data);
     }
   }
 
-  res.json(collectionsWithDoujins);
+  res.json(collectionsWithArchives);
 });
 
 router.post("/add", async (req, res, next) => {

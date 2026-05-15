@@ -13,7 +13,7 @@ exports.getDoujinsIdThumbnail = async (doujinId = "", doujinFilepath = "") => {
   );
 
   if (!(await fileExists(doujinThumbnailImagePath))) {
-    await createThumbnailForDoujin(doujinId, doujinFilepath);
+    await createThumbnailForArchive(doujinId, doujinFilepath);
   }
 
   return doujinThumbnailImagePath;

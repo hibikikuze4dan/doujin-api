@@ -8,7 +8,7 @@ const {
   deleteFile,
 } = require("../filesystem");
 
-exports.createThumbnailForDoujin = async (doujinId, doujinFilepath) => {
+exports.createThumbnailForArchive = async (doujinId, doujinFilepath) => {
   if (!doujinFilepath) {
     return null;
   }

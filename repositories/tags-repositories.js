@@ -24,7 +24,7 @@ const addTags = (db) => {
 
 // READ
 
-const getTagsByDoujinId = (db) => {
+const getTagsByArchiveId = (db) => {
   const stmt = db.prepare(`SELECT * FROM tags WHERE archive_id = ?`);
   return (archive_id) => stmt.all(archive_id);
 };
@@ -64,7 +64,7 @@ const deleteTag = (db) => {
   return (id) => stmt.run(id);
 };
 
-const deleteTagsByDoujinId = (db) => {
+const deleteTagsByArchiveId = (db) => {
   const stmt = db.prepare(`DELETE FROM tags WHERE archive_id = ?`);
   return (archive_id) => stmt.run(archive_id);
 };
@@ -78,9 +78,9 @@ exports.initTagsQueries = (db) => ({
   addTag: addTag(db),
   addTags: addTags(db),
   deleteTag: deleteTag(db),
-  deleteTagsByDoujinId: deleteTagsByDoujinId(db),
+  deleteTagsByArchiveId: deleteTagsByArchiveId(db),
   deleteTagByNameAndNamespace: deleteTagByNameAndNamespace(db),
-  getTagsByDoujinId: getTagsByDoujinId(db),
+  getTagsByArchiveId: getTagsByArchiveId(db),
   getTagsByName: getTagsByName(db),
   getTagByNameAndNamespace: getTagByNameAndNamespace(db),
   getTagsByNamespace: getTagsByNamespace(db),
