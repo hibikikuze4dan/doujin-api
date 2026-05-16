@@ -35,16 +35,31 @@ const CONFIG_FILENAME = `.${APP_NAME}rc.json`;
 
 const CONFIG_FILEPATH = path.join(CONFIG_DIR, CONFIG_FILENAME);
 
-const ARCHIVE_IMAGES_DIRECTORY_PATH = path.resolve(
-  path.join(__dirname, "public", "images", "archive"),
+const PUBLIC_FILES_DIRECTORY_PATH = path.resolve(
+  path.join(__dirname, "public"),
 );
 
-const TEMP_IMAGE_DIRECTORY_PATH = path.resolve(
-  path.join(__dirname, "public", "images", "temp"),
+const THUMBNAIL_NOT_FOUND_IMAGE_PATH = path.join(
+  PUBLIC_FILES_DIRECTORY_PATH,
+  "no-thumb.png",
 );
 
-const THUMBNAIL_IMAGE_DIRECTORY_PATH = path.resolve(
-  path.join(__dirname, "public", "images", "thumbs"),
+const ARCHIVE_IMAGES_DIRECTORY_PATH = path.join(
+  PUBLIC_FILES_DIRECTORY_PATH,
+  "images",
+  "archive",
+);
+
+const TEMP_IMAGE_DIRECTORY_PATH = path.join(
+  PUBLIC_FILES_DIRECTORY_PATH,
+  "images",
+  "temp",
+);
+
+const THUMBNAIL_IMAGE_DIRECTORY_PATH = path.join(
+  PUBLIC_FILES_DIRECTORY_PATH,
+  "images",
+  "thumbs",
 );
 
 const COMPRESSED_EXTENSIONS = new Set([
@@ -84,4 +99,5 @@ module.exports = {
   IMAGE_EXTENSIONS,
   TEMP_IMAGE_DIRECTORY_PATH,
   THUMBNAIL_IMAGE_DIRECTORY_PATH,
+  THUMBNAIL_NOT_FOUND_IMAGE_PATH,
 };
