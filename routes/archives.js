@@ -1,7 +1,7 @@
 const express = require("express");
 const { archivesQueries } = require("../db");
 const { getArchiveTags } = require("../utils");
-const { getArchiveWithTags } = require("../db-utils");
+const { getArchiveWithTableData } = require("../db-utils");
 const {
   getArchivesIdPages,
   getArchivesIdThumbnail,
@@ -20,7 +20,7 @@ router.get("/", async (req, res, _next) => {
 router.get("/all", async (req, res, _next) => {
   const archives = archivesQueries
     .getAllArchives()
-    ?.map((archive) => getArchiveWithTags(archive?.id));
+    ?.map((archive) => getArchiveWithTableData(archive?.id));
 
   res.json(archives);
 });
@@ -64,7 +64,9 @@ router.get("/search", async (req, res, _next) => {
       })?.results ?? [];
   }
 
-  const archives = results?.map((archive) => getArchiveWithTags(archive?.id));
+  const archives = results?.map((archive) =>
+    getArchiveWithTableData(archive?.id),
+  );
 
   res.json(archives);
 });
@@ -74,7 +76,7 @@ router.get("/random", async (req, res, _next) => {
 
   const archives = archivesQueries
     .getRandomEntries(count)
-    ?.map((archive) => getArchiveWithTags(archive?.id));
+    ?.map((archive) => getArchiveWithTableData(archive?.id));
 
   res.json(archives);
 });

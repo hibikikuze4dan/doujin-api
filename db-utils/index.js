@@ -1,7 +1,7 @@
-const { getArchiveWithTags } = require("./getArchiveWithTags");
+const { getArchiveWithTableData } = require("./getArchiveWithTableData");
 const { getCollectionWithArchives } = require("./getCollectionWithArchives");
 
 module.exports = {
-  getArchiveWithTags,
+  getArchiveWithTableData,
   getCollectionWithArchives,
 };

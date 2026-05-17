@@ -45,7 +45,7 @@ const ARCHIVE_RATING_MIGRATION = `
   CREATE TABLE IF NOT EXISTS archive_rating (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     archive_id   INTEGER NOT NULL,
-    user_id      INTEGER NOT NULL
+    user_id      INTEGER NOT NULL,
     rating       INTEGER NOT NULL CHECK (rating >= 0 AND rating <= 10),
     rated_at     TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,

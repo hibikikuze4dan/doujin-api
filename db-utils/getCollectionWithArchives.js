@@ -1,5 +1,5 @@
 const { collectionsQueries } = require("../db");
-const { getArchiveWithTags } = require("./getArchiveWithTags");
+const { getArchiveWithTableData } = require("./getArchiveWithTableData");
 
 exports.getCollectionWithArchives = async (collectionId) => {
   if (!collectionId) {
@@ -10,7 +10,7 @@ exports.getCollectionWithArchives = async (collectionId) => {
     const collection = collectionsQueries?.getCollectionById(collectionId);
     const archives = collectionsQueries
       ?.getArchivesInCollection(collectionId)
-      ?.map((arc) => getArchiveWithTags(arc?.id));
+      ?.map((arc) => getArchiveWithTableData(arc?.id));
 
     return {
       ...collection,

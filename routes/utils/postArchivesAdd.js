@@ -13,7 +13,7 @@ const {
 } = require("../../utils/tagging");
 const { createThumbnailForArchive } = require("../../utils/archives");
 const { archivesQueries, tagsQueries } = require("../../db");
-const { getArchiveWithTags } = require("../../db-utils");
+const { getArchiveWithTableData } = require("../../db-utils");
 
 exports.postArchivesAdd = async () => {
   const newArchives = [];
@@ -69,7 +69,7 @@ exports.postArchivesAdd = async () => {
     }
 
     for (const id of newRowIds) {
-      const archive = getArchiveWithTags(id);
+      const archive = getArchiveWithTableData(id);
 
       if (archive) {
         newArchives.push(archive);
