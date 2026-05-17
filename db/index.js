@@ -13,7 +13,9 @@ const {
   initArchivesQueries,
   initCollectionQueries,
   initHistoryQueries,
+  initRatingRepositories,
   initTagsQueries,
+  initUserQueries,
 } = require("../repositories");
 
 // TODO: Create database at user supplied location
@@ -33,12 +35,16 @@ console.log("Migrations complete");
 const collections = initCollectionQueries(db);
 const archives = initArchivesQueries(db);
 const history = initHistoryQueries(db);
+const ratings = initRatingRepositories(db);
 const tags = initTagsQueries(db);
+const users = initUserQueries(db);
 
 module.exports = {
   database: db,
   archivesQueries: archives,
   collectionsQueries: collections,
   historyQueries: history,
+  ratingQueries: ratings,
   tagsQueries: tags,
+  userQueries: users,
 };
