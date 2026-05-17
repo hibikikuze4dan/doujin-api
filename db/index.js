@@ -6,6 +6,8 @@ const {
   ARCHIVES_MIGRATION,
   ARCHIVE_HISTORY_MIGRATION,
   TAGS_MIGRATION,
+  ARCHIVE_RATING_MIGRATION,
+  USERS_MIGRATION,
 } = require("./migrate");
 const {
   initArchivesQueries,
@@ -19,6 +21,8 @@ const db = new Database(path.join(__dirname, "../data.db"));
 
 db.exec(ARCHIVES_MIGRATION);
 db.exec(ARCHIVE_HISTORY_MIGRATION);
+db.exec(USERS_MIGRATION);
+db.exec(ARCHIVE_RATING_MIGRATION);
 db.exec(COLLECTIONS_MIGRATION);
 db.exec(COLLECTION_ARCHIVES_MIGRATION);
 db.exec(TAGS_MIGRATION);
