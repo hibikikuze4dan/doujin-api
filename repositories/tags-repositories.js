@@ -46,6 +46,22 @@ const getTagByNameAndNamespace = (db) => {
   return (name, namespace = "") => stmt.get(name, namespace);
 };
 
+const searchTags = (db) => {
+  const stmt = db.prepare(`
+    SELECT namespace, name, MIN(id) as id, MIN(archive_id) as archive_id
+    FROM tags
+    WHERE name LIKE ?
+      OR namespace LIKE ?
+      OR (namespace || ':' || name) LIKE ?
+    GROUP BY namespace, name
+    ORDER BY namespace ASC, name ASC
+  `);
+  return (tagQuery) => {
+    const pattern = `%${tagQuery}%`;
+    return stmt.all(pattern, pattern, pattern);
+  };
+};
+
 // UPDATE
 
 const updateTag = (db) => {
@@ -84,5 +100,6 @@ exports.initTagsQueries = (db) => ({
   getTagsByName: getTagsByName(db),
   getTagByNameAndNamespace: getTagByNameAndNamespace(db),
   getTagsByNamespace: getTagsByNamespace(db),
+  searchTags: searchTags(db),
   updateTag: updateTag(db),
 });

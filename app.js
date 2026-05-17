@@ -11,6 +11,7 @@ var collectionsRouter = require("./routes/collections");
 var archivesRouter = require("./routes/archives");
 var historyRouter = require("./routes/history");
 var publicRoter = require("./routes/public");
+var tagsRouter = require("./routes/tags");
 var usersRouter = require("./routes/users");
 
 var app = express();
@@ -35,6 +36,7 @@ app.use("/", indexRouter);
 app.use("/collections", collectionsRouter);
 app.use("/archives", archivesRouter);
 app.use("/history", historyRouter);
+app.use("/tags", tagsRouter);
 app.use("/users", usersRouter);
 
 // catch 404 and forward to error handler
