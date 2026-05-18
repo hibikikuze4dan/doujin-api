@@ -13,6 +13,7 @@ var historyRouter = require("./routes/history");
 var publicRoter = require("./routes/public");
 var tagsRouter = require("./routes/tags");
 var usersRouter = require("./routes/users");
+const { seeds } = require("./db-utils");
 
 var app = express();
 configCreation();
@@ -54,5 +55,8 @@ app.use(function (err, req, res, _next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
+// Add init table data
+seeds.seedUsers();
 
 module.exports = app;
