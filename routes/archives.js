@@ -1,5 +1,5 @@
 const express = require("express");
-const { archivesQueries, ratingQueries } = require("../db");
+const { archivesQueries } = require("../db");
 const { getArchiveTags } = require("../utils");
 const { getArchiveWithTableData } = require("../db-utils");
 const {
@@ -7,6 +7,7 @@ const {
   getArchivesIdThumbnail,
   postArchivesAdd,
   deleteArchivesId,
+  putArchivesRating,
 } = require("./utils");
 
 var router = express.Router();
@@ -109,35 +110,13 @@ router.post("/add", async (req, res, _next) => {
 
 // TODO: Update user rating if rating already exists
 router.put("/rating", async (req, res, _next) => {
-  let status = 200;
-  let data, createRatingResults;
   const { arcid: archive_id, rating, userid: user_id } = req?.body ?? {};
 
-  const ratingEntry = ratingQueries.getRatingByArchiveAndUser({
+  const { status, data } = await putArchivesRating({
     archive_id,
     user_id,
+    rating,
   });
-
-  if (!ratingEntry) {
-    createRatingResults = ratingQueries.createRating({
-      archive_id,
-      user_id,
-      rating,
-    });
-  }
-
-  if (0 < (createRatingResults?.changes ?? 0)) {
-    const archive = getArchiveWithTableData(archive_id);
-
-    data = {
-      status: "success",
-      message: `Applied rating of ${rating} to ${archive?.name}`,
-      data: archive,
-    };
-  } else {
-    status = 400;
-    data = "Something went wrong!";
-  }
 
   res.status(status).json(data);
 });

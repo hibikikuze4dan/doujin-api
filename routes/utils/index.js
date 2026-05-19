@@ -5,6 +5,7 @@ const { postCollectionsAdd } = require("./postCollectionsAdd");
 const { postCollectionsIdAdd } = require("./postCollectionsIdAdd");
 const { postArchivesAdd } = require("./postArchivesAdd");
 const { getPublicImage } = require("./getPublicImage");
+const { putArchivesRating } = require("./putArchivesRating");
 
 module.exports = {
   deleteArchivesId,
@@ -14,4 +15,5 @@ module.exports = {
   postCollectionsAdd,
   postCollectionsIdAdd,
   postArchivesAdd,
+  putArchivesRating,
 };
