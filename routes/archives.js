@@ -41,6 +41,8 @@ router.get("/search", async (req, res, _next) => {
     created_after,
     created_before,
     collection,
+    sort_by,
+    sort_direction,
   } = req?.query ?? {};
 
   let results;
@@ -62,6 +64,8 @@ router.get("/search", async (req, res, _next) => {
         created_after,
         created_before,
         collection,
+        sort_by,
+        sort_direction,
       })?.results ?? [];
   }
 

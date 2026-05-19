@@ -21,6 +21,8 @@ const searchArchives = (db) => {
       created_after,
       created_before,
       collection,
+      sort_by,
+      sort_direction,
     } = parameters ?? {};
 
     let conditions = [];
@@ -99,6 +101,24 @@ const searchArchives = (db) => {
     const whereClause =
       conditions.length > 0 ? `WHERE ${conditions.join("\n  AND ")}` : "";
 
+    // --- Sorting ---
+    const allowedSortFields = {
+      name: "d.name",
+      size: "d.size",
+      pagecount: "d.pagecount",
+      date_added: "d.date_added",
+      date_created: "d.date_created",
+      rating: "COALESCE(ar.avg_rating, 0)",
+    };
+
+    const sortField = allowedSortFields[sort_by] || allowedSortFields.name;
+    let dir = (sort_direction || "asc").toLowerCase();
+    dir = dir === "desc" ? "DESC" : "ASC";
+    const orderClause =
+      sort_by === "rating"
+        ? `ORDER BY ${sortField} ${dir}, d.name ${dir}`
+        : `ORDER BY ${sortField} ${dir}`;
+
     const sql = `
     SELECT DISTINCT
       d.id,
@@ -107,11 +127,17 @@ const searchArchives = (db) => {
       d.date_added,
       d.date_created,
       d.pagecount,
-      d.size
+      d.size,
+      COALESCE(ar.avg_rating, 0) AS rating
     FROM archives d
     LEFT JOIN tags t ON t.archive_id = d.id
+    LEFT JOIN (
+      SELECT archive_id, AVG(rating) AS avg_rating
+      FROM archive_rating
+      GROUP BY archive_id
+    ) ar ON ar.archive_id = d.id
     ${whereClause}
-    ORDER BY d.name
+    ${orderClause}
   `;
 
     const results = db.prepare(sql).all(bindings);
