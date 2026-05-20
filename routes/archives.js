@@ -1,6 +1,6 @@
 const express = require("express");
 const { archivesQueries } = require("../db");
-const { getArchiveTags } = require("../utils");
+const { getArchiveTags, queryUtils } = require("../utils");
 const { getArchiveWithTableData } = require("../db-utils");
 const {
   getArchivesIdPages,
@@ -9,7 +9,7 @@ const {
   deleteArchivesId,
   putArchivesRating,
 } = require("./utils");
-
+const { parseNumericQuery } = queryUtils;
 var router = express.Router();
 
 // NOTE: TEST ROUTE. NEEDS TO BE CLEANED UP LATER
@@ -36,6 +36,8 @@ router.get("/search", async (req, res, _next) => {
     max_pages,
     min_size,
     max_size,
+    min_rating,
+    max_rating,
     added_after,
     added_before,
     created_after,
@@ -45,29 +47,26 @@ router.get("/search", async (req, res, _next) => {
     sort_direction,
   } = req?.query ?? {};
 
-  let results;
-  if (!q && !tag) {
-    results = archivesQueries.getAllArchives();
-  } else {
-    results =
-      archivesQueries.searchArchives({
-        q,
-        q_mode,
-        tag,
-        tag_mode,
-        min_pages,
-        max_pages,
-        min_size,
-        max_size,
-        added_after,
-        added_before,
-        created_after,
-        created_before,
-        collection,
-        sort_by,
-        sort_direction,
-      })?.results ?? [];
-  }
+  const results =
+    archivesQueries.searchArchives({
+      q,
+      q_mode,
+      tag,
+      tag_mode,
+      min_pages: parseNumericQuery(min_pages),
+      max_pages: parseNumericQuery(max_pages),
+      min_size: parseNumericQuery(min_size),
+      max_size: parseNumericQuery(max_size),
+      min_rating: parseNumericQuery(min_rating),
+      max_rating: parseNumericQuery(max_rating),
+      added_after,
+      added_before,
+      created_after,
+      created_before,
+      collection,
+      sort_by,
+      sort_direction,
+    })?.results ?? [];
 
   const archives = results?.map((archive) =>
     getArchiveWithTableData(archive?.id),

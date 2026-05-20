@@ -2,6 +2,9 @@ const {
   getQueryConditionsAndBindings,
 } = require("./getQueryConditionsAndBindings");
 const {
+  getRangeBasedConditionsAndBindings,
+} = require("./getRangeBasedConditionsAndBindings");
+const {
   getTagsConditionsAndBindings,
 } = require("./getTagsConditionsAndBindings");
 
@@ -16,6 +19,8 @@ const searchArchives = (db) => {
       max_pages,
       min_size,
       max_size,
+      min_rating,
+      max_rating,
       added_after,
       added_before,
       created_after,
@@ -29,44 +34,38 @@ const searchArchives = (db) => {
     let bindings = [];
 
     // --- Text search (q) ---
-    const queryConditionsAndBindings = getQueryConditionsAndBindings({
+    let newConditionsAndBindings = getQueryConditionsAndBindings({
       bindings,
       conditions,
       q_mode,
       q,
     });
-
-    conditions = queryConditionsAndBindings?.conditions;
-    bindings = queryConditionsAndBindings?.bindings;
+    conditions = newConditionsAndBindings?.conditions;
+    bindings = newConditionsAndBindings?.bindings;
 
     // --- Tag filtering ---
-    const tagsConditionsAndBindings = getTagsConditionsAndBindings({
+    newConditionsAndBindings = getTagsConditionsAndBindings({
       bindings,
       conditions,
       tag,
       tag_mode,
     });
-
-    conditions = [...conditions, ...tagsConditionsAndBindings.conditions];
-    bindings = [...bindings, ...tagsConditionsAndBindings.bindings];
+    conditions = newConditionsAndBindings?.conditions;
+    bindings = newConditionsAndBindings?.bindings;
 
     // --- Scalar range filters ---
-    if (min_pages !== undefined) {
-      conditions.push("d.pagecount >= ?");
-      bindings.push(min_pages);
-    }
-    if (max_pages !== undefined) {
-      conditions.push("d.pagecount <= ?");
-      bindings.push(max_pages);
-    }
-    if (min_size !== undefined) {
-      conditions.push("d.size >= ?");
-      bindings.push(min_size);
-    }
-    if (max_size !== undefined) {
-      conditions.push("d.size <= ?");
-      bindings.push(max_size);
-    }
+    newConditionsAndBindings = getRangeBasedConditionsAndBindings({
+      bindings,
+      conditions,
+      min_pages,
+      max_pages,
+      min_size,
+      max_size,
+      min_rating,
+      max_rating,
+    });
+    conditions = newConditionsAndBindings?.conditions;
+    bindings = newConditionsAndBindings?.bindings;
 
     // --- Date range filters ---
     if (added_after !== undefined) {
@@ -120,25 +119,25 @@ const searchArchives = (db) => {
         : `ORDER BY ${sortField} ${dir}`;
 
     const sql = `
-    SELECT DISTINCT
-      d.id,
-      d.name,
-      d.filepath,
-      d.date_added,
-      d.date_created,
-      d.pagecount,
-      d.size,
-      COALESCE(ar.avg_rating, 0) AS rating
-    FROM archives d
-    LEFT JOIN tags t ON t.archive_id = d.id
-    LEFT JOIN (
-      SELECT archive_id, AVG(rating) AS avg_rating
-      FROM archive_rating
-      GROUP BY archive_id
-    ) ar ON ar.archive_id = d.id
-    ${whereClause}
-    ${orderClause}
-  `;
+      SELECT DISTINCT
+        d.id,
+        d.name,
+        d.filepath,
+        d.date_added,
+        d.date_created,
+        d.pagecount,
+        d.size,
+        COALESCE(ar.avg_rating, 0) AS rating
+      FROM archives d
+      LEFT JOIN tags t ON t.archive_id = d.id
+      LEFT JOIN (
+        SELECT archive_id, AVG(rating) AS avg_rating
+        FROM archive_rating
+        GROUP BY archive_id
+      ) ar ON ar.archive_id = d.id
+      ${whereClause}
+      ${orderClause}
+    `;
 
     const results = db.prepare(sql).all(bindings);
     return { results };
