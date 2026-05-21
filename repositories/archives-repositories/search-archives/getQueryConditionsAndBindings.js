@@ -10,20 +10,27 @@ exports.getQueryConditionsAndBindings = ({
 
   if (terms.length > 0) {
     const termClauses = terms.map(() => {
-      bindings.push(...Array(3).fill(null)); // placeholder, filled below
+      // We'll add three bindings per term below: one for d.name, one for tag name, one for namespace:name
+      bindings.push(...Array(3).fill(null));
       return `(
-        d.name     LIKE '%' || ? || '%' COLLATE NOCASE OR
-        t.name     LIKE '%' || ? || '%' COLLATE NOCASE OR
-        (t.namespace || ':' || t.name) LIKE '%' || ? || '%' COLLATE NOCASE
+        d.name LIKE '%' || ? || '%' COLLATE NOCASE OR
+        EXISTS (
+          SELECT 1 FROM tags t2
+          WHERE t2.archive_id = d.id
+          AND (
+            t2.name LIKE '%' || ? || '%' COLLATE NOCASE OR
+            (t2.namespace || ':' || t2.name) LIKE '%' || ? || '%' COLLATE NOCASE
+          )
+        )
       )`;
     });
 
     // Replace placeholder nulls with actual repeated term values
     let bindingIndex = bindings.indexOf(null);
     for (const term of terms) {
-      bindings[bindingIndex] = term;
-      bindings[bindingIndex + 1] = term;
-      bindings[bindingIndex + 2] = term;
+      bindings[bindingIndex] = term; // for d.name
+      bindings[bindingIndex + 1] = term; // for t2.name
+      bindings[bindingIndex + 2] = term; // for t2.namespace:name
       bindingIndex += 3;
     }
 

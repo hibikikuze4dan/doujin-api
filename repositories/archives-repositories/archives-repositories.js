@@ -1,22 +1,31 @@
+const { ARCHIVE_SELECT, ARCHIVE_JOINS } = require("./constants");
 const { searchArchives } = require("./search-archives");
 
 const getAllArchives = (db) => {
-  const stmt = db.prepare(`SELECT * FROM archives`);
+  const stmt = db.prepare(
+    `SELECT ${ARCHIVE_SELECT} ${ARCHIVE_JOINS} GROUP BY d.id`,
+  );
   return () => stmt.all();
 };
 
 const getArchiveById = (db) => {
-  const stmt = db.prepare(`SELECT * FROM archives WHERE id = ?`);
+  const stmt = db.prepare(
+    `SELECT ${ARCHIVE_SELECT} ${ARCHIVE_JOINS} WHERE d.id = ? GROUP BY d.id`,
+  );
   return (id) => stmt.get(id);
 };
 
 const getArchiveByFilepath = (db) => {
-  const stmt = db.prepare(`SELECT * FROM archives WHERE filepath = ?`);
+  const stmt = db.prepare(
+    `SELECT ${ARCHIVE_SELECT} ${ARCHIVE_JOINS} WHERE d.filepath = ? GROUP BY d.id`,
+  );
   return (filepath) => stmt.get(filepath);
 };
 
 const getArchivesByName = (db) => {
-  const stmt = db.prepare(`SELECT * FROM archives WHERE name LIKE ?`);
+  const stmt = db.prepare(
+    `SELECT ${ARCHIVE_SELECT} ${ARCHIVE_JOINS} WHERE d.name LIKE ? GROUP BY d.id ORDER BY d.name`,
+  );
   return (name) => stmt.all(`%${name}%`);
 };
 
@@ -43,17 +52,10 @@ const getArchivesByNameOrTags =
     const termParams = terms.flatMap((term) => [term, term, term, term]);
 
     const baseQuery = `
-    SELECT DISTINCT
-      d.id,
-      d.name,
-      d.filepath,
-      d.date_added,
-      d.date_created,
-      d.pagecount,
-      d.size
-    FROM archives d
-    LEFT JOIN tags t ON t.archive_id = d.id
+    SELECT ${ARCHIVE_SELECT}
+    ${ARCHIVE_JOINS}
     WHERE ${whereClause}
+    GROUP BY d.id
   `;
 
     const total = db
@@ -68,7 +70,9 @@ const getArchivesByNameOrTags =
   };
 
 const getRandomEntries = (db) => {
-  const stmt = db.prepare(`SELECT * FROM archives ORDER BY RANDOM() LIMIT ?`);
+  const stmt = db.prepare(
+    `SELECT ${ARCHIVE_SELECT} ${ARCHIVE_JOINS} GROUP BY d.id ORDER BY RANDOM() LIMIT ?`,
+  );
   return (count) => stmt.all(count);
 };
 

@@ -1,3 +1,4 @@
+const { ARCHIVE_JOINS, ARCHIVE_SELECT } = require("../constants");
 const {
   getQueryConditionsAndBindings,
 } = require("./getQueryConditionsAndBindings");
@@ -119,23 +120,11 @@ const searchArchives = (db) => {
         : `ORDER BY ${sortField} ${dir}`;
 
     const sql = `
-      SELECT DISTINCT
-        d.id,
-        d.name,
-        d.filepath,
-        d.date_added,
-        d.date_created,
-        d.pagecount,
-        d.size,
-        COALESCE(ar.avg_rating, 0) AS rating
-      FROM archives d
-      LEFT JOIN tags t ON t.archive_id = d.id
-      LEFT JOIN (
-        SELECT archive_id, AVG(rating) AS avg_rating
-        FROM archive_rating
-        GROUP BY archive_id
-      ) ar ON ar.archive_id = d.id
+      SELECT
+        ${ARCHIVE_SELECT}
+      ${ARCHIVE_JOINS}  
       ${whereClause}
+      GROUP BY d.id
       ${orderClause}
     `;
 
