@@ -1,5 +1,4 @@
-const { ratingQueries } = require("../../db");
-const { getArchiveWithTableData } = require("../../db-utils");
+const { ratingQueries, archivesQueries } = require("../../db");
 
 exports.putArchivesRating = async ({ archive_id, user_id, rating } = {}) => {
   let status = 200;
@@ -19,7 +18,7 @@ exports.putArchivesRating = async ({ archive_id, user_id, rating } = {}) => {
   }
 
   if (0 < (createRatingResults?.changes ?? 0)) {
-    const archive = getArchiveWithTableData(archive_id);
+    const archive = archivesQueries.getArchiveById(archive_id);
 
     data = {
       status: "success",

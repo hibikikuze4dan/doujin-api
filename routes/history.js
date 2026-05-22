@@ -1,6 +1,5 @@
 const express = require("express");
-const { historyQueries } = require("../db");
-const { getArchiveWithTableData } = require("../db-utils");
+const { historyQueries, archivesQueries } = require("../db");
 
 const router = express.Router();
 
@@ -15,7 +14,7 @@ router.get("/all", async (req, res, _next) => {
     ? history.map((his) => {
         return {
           ...his,
-          archive: getArchiveWithTableData(his?.archive_id),
+          archive: archivesQueries.getArchiveById(his?.archive_id),
         };
       })
     : history;

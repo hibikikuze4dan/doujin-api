@@ -1,5 +1,4 @@
 const { archivesQueries } = require("../../db");
-const { getArchiveWithTableData } = require("../../db-utils");
 const { deleteFile } = require("../../utils/filesystem");
 
 exports.deleteArchivesId = async (id, shouldDeleteFile = false) => {
@@ -7,7 +6,7 @@ exports.deleteArchivesId = async (id, shouldDeleteFile = false) => {
     return null;
   }
 
-  const archive = getArchiveWithTableData(id);
+  const archive = archivesQueries.getArchiveById(id);
   const removalSuccessful = archivesQueries.removeArchiveEntry(id);
 
   if (removalSuccessful && shouldDeleteFile) {
