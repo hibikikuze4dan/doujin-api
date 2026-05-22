@@ -1,3 +1,8 @@
+const {
+  ARCHIVE_SELECT,
+  ARCHIVE_JOINS,
+} = require("./archives-repositories/constants");
+
 const createCollection = (db) => {
   const stmt = db.prepare(`
     INSERT INTO collections (name, description)
@@ -35,24 +40,11 @@ const removeArchiveFromCollection = (db) => {
 const getArchivesInCollection = (db) => {
   const stmt = db.prepare(`
     SELECT  
-      d.id,
-      d.name,
-      d.filepath,
-      d.date_added,
-      d.date_created,
-      d.pagecount,
-      d.size,
-      COALESCE(ar.avg_rating, 0) AS rating,
-      REPLACE(GROUP_CONCAT(DISTINCT CASE WHEN t.namespace = '' THEN t.name ELSE t.namespace || ':' || t.name END), ',', ', ') AS tags
-    FROM archives d
+      ${ARCHIVE_SELECT}
+    ${ARCHIVE_JOINS}
     JOIN collection_archives cd ON cd.archive_id = d.id
-    LEFT JOIN tags t ON t.archive_id = d.id
-    LEFT JOIN (
-      SELECT archive_id, AVG(rating) AS avg_rating
-      FROM archive_rating
-      GROUP BY archive_id
-    ) ar ON ar.archive_id = d.id
     WHERE cd.collection_id = ?
+    GROUP BY d.id
   `);
   return (collectionId) => stmt.all(collectionId);
 };
