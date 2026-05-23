@@ -1,0 +1,14 @@
+node_modules
+npm-debug.log
+.yarn/
+.zed/
+*.db
+*.sqlite
+.env
+.git
+.gitignore
+public/doujins/*
+public/archives/*
+public/images/*
+backup.json
+*NOTES*

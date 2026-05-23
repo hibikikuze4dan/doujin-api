@@ -1,0 +1,10 @@
+services:
+  doujin-api:
+    build: .
+    image: doujin-api:9422
+    container_name: doujin-api
+    ports:
+      - "9422:9422"
+    environment:
+      PORT: 9422
+    restart: unless-stopped
