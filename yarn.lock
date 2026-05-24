@@ -528,6 +528,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/sharp@npm:^0.32.0":
+  version: 0.32.0
+  resolution: "@types/sharp@npm:0.32.0"
+  dependencies:
+    sharp: "npm:*"
+  checksum: 10c0/a101c5bf17220b51e339164fabf779993e1757fcae1610f2647d36a24d7f15bf857fd747ec559b8fef667c9ea38caab09dc3ba4d49095fef2a06e5ae1819e639
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^4.0.0":
   version: 4.0.0
   resolution: "abbrev@npm:4.0.0"
@@ -1063,6 +1072,7 @@ __metadata:
     "@eslint/js": "npm:^10.0.1"
     "@types/cosmiconfig": "npm:^6.0.3"
     "@types/node": "npm:^25.9.1"
+    "@types/sharp": "npm:^0.32.0"
     better-sqlite3: "npm:^12.8.0"
     cookie-parser: "npm:~1.4.4"
     cosmiconfig: "npm:^9.0.1"
@@ -2491,7 +2501,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sharp@npm:^0.34.5":
+"sharp@npm:*, sharp@npm:^0.34.5":
   version: 0.34.5
   resolution: "sharp@npm:0.34.5"
   dependencies:

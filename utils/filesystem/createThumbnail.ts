@@ -1,15 +1,28 @@
-const sharp = require("sharp");
-const path = require("path");
-const { createDirectory } = require("./createDirectory");
+import path from "path";
+import sharp, { type ResizeOptions } from "sharp";
+import { createDirectory } from "./createDirectory";
 
-exports.createThumbnail = async (imagePath, outputDir, options = {}) => {
-  const {
-    height = 200,
-    width = null,
-    prefix = "thumb_",
-    quality = 80,
-    filename = "",
-  } = options;
+type CreateThumbnailOptions = {
+  height?: number;
+  width?: number;
+  prefix?: string;
+  quality?: number;
+  filename?: string;
+} & ResizeOptions;
+
+const CREATE_THUMBNAIL_OPTION_DEFAULTS: CreateThumbnailOptions = {
+  height: 200,
+  prefix: "thumb_",
+  quality: 80,
+  filename: "",
+};
+
+export const createThumbnail = async (
+  imagePath: string,
+  outputDir: string,
+  options = CREATE_THUMBNAIL_OPTION_DEFAULTS,
+) => {
+  const { filename, prefix, quality, height, width } = options;
 
   if (!imagePath || !outputDir) {
     return null;
