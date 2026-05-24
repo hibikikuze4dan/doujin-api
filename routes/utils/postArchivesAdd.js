@@ -4,6 +4,7 @@ const {
   getCompressedFilepaths,
   getFileStats,
   getCompressedFileImages,
+  fileExists,
 } = require("../../utils/filesystem");
 const {
   getLanraragiDatabaseBackup,
@@ -18,8 +19,12 @@ exports.postArchivesAdd = async () => {
   const newArchives = [];
 
   try {
-    const userConfig = await getUserConfigs();
-    const content_directory = userConfig?.content_directory;
+    const { content_directory = "" } = (await getUserConfigs()) ?? {};
+    const resolvedContentDirectory = path.resolve(content_directory);
+
+    if (!(await fileExists(resolvedContentDirectory))) {
+      return ["Content directory does not exist!"];
+    }
 
     let lanraragiBackupData = await getLanraragiDatabaseBackup();
 
@@ -27,7 +32,7 @@ exports.postArchivesAdd = async () => {
     lanraragiBackupData = null;
 
     const newRowIds = [];
-    const filepaths = await getCompressedFilepaths(content_directory);
+    const filepaths = await getCompressedFilepaths(resolvedContentDirectory);
 
     for (const filepath of filepaths) {
       const fileStats = await getFileStats(filepath);

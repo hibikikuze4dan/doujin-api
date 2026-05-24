@@ -69,11 +69,44 @@ const getArchivesByNameOrTags =
     return { results, total };
   };
 
+const getNumberOfNewArchivesByFilepaths = (db) => {
+  return (filepaths) => {
+    db.prepare(
+      `CREATE TEMP TABLE IF NOT EXISTS archive_filepaths_to_search (value TEXT)`,
+    ).run();
+
+    const insert = db.prepare(
+      `INSERT INTO archive_filepaths_to_search VALUES (?)`,
+    );
+
+    const insertMany = db.transaction((file_paths) => {
+      for (const path of file_paths) {
+        insert.run(path);
+      }
+    });
+    insertMany(filepaths);
+
+    const { count } = db
+      .prepare(
+        `
+        SELECT COUNT(*) as count FROM archive_filepaths_to_search
+        WHERE value NOT IN (SELECT filepath FROM archives)
+      `,
+      )
+      .get();
+
+    db.prepare(`DROP TABLE archive_filepaths_to_search`).run();
+
+    return count;
+  };
+};
+
 const getRandomEntries = (db) => {
   const stmt = db.prepare(
     `SELECT ${ARCHIVE_SELECT} ${ARCHIVE_JOINS} GROUP BY d.id ORDER BY RANDOM() LIMIT ?`,
   );
-  return (count) => stmt.all(count);
+
+  return (limit) => stmt.all(limit);
 };
 
 const createArchiveEntry = (db) => {
@@ -116,6 +149,7 @@ exports.initArchivesQueries = (db) => ({
   getArchiveByFilepath: getArchiveByFilepath(db),
   getArchivesByName: getArchivesByName(db),
   getArchivesByNameOrTags: getArchivesByNameOrTags(db),
+  getNumberOfNewArchivesByFilepaths: getNumberOfNewArchivesByFilepaths(db),
   getRandomEntries: getRandomEntries(db),
   createArchiveEntry: createArchiveEntry(db),
   updateArchive: updateArchive(db),

@@ -1,6 +1,6 @@
 const express = require("express");
 const { archivesQueries } = require("../db");
-const { getArchiveTags, queryUtils } = require("../utils");
+const { queryUtils } = require("../utils");
 const {
   getArchivesIdPages,
   getArchivesIdThumbnail,
@@ -13,8 +13,7 @@ var router = express.Router();
 
 // NOTE: TEST ROUTE. NEEDS TO BE CLEANED UP LATER
 router.get("/", async (req, res, _next) => {
-  const tags = await getArchiveTags("");
-  res.json(tags);
+  res.json("test route");
 });
 
 router.get("/all", async (req, res, _next) => {

@@ -10,7 +10,7 @@ RUN apt-get update \
 RUN npm install --omit=dev --no-audit --no-fund \
   && npm cache clean --force
 
-FROM node:22-bookworm-slim AS runtime
+FROM node:24-bookworm-slim AS runtime
 WORKDIR /app
 
 ENV NODE_ENV=production
