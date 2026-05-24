@@ -14,12 +14,19 @@
 
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": false,
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["**/*.js", "**/*.mjs", "**/*.cjs", "**/*.ts"],
+  "include": [
+    "**/*.js",
+    "**/*.mjs",
+    "**/*.cjs",
+    "**/*.ts",
+    "utils/archives/createThumbnailForArchive.ts",
+    "utils/configuration/index.ts"
+  ],
   "exclude": ["node_modules", "dist", "coverage", ".yarn", "public"]
 }

@@ -1,15 +1,14 @@
-const {
+import {
   TEMP_IMAGE_DIRECTORY_PATH,
   THUMBNAIL_IMAGE_DIRECTORY_PATH,
-} = require("../../constants");
-const {
-  createThumbnail,
-  extractFirstImage,
-  deleteFile,
-} = require("../filesystem");
+} from "../../constants";
+import { createThumbnail, extractFirstImage, deleteFile } from "../filesystem";
 
-exports.createThumbnailForArchive = async (archiveId, archiveFilepath) => {
-  if (!archiveFilepath) {
+export const createThumbnailForArchive = async (
+  archiveId: string,
+  archiveFilepath: string,
+): Promise<string | null> => {
+  if (!archiveFilepath || !archiveId) {
     return null;
   }
 
@@ -18,6 +17,10 @@ exports.createThumbnailForArchive = async (archiveId, archiveFilepath) => {
       archiveFilepath,
       TEMP_IMAGE_DIRECTORY_PATH,
     );
+
+    if (!tempImagePath) {
+      return null;
+    }
 
     const thumbnailPath = await createThumbnail(
       tempImagePath,
@@ -28,6 +31,10 @@ exports.createThumbnailForArchive = async (archiveId, archiveFilepath) => {
         prefix: "",
       },
     );
+
+    if (!thumbnailPath) {
+      return null;
+    }
 
     await deleteFile(tempImagePath);
 

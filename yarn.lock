@@ -489,6 +489,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/cosmiconfig@npm:^6.0.3":
+  version: 6.0.3
+  resolution: "@types/cosmiconfig@npm:6.0.3"
+  dependencies:
+    cosmiconfig: "npm:*"
+  checksum: 10c0/fe863c7b739dc24de7db8234b62fd474a15bef1a84331bd818dfd6405a0e37ae8997f5fe72a2ea570ac1aa68cafdd506571b92eaac874233967a8c30eaf313cf
+  languageName: node
+  linkType: hard
+
 "@types/esrecurse@npm:^4.3.1":
   version: 4.3.1
   resolution: "@types/esrecurse@npm:4.3.1"
@@ -909,7 +918,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cosmiconfig@npm:^9.0.1":
+"cosmiconfig@npm:*, cosmiconfig@npm:^9.0.1":
   version: 9.0.1
   resolution: "cosmiconfig@npm:9.0.1"
   dependencies:
@@ -1052,6 +1061,7 @@ __metadata:
   resolution: "doujin-api@workspace:."
   dependencies:
     "@eslint/js": "npm:^10.0.1"
+    "@types/cosmiconfig": "npm:^6.0.3"
     "@types/node": "npm:^25.9.1"
     better-sqlite3: "npm:^12.8.0"
     cookie-parser: "npm:~1.4.4"
