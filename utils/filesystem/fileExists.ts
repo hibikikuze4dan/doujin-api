@@ -1,6 +1,6 @@
-const fs = require("fs/promises");
+import fs from "fs/promises";
 
-exports.fileExists = async (filepath = "") => {
+export const fileExists = async (filepath = "") => {
   if (!filepath) {
     return false;
   }

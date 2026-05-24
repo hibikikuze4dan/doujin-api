@@ -1,11 +1,18 @@
-const fs = require("fs/promises");
+import fs from "fs/promises";
 
-const DEFAULT_OPTIONS = {
-  withFileTypes: true,
-  recursive: true,
+export type GetFilesOptions = {
+  encoding: "utf-8";
+  withFileTypes: true;
+  recursive: boolean;
 };
 
-exports.getFiles = async (dirpath = "", options = DEFAULT_OPTIONS) => {
+const DEFAULT_OPTIONS = {
+  encoding: "utf-8",
+  withFileTypes: true,
+  recursive: true,
+} as GetFilesOptions;
+
+export const getFiles = async (dirpath = "", options = DEFAULT_OPTIONS) => {
   if (!dirpath) {
     return [];
   }

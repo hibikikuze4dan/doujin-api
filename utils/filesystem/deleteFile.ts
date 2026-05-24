@@ -1,17 +1,17 @@
-const fs = require("fs/promises");
+import fs from "fs/promises";
 
-exports.deleteFile = async (filepath = "") => {
+export const deleteFile = async (filepath = "") => {
   if (!filepath) {
-    return;
+    return false;
   }
 
   try {
     await fs.unlink(filepath);
-    return;
+    return true;
   } catch (error) {
     console.error(
       `Error occured while attempting to delete file ${filepath}:\n${error}`,
     );
-    return;
+    return false;
   }
 };

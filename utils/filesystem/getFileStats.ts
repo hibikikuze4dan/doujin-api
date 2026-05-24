@@ -1,6 +1,6 @@
-const fs = require("fs/promises");
+import fs from "fs/promises";
 
-exports.getFileStats = async (filepath = "") => {
+export const getFileStats = async (filepath = "") => {
   if (!filepath) {
     return null;
   }

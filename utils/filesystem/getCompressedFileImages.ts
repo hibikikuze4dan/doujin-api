@@ -1,8 +1,8 @@
-const path = require("path");
-const { IMAGE_EXTENSIONS } = require("../../constants");
-const { getCompressedFileEntries } = require("./getCompressedFileEntries");
+import path from "path";
+import { IMAGE_EXTENSIONS } from "../../constants";
+import { getCompressedFileEntries } from "./getCompressedFileEntries";
 
-exports.getCompressedFileImages = async (filepath = "") => {
+export const getCompressedFileImages = async (filepath = "") => {
   if (!filepath) {
     return [];
   }

@@ -1,8 +1,7 @@
-const path = require("path");
+import path from "path";
+import { getCompressedFiles } from "./getCompressedFiles";
 
-const { getCompressedFiles } = require("./getCompressedFiles");
-
-const getCompressedFilepaths = async (dirpath = "") => {
+export const getCompressedFilepaths = async (dirpath = "") => {
   if (!dirpath) {
     return [];
   }

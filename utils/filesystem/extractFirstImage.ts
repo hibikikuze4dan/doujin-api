@@ -1,10 +1,10 @@
-const path = require("path");
-const StreamZip = require("node-stream-zip");
-const { createDirectory } = require("./createDirectory");
-const { getCompressedFileEntries } = require("./getCompressedFileEntries");
-const { IMAGE_EXTENSIONS } = require("../../constants");
+import path from "path";
+import StreamZip from "node-stream-zip";
+import { createDirectory } from "./createDirectory";
+import { getCompressedFileEntries } from "./getCompressedFileEntries";
+import { IMAGE_EXTENSIONS } from "../../constants";
 
-exports.extractFirstImage = async (filepath = "", outputDir = "") => {
+export const extractFirstImage = async (filepath = "", outputDir = "") => {
   if (!outputDir || !filepath) {
     return null;
   }
@@ -31,12 +31,12 @@ exports.extractFirstImage = async (filepath = "", outputDir = "") => {
     }
 
     const outputFileName = path.basename(firstImage?.name);
-    const outputPath = path.join(resolvedOutputDir, outputFileName);
+    const imageOutputPath = path.join(resolvedOutputDir, outputFileName);
 
-    await zip.extract(firstImage.name, outputPath);
-    console.log(`Extracted: ${firstImage?.name} → ${outputPath}`);
+    await zip.extract(firstImage.name, imageOutputPath);
+    console.log(`Extracted: ${firstImage?.name} → ${imageOutputPath}`);
 
-    return outputPath;
+    return imageOutputPath;
   } catch (error) {
     console.error(
       `Something went wrong while trying to extract an image from the archive at ${filepath}:\n${error}`,

@@ -1,6 +1,7 @@
-const { readFile } = require("./readFile");
+import { JSONValue } from "../../types/general";
+import { readFile } from "./readFile";
 
-exports.readJSONFile = async (filepath = "") => {
+export const readJSONFile = async (filepath = ""): Promise<JSONValue> => {
   if (!filepath) {
     return {};
   }

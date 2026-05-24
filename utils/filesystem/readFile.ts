@@ -1,6 +1,6 @@
-const fs = require("fs/promises");
+import fs from "fs/promises";
 
-exports.readFile = async (filepath = "") => {
+export const readFile = async (filepath = "") => {
   if (!filepath) {
     return "";
   }

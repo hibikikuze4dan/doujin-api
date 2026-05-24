@@ -1,10 +1,11 @@
-const path = require("path");
-const { deleteFile } = require("./deleteFile");
-const { getFiles } = require("./getFiles");
+import path from "path";
 
-exports.deleteFolderContents = async (folderpath = "") => {
+import { deleteFile } from "./deleteFile";
+import { getFiles } from "./getFiles";
+
+export const deleteFolderContents = async (folderpath = "") => {
   if (!folderpath) {
-    return;
+    return false;
   }
 
   try {
@@ -15,11 +16,11 @@ exports.deleteFolderContents = async (folderpath = "") => {
       await deleteFile(filepath);
     }
 
-    return;
+    return true;
   } catch (error) {
     console.error(
       `Error occured while trying to delete the contents of folder ${folderpath}:\n${error}`,
     );
-    return;
+    return false;
   }
 };

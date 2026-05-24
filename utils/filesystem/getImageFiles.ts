@@ -1,13 +1,17 @@
-const path = require("path");
-const { IMAGE_EXTENSIONS } = require("../../constants");
-const { getFiles } = require("./getFiles");
+import path from "path";
+import { IMAGE_EXTENSIONS } from "../../constants";
+import { getFiles, type GetFilesOptions } from "./getFiles";
 
 const DEFAULT_OPTIONS = {
+  encoding: "utf-8",
   withFileTypes: true,
   recursive: true,
-};
+} as GetFilesOptions;
 
-exports.getImageFiles = async (dirpath = "", options = DEFAULT_OPTIONS) => {
+export const getImageFiles = async (
+  dirpath = "",
+  options = DEFAULT_OPTIONS,
+) => {
   if (!dirpath) {
     return [];
   }

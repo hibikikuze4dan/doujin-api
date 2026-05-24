@@ -1,9 +1,8 @@
-const path = require("path");
+import path from "path";
+import { COMPRESSED_EXTENSIONS } from "../../constants";
+import { getFiles } from "./getFiles";
 
-const { COMPRESSED_EXTENSIONS } = require("../../constants");
-const { getFiles } = require("./getFiles");
-
-exports.getCompressedFiles = async (dirpath = "") => {
+export const getCompressedFiles = async (dirpath = "") => {
   if (!dirpath) {
     return [];
   }
@@ -14,7 +13,7 @@ exports.getCompressedFiles = async (dirpath = "") => {
       const isCompressedFile = COMPRESSED_EXTENSIONS.has(
         path.extname(file.name).toLowerCase(),
       );
-      return file.isFile && isCompressedFile;
+      return file.isFile() && isCompressedFile;
     });
 
     return filteredFiles;

@@ -22,7 +22,8 @@ export const createThumbnail = async (
   outputDir: string,
   options = CREATE_THUMBNAIL_OPTION_DEFAULTS,
 ) => {
-  const { filename, prefix, quality, height, width } = options;
+  const { filename, prefix, quality, height, width, ...otherResizeOptions } =
+    options;
 
   if (!imagePath || !outputDir) {
     return null;
@@ -41,6 +42,7 @@ export const createThumbnail = async (
       .resize(width, height, {
         fit: "inside",
         withoutEnlargement: true,
+        ...otherResizeOptions,
       })
       .jpeg({ quality })
       .toFile(outputThumbnailPath);

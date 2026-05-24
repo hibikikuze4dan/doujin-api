@@ -1,6 +1,6 @@
-const StreamZip = require("node-stream-zip");
+import StreamZip from "node-stream-zip";
 
-exports.getCompressedFileEntries = async (filepath = "") => {
+export const getCompressedFileEntries = async (filepath = "") => {
   if (!filepath) {
     return [];
   }
