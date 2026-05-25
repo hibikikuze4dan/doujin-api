@@ -1,16 +1,18 @@
-const { ARCHIVE_JOINS, ARCHIVE_SELECT } = require("../constants");
-const {
-  getQueryConditionsAndBindings,
-} = require("./getQueryConditionsAndBindings");
-const {
-  getRangeBasedConditionsAndBindings,
-} = require("./getRangeBasedConditionsAndBindings");
-const {
-  getTagsConditionsAndBindings,
-} = require("./getTagsConditionsAndBindings");
+import { type Database } from "better-sqlite3";
+import {
+  type DatabaseQueryBindings,
+  type DatabaseQueryConditions,
+} from "../types";
+import { getQueryConditionsAndBindings } from "./getQueryConditionsAndBindings";
+import { getTagsConditionsAndBindings } from "./getTagsConditionsAndBindings";
+import { getRangeBasedConditionsAndBindings } from "./getRangeBasedConditionsAndBindings";
+import { ARCHIVE_JOINS, ARCHIVE_SELECT } from "../constants";
+import { type SearchArchivesQuery } from "../../../types/general";
+import { parseNumericQuery } from "../../../utils/query";
+import { type ArchiveWithConnectedTableData } from "../../../types/database";
 
-const searchArchives = (db) => {
-  const func = (parameters = {}) => {
+export const searchArchives = (db: Database) => {
+  const func = (parameters = {} as SearchArchivesQuery) => {
     const {
       q,
       q_mode = "and",
@@ -27,12 +29,12 @@ const searchArchives = (db) => {
       created_after,
       created_before,
       collection,
-      sort_by,
-      sort_direction,
-    } = parameters ?? {};
+      sort_by = "name",
+      sort_direction = "asc",
+    } = parameters;
 
-    let conditions = [];
-    let bindings = [];
+    let conditions: DatabaseQueryConditions = [];
+    let bindings: DatabaseQueryBindings = [];
 
     // --- Text search (q) ---
     let newConditionsAndBindings = getQueryConditionsAndBindings({
@@ -58,12 +60,12 @@ const searchArchives = (db) => {
     newConditionsAndBindings = getRangeBasedConditionsAndBindings({
       bindings,
       conditions,
-      min_pages,
-      max_pages,
-      min_size,
-      max_size,
-      min_rating,
-      max_rating,
+      min_pages: parseNumericQuery(min_pages),
+      max_pages: parseNumericQuery(max_pages),
+      min_size: parseNumericQuery(min_size),
+      max_size: parseNumericQuery(max_size),
+      min_rating: parseNumericQuery(min_rating),
+      max_rating: parseNumericQuery(max_rating),
     });
     conditions = newConditionsAndBindings?.conditions;
     bindings = newConditionsAndBindings?.bindings;
@@ -128,11 +130,11 @@ const searchArchives = (db) => {
       ${orderClause}
     `;
 
-    const results = db.prepare(sql).all(bindings);
+    const results = db
+      .prepare(sql)
+      .all(bindings) as ArchiveWithConnectedTableData[];
     return { results };
   };
 
   return func;
 };
-
-exports.searchArchives = searchArchives;

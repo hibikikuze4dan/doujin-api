@@ -1,8 +1,12 @@
-const { splitByComma, parseTag } = require("../../../utils");
+import { parseTag, splitByComma } from "../../../utils";
+import {
+  type DatabaseQueryBindings,
+  type DatabaseQueryConditions,
+} from "../types";
 
-exports.getTagsConditionsAndBindings = ({
-  bindings = [],
-  conditions = [],
+export const getTagsConditionsAndBindings = ({
+  bindings = [] as DatabaseQueryBindings,
+  conditions = [] as DatabaseQueryConditions,
   tag = "",
   tag_mode = "and",
 } = {}) => {

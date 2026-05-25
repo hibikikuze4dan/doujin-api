@@ -1,22 +1,22 @@
-const Database = require("better-sqlite3");
-const path = require("path");
-const {
-  COLLECTIONS_MIGRATION,
-  COLLECTION_ARCHIVES_MIGRATION,
-  ARCHIVES_MIGRATION,
+import Database from "better-sqlite3";
+import path from "path";
+import {
   ARCHIVE_HISTORY_MIGRATION,
-  TAGS_MIGRATION,
   ARCHIVE_RATING_MIGRATION,
+  ARCHIVES_MIGRATION,
+  COLLECTION_ARCHIVES_MIGRATION,
+  COLLECTIONS_MIGRATION,
+  TAGS_MIGRATION,
   USERS_MIGRATION,
-} = require("./migrate");
-const {
+} from "./migrate";
+import {
   initArchivesQueries,
   initCollectionQueries,
   initHistoryQueries,
   initRatingRepositories,
   initTagsQueries,
   initUserQueries,
-} = require("../repositories");
+} from "../repositories";
 
 // TODO: Create database at user supplied location
 const db = new Database(path.join(__dirname, "../data.db"));

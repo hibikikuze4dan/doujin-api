@@ -1,8 +1,12 @@
-const { splitByComma } = require("../../../utils");
+import { splitByComma } from "../../../utils";
+import {
+  type DatabaseQueryBindings,
+  type DatabaseQueryConditions,
+} from "../types";
 
-exports.getQueryConditionsAndBindings = ({
-  bindings = [],
-  conditions = [],
+export const getQueryConditionsAndBindings = ({
+  bindings = [] as DatabaseQueryBindings,
+  conditions = [] as DatabaseQueryConditions,
   q_mode = "and",
   q = "",
 } = {}) => {

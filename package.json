@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/cosmiconfig": "^6.0.3",
     "@types/node": "^25.9.1",
     "@types/sharp": "^0.32.0",

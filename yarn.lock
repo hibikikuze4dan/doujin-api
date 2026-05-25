@@ -489,6 +489,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/better-sqlite3@npm:^7.6.13":
+  version: 7.6.13
+  resolution: "@types/better-sqlite3@npm:7.6.13"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/c4336e7b92343eb0e988ded007c53fa9887b98a38d61175226e86124a1a2c28b1a4e3892873c5041e350b7bfa2901f85c82db1542c4f0eed1d3a899682c92106
+  languageName: node
+  linkType: hard
+
 "@types/cosmiconfig@npm:^6.0.3":
   version: 6.0.3
   resolution: "@types/cosmiconfig@npm:6.0.3"
@@ -519,7 +528,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^25.9.1":
+"@types/node@npm:*, @types/node@npm:^25.9.1":
   version: 25.9.1
   resolution: "@types/node@npm:25.9.1"
   dependencies:
@@ -1070,6 +1079,7 @@ __metadata:
   resolution: "doujin-api@workspace:."
   dependencies:
     "@eslint/js": "npm:^10.0.1"
+    "@types/better-sqlite3": "npm:^7.6.13"
     "@types/cosmiconfig": "npm:^6.0.3"
     "@types/node": "npm:^25.9.1"
     "@types/sharp": "npm:^0.32.0"

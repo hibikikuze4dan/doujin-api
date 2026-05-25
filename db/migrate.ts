@@ -1,4 +1,4 @@
-const ARCHIVES_MIGRATION = `
+export const ARCHIVES_MIGRATION = `
   CREATE TABLE IF NOT EXISTS archives (
     id          INTEGER PRIMARY KEY,
     name        TEXT    NOT NULL,
@@ -10,7 +10,7 @@ const ARCHIVES_MIGRATION = `
   )
 `;
 
-const TAGS_MIGRATION = `
+export const TAGS_MIGRATION = `
   CREATE TABLE IF NOT EXISTS tags (
     id          INTEGER PRIMARY KEY,
     archive_id   INTEGER NOT NULL,
@@ -21,7 +21,7 @@ const TAGS_MIGRATION = `
   )
 `;
 
-const ARCHIVE_HISTORY_MIGRATION = `
+export const ARCHIVE_HISTORY_MIGRATION = `
   CREATE TABLE IF NOT EXISTS archive_history (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     archive_id   INTEGER NOT NULL,
@@ -31,7 +31,7 @@ const ARCHIVE_HISTORY_MIGRATION = `
   )
 `;
 
-const USERS_MIGRATION = `
+export const USERS_MIGRATION = `
   CREATE TABLE IF NOT EXISTS users (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     username     TEXT NOT NULL UNIQUE,
@@ -41,7 +41,7 @@ const USERS_MIGRATION = `
   )
 `;
 
-const ARCHIVE_RATING_MIGRATION = `
+export const ARCHIVE_RATING_MIGRATION = `
   CREATE TABLE IF NOT EXISTS archive_rating (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     archive_id   INTEGER NOT NULL,
@@ -53,7 +53,7 @@ const ARCHIVE_RATING_MIGRATION = `
   )
 `;
 
-const COLLECTIONS_MIGRATION = `
+export const COLLECTIONS_MIGRATION = `
   CREATE TABLE IF NOT EXISTS collections (
     id          INTEGER PRIMARY KEY,
     name        TEXT    NOT NULL UNIQUE,
@@ -62,7 +62,7 @@ const COLLECTIONS_MIGRATION = `
   );
 `;
 
-const COLLECTION_ARCHIVES_MIGRATION = `
+export const COLLECTION_ARCHIVES_MIGRATION = `
   CREATE TABLE IF NOT EXISTS collection_archives (
     collection_id INTEGER NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
     archive_id     INTEGER NOT NULL REFERENCES archives(id)     ON DELETE CASCADE,
@@ -70,13 +70,3 @@ const COLLECTION_ARCHIVES_MIGRATION = `
     PRIMARY KEY (collection_id, archive_id)
   );
 `;
-
-module.exports = {
-  COLLECTION_ARCHIVES_MIGRATION,
-  COLLECTIONS_MIGRATION,
-  ARCHIVES_MIGRATION,
-  ARCHIVE_HISTORY_MIGRATION,
-  ARCHIVE_RATING_MIGRATION,
-  TAGS_MIGRATION,
-  USERS_MIGRATION,
-};

@@ -1,11 +1,11 @@
-const path = require("path");
-const os = require("os");
+import os from "os";
+import path from "path";
 
-const APP_NAME = "DoujinApi";
+export const APP_NAME = "DoujinApi";
 
-const APP_DATA = process.env.APP_DATA;
+export const APP_DATA = process.env.APP_DATA;
 
-const CONFIG_DEFAULTS = {
+export const CONFIG_DEFAULTS = {
   content_directory: "",
   lrr_database_backup_path: "",
   thumbnail_directory: "",
@@ -27,42 +27,42 @@ const CONFIG_DEFAULTS = {
   ],
 };
 
-const CONFIG_DIR = APP_DATA
+export const CONFIG_DIR = APP_DATA
   ? path.join(APP_DATA, APP_NAME)
   : path.join(os.homedir(), ".config", APP_NAME);
 
-const CONFIG_FILENAME = `.${APP_NAME}rc.json`;
+export const CONFIG_FILENAME = `.${APP_NAME}rc.json`;
 
-const CONFIG_FILEPATH = path.join(CONFIG_DIR, CONFIG_FILENAME);
+export const CONFIG_FILEPATH = path.join(CONFIG_DIR, CONFIG_FILENAME);
 
-const PUBLIC_FILES_DIRECTORY_PATH = path.resolve(
+export const PUBLIC_FILES_DIRECTORY_PATH = path.resolve(
   path.join(__dirname, "public"),
 );
 
-const IMAGE_NOT_FOUND_FILEPATH = path.join(
+export const IMAGE_NOT_FOUND_FILEPATH = path.join(
   PUBLIC_FILES_DIRECTORY_PATH,
   "no-thumb.png",
 );
 
-const ARCHIVE_IMAGES_DIRECTORY_PATH = path.join(
+export const ARCHIVE_IMAGES_DIRECTORY_PATH = path.join(
   PUBLIC_FILES_DIRECTORY_PATH,
   "images",
   "archive",
 );
 
-const TEMP_IMAGE_DIRECTORY_PATH = path.join(
+export const TEMP_IMAGE_DIRECTORY_PATH = path.join(
   PUBLIC_FILES_DIRECTORY_PATH,
   "images",
   "temp",
 );
 
-const THUMBNAIL_IMAGE_DIRECTORY_PATH = path.join(
+export const THUMBNAIL_IMAGE_DIRECTORY_PATH = path.join(
   PUBLIC_FILES_DIRECTORY_PATH,
   "images",
   "thumbs",
 );
 
-const COMPRESSED_EXTENSIONS = new Set([
+export const COMPRESSED_EXTENSIONS = new Set([
   ".zip",
   ".tar",
   ".gz",
@@ -75,7 +75,7 @@ const COMPRESSED_EXTENSIONS = new Set([
   ".cbr",
 ]);
 
-const IMAGE_EXTENSIONS = new Set([
+export const IMAGE_EXTENSIONS = new Set([
   ".jpg",
   ".jpeg",
   ".png",
@@ -86,18 +86,3 @@ const IMAGE_EXTENSIONS = new Set([
   ".tiff",
   ".ico",
 ]);
-
-module.exports = {
-  APP_DATA,
-  APP_NAME,
-  COMPRESSED_EXTENSIONS,
-  CONFIG_DEFAULTS,
-  CONFIG_DIR,
-  CONFIG_FILENAME,
-  CONFIG_FILEPATH,
-  ARCHIVE_IMAGES_DIRECTORY_PATH,
-  IMAGE_EXTENSIONS,
-  IMAGE_NOT_FOUND_FILEPATH,
-  TEMP_IMAGE_DIRECTORY_PATH,
-  THUMBNAIL_IMAGE_DIRECTORY_PATH,
-};

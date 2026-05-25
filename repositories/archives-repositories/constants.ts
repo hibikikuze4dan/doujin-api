@@ -1,4 +1,4 @@
-const ARCHIVE_SELECT = `
+export const ARCHIVE_SELECT = `
   d.id,
   d.name,
   d.filepath,
@@ -10,7 +10,7 @@ const ARCHIVE_SELECT = `
   REPLACE(GROUP_CONCAT(DISTINCT CASE WHEN t.namespace = '' THEN t.name ELSE t.namespace || ':' || t.name END), ',', ', ') AS tags
 `;
 
-const ARCHIVE_JOINS = `
+export const ARCHIVE_JOINS = `
   FROM archives d
   LEFT JOIN tags t ON t.archive_id = d.id
   LEFT JOIN (
@@ -19,8 +19,3 @@ const ARCHIVE_JOINS = `
     GROUP BY archive_id
   ) ar ON ar.archive_id = d.id
 `;
-
-module.exports = {
-  ARCHIVE_SELECT,
-  ARCHIVE_JOINS,
-};
