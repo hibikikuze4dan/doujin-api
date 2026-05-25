@@ -1,8 +1,11 @@
 import StreamZip from "node-stream-zip";
+import { type StreamZipEntries } from "../../types/general";
 
-export const getCompressedFileEntries = async (filepath = "") => {
+export const getCompressedFileEntries = async (
+  filepath = "",
+): Promise<StreamZipEntries> => {
   if (!filepath) {
-    return [];
+    return {};
   }
 
   let zip;
@@ -16,7 +19,7 @@ export const getCompressedFileEntries = async (filepath = "") => {
     console.error(
       `Something went wrong while trying to get the contents of compressed file ${filepath}:\n${error}`,
     );
-    return [];
+    return {};
   } finally {
     await zip?.close();
   }

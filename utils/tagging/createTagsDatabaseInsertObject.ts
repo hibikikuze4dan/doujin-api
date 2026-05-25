@@ -1,4 +1,4 @@
-exports.createTagsDatabaseInsertObject = (archiveId, tag = "") => {
+export const createTagsDatabaseInsertObject = (archiveId = "", tag = "") => {
   if (!archiveId || !tag) {
     return null;
   }

@@ -1,15 +1,11 @@
-const { XMLParser } = require("fast-xml-parser");
+import { XMLParser } from "fast-xml-parser";
+import { createTagsString, getCompressedFileEntryBufferString } from "..";
+import { getCompressedFileEntries } from "../filesystem";
+import { getMetadataEntryAndConfig } from "./getMetadataEntryAndConfig";
 
-const {
-  getCompressedFileEntries,
-  getCompressedFileEntryBufferString,
-} = require("../filesystem");
-const { getMetadataEntryAndConfig } = require("./getMetadataEntryAndConfig");
-const { createTagsString } = require("./createTagsString");
-
-exports.getArchiveTags = async (filepath) => {
+export const getArchiveTags = async (filepath?: string) => {
   if (!filepath) {
-    return null;
+    return "";
   }
 
   try {
@@ -29,16 +25,16 @@ exports.getArchiveTags = async (filepath) => {
 
     if (metadataEntryExtension === ".json") {
       return createTagsString(
-        JSON.parse(metadataEntryBufferString),
+        JSON.parse(metadataEntryBufferString ?? ""),
         tagConfig?.data,
       );
     } else if (metadataEntryExtension === ".xml") {
       return createTagsString(
-        new XMLParser().parse(metadataEntryBufferString),
+        new XMLParser().parse(metadataEntryBufferString ?? ""),
         tagConfig?.data,
       );
     } else if (metadataEntryExtension === ".txt") {
-      return metadataEntryBufferString;
+      return metadataEntryBufferString ?? "";
     } else {
       return "";
     }

@@ -1,7 +1,7 @@
-const { getUserConfigs } = require("../configuration");
-const { readJSONFile } = require("../filesystem");
+import { getUserConfigs } from "../configuration";
+import { readJSONFile } from "../filesystem";
 
-exports.getLanraragiDatabaseBackup = async () => {
+export const getLanraragiDatabaseBackup = async () => {
   const config = await getUserConfigs();
   const filepath = config?.lrr_database_backup_path ?? "";
 

@@ -1,8 +1,14 @@
-const path = require("path");
-const { getUserConfigs } = require("../configuration");
-const { getCompressedFileEntries } = require("../filesystem");
+import path from "path";
+import StreamZip from "node-stream-zip";
+import { getUserConfigs } from "../configuration";
+import { getCompressedFileEntries } from "../filesystem";
+import { type StreamZipEntries } from "../../types/general";
+import { type TaggingData } from "../../types/configuration";
 
-exports.getMetadataEntryAndConfig = async (filepath = "", entries) => {
+export const getMetadataEntryAndConfig = async (
+  filepath = "",
+  entries: StreamZipEntries,
+) => {
   if (!filepath) {
     return null;
   }
@@ -20,8 +26,8 @@ exports.getMetadataEntryAndConfig = async (filepath = "", entries) => {
     compressedFileEntries = await getCompressedFileEntries();
   }
 
-  let metadataEntry;
-  let taggingConfigToUse;
+  let metadataEntry: StreamZip.ZipEntry | undefined;
+  let taggingConfigToUse: TaggingData | undefined;
 
   metadataEntry = Object.values(compressedFileEntries)?.find((entry) => {
     for (const config of taggingConfigs) {
