@@ -1,4 +1,4 @@
-exports.parseNumericQuery = (queryValue) => {
+export const parseNumericQuery = (queryValue: string) => {
   if (!queryValue) {
     return undefined;
   }

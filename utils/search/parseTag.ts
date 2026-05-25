@@ -1,4 +1,4 @@
-exports.parseTag = (tag = "") => {
+export const parseTag = (tag = "") => {
   const colonIndex = tag.indexOf(":");
 
   if (colonIndex === -1) {

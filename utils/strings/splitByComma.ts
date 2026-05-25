@@ -1,4 +1,7 @@
-exports.splitByComma = (str = "", { trim = true, removeEmpty = true } = {}) => {
+export const splitByComma = (
+  str = "",
+  { trim = true, removeEmpty = true } = {},
+) => {
   if (!str) {
     return [];
   }

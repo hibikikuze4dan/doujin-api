@@ -1,6 +1,6 @@
-const crypto = require("crypto");
+import crypto from "crypto";
 
-exports.hashPassword = (password, salt) => {
+export const hashPassword = (password: string, salt: string) => {
   return crypto
     .createHash("sha256")
     .update(salt + password)

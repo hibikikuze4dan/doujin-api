@@ -1,13 +1,14 @@
-const StreamZip = require("node-stream-zip");
-const { createDirectory } = require("./createDirectory");
+import StreamZip from "node-stream-zip";
 
-exports.unzipFileContents = async (
+import { createDirectory } from "./createDirectory";
+
+export const unzipFileContents = async (
   filepath = "",
   outputdir = "",
   _options = {},
 ) => {
   if (!filepath || !outputdir) {
-    return;
+    return false;
   }
 
   let zip;
@@ -23,13 +24,13 @@ exports.unzipFileContents = async (
 
     await zip.close();
 
-    return;
+    return true;
   } catch (error) {
     console.error(
       `Something went wrong while trying to extract the contents of ${filepath}:\n${error}`,
     );
 
     await zip?.close();
-    return;
+    return false;
   }
 };
