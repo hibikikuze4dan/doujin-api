@@ -1,15 +1,23 @@
-// CREATE
+import { type Database } from "better-sqlite3";
+import { type Tag } from "../types/database";
 
-const addTag = (db) => {
+const addTag = (db: Database) => {
   const stmt = db.prepare(`
     INSERT INTO tags (archive_id, name, namespace)
     VALUES (@archive_id, @name, @namespace)
   `);
-  return ({ archive_id, name, namespace = "" }) =>
-    stmt.run({ archive_id, name, namespace });
+  return ({
+    archive_id,
+    name,
+    namespace = "",
+  }: {
+    archive_id: number;
+    name: string;
+    namespace: string;
+  }) => stmt.run({ archive_id, name, namespace });
 };
 
-const addTags = (db) => {
+const addTags = (db: Database) => {
   const stmt = db.prepare(`
     INSERT INTO tags (archive_id, name, namespace)
     VALUES (@archive_id, @name, @namespace)
@@ -19,34 +27,34 @@ const addTags = (db) => {
       stmt.run({ namespace: "", ...tag });
     }
   });
-  return (tags) => insertMany(tags);
+  return (tags: { archive_id: number; name: string; namespace: string }[]) =>
+    insertMany(tags);
 };
 
-// READ
-
-const getTagsByArchiveId = (db) => {
+const getTagsByArchiveId = (db: Database) => {
   const stmt = db.prepare(`SELECT * FROM tags WHERE archive_id = ?`);
-  return (archive_id) => stmt.all(archive_id);
+  return (archive_id: number) => stmt.all(archive_id) as Tag[];
 };
 
-const getTagsByName = (db) => {
+const getTagsByName = (db: Database) => {
   const stmt = db.prepare(`SELECT * FROM tags WHERE name = ?`);
-  return (name) => stmt.all(name);
+  return (name: string) => stmt.all(name) as Tag[];
 };
 
-const getTagsByNamespace = (db) => {
+const getTagsByNamespace = (db: Database) => {
   const stmt = db.prepare(`SELECT * FROM tags WHERE namespace = ?`);
-  return (namespace) => stmt.all(namespace);
+  return (namespace: string) => stmt.all(namespace) as Tag[];
 };
 
-const getTagByNameAndNamespace = (db) => {
+const getTagByNameAndNamespace = (db: Database) => {
   const stmt = db.prepare(
     `SELECT * FROM tags WHERE name = ? AND namespace = ?`,
   );
-  return (name, namespace = "") => stmt.get(name, namespace);
+  return (name = "", namespace = "") =>
+    stmt.get(name, namespace) as Tag | undefined;
 };
 
-const searchTags = (db) => {
+const searchTags = (db: Database) => {
   const stmt = db.prepare(`
     SELECT namespace, name, MIN(id) as id, MIN(archive_id) as archive_id
     FROM tags
@@ -56,41 +64,45 @@ const searchTags = (db) => {
     GROUP BY namespace, name
     ORDER BY namespace ASC, name ASC
   `);
-  return (tagQuery) => {
+  return (tagQuery: string) => {
     const pattern = `%${tagQuery}%`;
-    return stmt.all(pattern, pattern, pattern);
+    return stmt.all(pattern, pattern, pattern) as Tag[];
   };
 };
 
-// UPDATE
-
-const updateTag = (db) => {
+const updateTag = (db: Database) => {
   const stmt = db.prepare(`
     UPDATE tags
     SET name = @name, namespace = @namespace
     WHERE id = @id
   `);
-  return ({ id, name, namespace = "" }) => stmt.run({ id, name, namespace });
+  return ({
+    id,
+    name,
+    namespace = "",
+  }: {
+    id: number;
+    name: string;
+    namespace: string;
+  }) => stmt.run({ id, name, namespace });
 };
 
-// DELETE
-
-const deleteTag = (db) => {
+const deleteTag = (db: Database) => {
   const stmt = db.prepare(`DELETE FROM tags WHERE id = ?`);
-  return (id) => stmt.run(id);
+  return (id: number) => stmt.run(id);
 };
 
-const deleteTagsByArchiveId = (db) => {
+const deleteTagsByArchiveId = (db: Database) => {
   const stmt = db.prepare(`DELETE FROM tags WHERE archive_id = ?`);
-  return (archive_id) => stmt.run(archive_id);
+  return (archive_id: number) => stmt.run(archive_id);
 };
 
-const deleteTagByNameAndNamespace = (db) => {
+const deleteTagByNameAndNamespace = (db: Database) => {
   const stmt = db.prepare(`DELETE FROM tags WHERE name = ? AND namespace = ?`);
-  return (name, namespace = "") => stmt.run(name, namespace);
+  return (name = "", namespace = "") => stmt.run(name, namespace);
 };
 
-exports.initTagsQueries = (db) => ({
+export const initTagsQueries = (db: Database) => ({
   addTag: addTag(db),
   addTags: addTags(db),
   deleteTag: deleteTag(db),
