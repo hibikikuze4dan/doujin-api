@@ -39,7 +39,7 @@ const ratings = initRatingRepositories(db);
 const tags = initTagsQueries(db);
 const users = initUserQueries(db);
 
-module.exports = {
+const exports = {
   database: db,
   archivesQueries: archives,
   collectionsQueries: collections,
@@ -48,3 +48,5 @@ module.exports = {
   tagsQueries: tags,
   userQueries: users,
 };
+
+export default exports;
