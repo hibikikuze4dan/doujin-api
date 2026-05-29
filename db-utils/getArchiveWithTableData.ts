@@ -1,6 +1,6 @@
-const { archivesQueries, tagsQueries, ratingQueries } = require("../db");
+import { archivesQueries, ratingQueries, tagsQueries } from "../db";
 
-exports.getArchiveWithTableData = (archiveId) => {
+export const getArchiveWithTableData = (archiveId: number) => {
   const archive = archivesQueries.getArchiveById(archiveId);
   const tagsArray = tagsQueries.getTagsByArchiveId(archiveId) ?? [];
   const archiveRatings = ratingQueries.getRatingsByArchiveId(archiveId);

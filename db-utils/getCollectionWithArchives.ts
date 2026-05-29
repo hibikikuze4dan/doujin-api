@@ -1,6 +1,6 @@
-const { collectionsQueries } = require("../db");
+import { collectionsQueries } from "../db";
 
-exports.getCollectionWithArchives = async (collectionId) => {
+export const getCollectionWithArchives = async (collectionId: number) => {
   if (!collectionId) {
     return null;
   }

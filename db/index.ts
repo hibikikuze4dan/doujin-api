@@ -32,21 +32,10 @@ db.pragma("journal_mode = WAL");
 db.pragma("foreign_keys = ON");
 console.log("Migrations complete");
 
-const collections = initCollectionQueries(db);
-const archives = initArchivesQueries(db);
-const history = initHistoryQueries(db);
-const ratings = initRatingRepositories(db);
-const tags = initTagsQueries(db);
-const users = initUserQueries(db);
-
-const exports = {
-  database: db,
-  archivesQueries: archives,
-  collectionsQueries: collections,
-  historyQueries: history,
-  ratingQueries: ratings,
-  tagsQueries: tags,
-  userQueries: users,
-};
-
-export default exports;
+export const database = db;
+export const collectionsQueries = initCollectionQueries(db);
+export const archivesQueries = initArchivesQueries(db);
+export const historyQueries = initHistoryQueries(db);
+export const ratingQueries = initRatingRepositories(db);
+export const tagsQueries = initTagsQueries(db);
+export const userQueries = initUserQueries(db);
