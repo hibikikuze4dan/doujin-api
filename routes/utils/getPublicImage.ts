@@ -1,17 +1,17 @@
-const path = require("path");
-const {
-  IMAGE_EXTENSIONS,
+import path from "path";
+import {
   ARCHIVE_IMAGES_DIRECTORY_PATH,
+  IMAGE_EXTENSIONS,
   IMAGE_NOT_FOUND_FILEPATH,
-} = require("../../constants");
-const {
+} from "../../constants";
+import {
+  createThumbnailForArchive,
   fileExists,
   unzipFileContents,
-  createThumbnailForArchive,
-} = require("../../utils");
-const { archivesQueries } = require("../../db");
+} from "../../utils";
+import { archivesQueries } from "../../db";
 
-exports.getPublicImage = async ({
+export const getPublicImage = async ({
   archiveId = "",
   enableVerification = false,
   filename = "",

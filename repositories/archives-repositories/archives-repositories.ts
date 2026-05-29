@@ -89,7 +89,8 @@ const createArchiveEntry = (db: Database) => {
     pagecount,
     size,
   }: ArchiveEntryParams) =>
-    stmt.run({ name, filepath, date_created, pagecount, size }).lastInsertRowid;
+    stmt.run({ name, filepath, date_created, pagecount, size })
+      .lastInsertRowid as number;
 };
 
 const removeArchiveEntry = (db: Database) => {

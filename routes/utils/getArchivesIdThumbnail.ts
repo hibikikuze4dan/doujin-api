@@ -1,9 +1,8 @@
-const path = require("path");
-const { fileExists } = require("../../utils/filesystem");
-const { THUMBNAIL_IMAGE_DIRECTORY_PATH } = require("../../constants");
-const { createThumbnailForArchive } = require("../../utils");
+import path from "path";
+import { THUMBNAIL_IMAGE_DIRECTORY_PATH } from "../../constants";
+import { createThumbnailForArchive, fileExists } from "../../utils";
 
-exports.getArchivesIdThumbnail = async (
+export const getArchivesIdThumbnail = async (
   archiveId = "",
   archiveFilepath = "",
 ) => {

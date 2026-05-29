@@ -5,8 +5,8 @@ import {
 import { createThumbnail, extractFirstImage, deleteFile } from "../filesystem";
 
 export const createThumbnailForArchive = async (
-  archiveId: string,
-  archiveFilepath: string,
+  archiveId?: string | number,
+  archiveFilepath?: string,
 ): Promise<string | null> => {
   if (!archiveFilepath || !archiveId) {
     return null;
@@ -26,7 +26,7 @@ export const createThumbnailForArchive = async (
       tempImagePath,
       THUMBNAIL_IMAGE_DIRECTORY_PATH,
       {
-        filename: archiveId,
+        filename: `${archiveId}`,
         height: 500,
         prefix: "",
       },

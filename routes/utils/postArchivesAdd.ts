@@ -1,21 +1,37 @@
-const path = require("path");
-const { getUserConfigs } = require("../../utils/configuration");
-const {
+// const path = require("path");
+// const { getUserConfigs } = require("../../utils/configuration");
+// const {
+//   getCompressedFilepaths,
+//   getFileStats,
+//   getCompressedFileImages,
+//   fileExists,
+// } = require("../../utils/filesystem");
+// const {
+//   getLanraragiDatabaseBackup,
+//   getLanraragiTagsByFilename,
+//   getArchiveTags,
+//   createTagsDatabaseInsertArray,
+// } = require("../../utils/tagging");
+// const { createThumbnailForArchive } = require("../../utils/archives");
+// const { archivesQueries, tagsQueries } = require("../../db");
+
+import path from "path";
+import {
+  createTagsDatabaseInsertArray,
+  createThumbnailForArchive,
+  fileExists,
+  getArchiveTags,
+  getCompressedFileImages,
   getCompressedFilepaths,
   getFileStats,
-  getCompressedFileImages,
-  fileExists,
-} = require("../../utils/filesystem");
-const {
   getLanraragiDatabaseBackup,
   getLanraragiTagsByFilename,
-  getArchiveTags,
-  createTagsDatabaseInsertArray,
-} = require("../../utils/tagging");
-const { createThumbnailForArchive } = require("../../utils/archives");
-const { archivesQueries, tagsQueries } = require("../../db");
+  getUserConfigs,
+} from "../../utils";
+import { LanraragiBackupArchive } from "../../types/general";
+import { archivesQueries, tagsQueries } from "../../db";
 
-exports.postArchivesAdd = async () => {
+export const postArchivesAdd = async () => {
   const newArchives = [];
 
   try {
@@ -26,7 +42,10 @@ exports.postArchivesAdd = async () => {
       return ["Content directory does not exist!"];
     }
 
-    let lanraragiBackupData = await getLanraragiDatabaseBackup();
+    let lanraragiBackupData =
+      (await getLanraragiDatabaseBackup()) as unknown as {
+        archives: LanraragiBackupArchive[];
+      } | null;
 
     const archives = lanraragiBackupData?.archives;
     lanraragiBackupData = null;
@@ -38,7 +57,7 @@ exports.postArchivesAdd = async () => {
       const fileStats = await getFileStats(filepath);
 
       const archiveEntry = archivesQueries.getArchiveByFilepath(filepath);
-      if (!archiveEntry) {
+      if (!archiveEntry && fileStats) {
         const filename = path.basename(filepath);
         const filenameWithoutExtension = path.parse(filepath).name;
 
@@ -65,7 +84,9 @@ exports.postArchivesAdd = async () => {
 
         newRowIds.push(newRowId);
 
-        const tagsArray = createTagsDatabaseInsertArray(newRowId, tags);
+        const tagsArray = createTagsDatabaseInsertArray(newRowId, tags).filter(
+          (tag) => !!tag,
+        );
         tagsQueries.addTags(tagsArray);
 
         await createThumbnailForArchive(newRowId, filepath);

@@ -1,7 +1,7 @@
 import { createTagsDatabaseInsertObject } from "./createTagsDatabaseInsertObject";
 
 export const createTagsDatabaseInsertArray = (
-  archiveId: string,
+  archiveId: string | number,
   tagsString = "",
 ) => {
   if (!archiveId || !tagsString) {

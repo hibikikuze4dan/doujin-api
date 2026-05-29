@@ -1,7 +1,10 @@
-const { archivesQueries } = require("../../db");
-const { deleteFile } = require("../../utils/filesystem");
+import { archivesQueries } from "../../db";
+import { deleteFile } from "../../utils";
 
-exports.deleteArchivesId = async (id, shouldDeleteFile = false) => {
+export const deleteArchivesId = async (
+  id: number,
+  shouldDeleteFile = false,
+) => {
   if (!id) {
     return null;
   }

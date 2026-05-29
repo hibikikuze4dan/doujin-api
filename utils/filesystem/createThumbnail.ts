@@ -18,8 +18,8 @@ const CREATE_THUMBNAIL_OPTION_DEFAULTS: CreateThumbnailOptions = {
 };
 
 export const createThumbnail = async (
-  imagePath: string,
-  outputDir: string,
+  imagePath?: string,
+  outputDir?: string,
   options = CREATE_THUMBNAIL_OPTION_DEFAULTS,
 ) => {
   const { filename, prefix, quality, height, width, ...otherResizeOptions } =
