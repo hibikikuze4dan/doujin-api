@@ -1,8 +1,8 @@
-const express = require("express");
-const { getPublicImage } = require("./utils");
-const path = require("path");
+import { Router } from "express";
+import path from "path";
+import { getPublicImage } from "./utils";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/images/archive/:archiveId/:filename", async (req, res, next) => {
   const archiveId = req.params.archiveId;

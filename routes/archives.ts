@@ -10,7 +10,7 @@ import {
   putArchivesRating,
 } from "./utils";
 
-var router = express.Router();
+const router = express.Router();
 
 // NOTE: TEST ROUTE. NEEDS TO BE CLEANED UP LATER
 router.get("/", async (req, res, _next) => {
@@ -139,4 +139,4 @@ router.delete("/:id", async (req, res, _next) => {
   res.json(archive);
 });
 
-module.exports = router;
+export default router;

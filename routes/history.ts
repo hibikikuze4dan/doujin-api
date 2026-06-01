@@ -1,12 +1,19 @@
-const express = require("express");
-const { historyQueries, archivesQueries } = require("../db");
+import { Router } from "express";
+import { archivesQueries, historyQueries } from "../db";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/all", async (req, res, _next) => {
   const { withdata = "false" } = req?.query ?? {};
 
-  const shouldGetData = withdata.toLocaleLowerCase() === "true";
+  const isQueryString = typeof withdata === "string";
+
+  if (!isQueryString) {
+    res.status(400).send("Please provide valid query");
+    return;
+  }
+
+  const shouldGetData = withdata?.toLocaleLowerCase?.() === "true";
 
   let history = historyQueries.getAllHistory();
 
@@ -32,4 +39,4 @@ router.delete("/", async (req, res, _next) => {
   });
 });
 
-module.exports = router;
+export default router;

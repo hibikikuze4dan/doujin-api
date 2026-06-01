@@ -1,19 +1,21 @@
-const express = require("express");
-const { tagsQueries } = require("../db");
+import { Router } from "express";
+import { tagsQueries } from "../db";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/search", async (req, res, _next) => {
   const { q: query = "" } = req.query ?? {};
 
-  if (query) {
+  const tagQuery = typeof query === "string" ? query : "";
+
+  if (tagQuery) {
     const tags = tagsQueries
-      .searchTags(query)
+      .searchTags(tagQuery)
       ?.map((tag) => ({ name: tag?.name, namespace: tag?.namespace }));
 
     res.send(tags);
   } else {
-    res.status(400).send("Please provide a query");
+    res.status(400).send("Please provide a valid query");
   }
 });
 

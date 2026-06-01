@@ -1,9 +1,10 @@
-const express = require("express");
-const { collectionsQueries } = require("../db");
-const { postCollectionsIdAdd, postCollectionsAdd } = require("./utils");
-const { getCollectionWithArchives } = require("../db-utils");
+import { Router } from "express";
+import { collectionsQueries } from "../db";
+import { getCollectionWithArchives } from "../db-utils";
+import { postCollectionsAdd, postCollectionsIdAdd } from "./utils";
+import { parseNumericQuery } from "../utils/query";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/all", async (req, res, _next) => {
   const collections = collectionsQueries.getAllCollections();
@@ -37,8 +38,15 @@ router.post("/:collectionId/add", async (req, res, _next) => {
   const { collectionId = "" } = req?.params ?? {};
   const { arcid = "" } = req?.body ?? {};
 
+  const numericCollectionId = parseNumericQuery(collectionId);
+
+  if (!numericCollectionId) {
+    res.status(400).send("Please provide a valid collection id");
+    return;
+  }
+
   const collectionData = await postCollectionsIdAdd({
-    collectionId,
+    collectionId: numericCollectionId,
     archiveId: arcid,
   });
 
@@ -53,10 +61,23 @@ router.put("/:collectionId/remove", async (req, res, _next) => {
   const collectionId = req?.params?.collectionId;
   const archiveId = req?.body?.arcid;
 
-  const { _changes, _lastInsertRowid } =
-    collectionsQueries.removeArchiveFromCollection(collectionId, archiveId);
+  const { changes } = collectionsQueries.removeArchiveFromCollection(
+    collectionId,
+    archiveId,
+  );
 
-  const collection = await getCollectionWithArchives(collectionId);
+  const numericCollectionId = parseNumericQuery(collectionId);
+
+  if (!numericCollectionId || !changes) {
+    res
+      .status(400)
+      .send(
+        "Something went wrong while trying to remove archive from collection",
+      );
+    return;
+  }
+
+  const collection = await getCollectionWithArchives(numericCollectionId);
 
   res.json(collection);
 });
@@ -79,4 +100,4 @@ router.delete("/", async (req, res, _next) => {
   }
 });
 
-module.exports = router;
+export default router;
