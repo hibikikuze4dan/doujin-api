@@ -1,7 +1,9 @@
-const { collectionsQueries } = require("../../db");
-const { getCollectionWithArchives } = require("../../db-utils");
+import { collectionsQueries } from "../../db";
+import { getCollectionWithArchives } from "../../db-utils";
 
-exports.postCollectionsAdd = async ({ name, description } = {}) => {
+export const postCollectionsAdd = async (
+  { name, description } = {} as { name?: string; description?: string },
+) => {
   if (!name) {
     return null;
   }
@@ -10,7 +12,13 @@ exports.postCollectionsAdd = async ({ name, description } = {}) => {
     const { changes = 0, lastInsertRowid } =
       collectionsQueries?.createCollection?.(name, description ?? "") ?? {};
 
-    const collection = await getCollectionWithArchives(lastInsertRowid);
+    if (!lastInsertRowid) {
+      return null;
+    }
+
+    const collection = await getCollectionWithArchives(
+      lastInsertRowid as number,
+    );
 
     if (changes && lastInsertRowid && collection) {
       return {

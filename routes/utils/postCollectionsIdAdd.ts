@@ -1,7 +1,12 @@
-const { collectionsQueries } = require("../../db");
-const { getCollectionWithArchives } = require("../../db-utils");
+import { collectionsQueries } from "../../db";
+import { getCollectionWithArchives } from "../../db-utils";
 
-exports.postCollectionsIdAdd = async ({ collectionId, archiveId } = {}) => {
+export const postCollectionsIdAdd = async (
+  { collectionId, archiveId } = {} as {
+    collectionId: number;
+    archiveId: number;
+  },
+) => {
   if (!collectionId || !archiveId) {
     return null;
   }

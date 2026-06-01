@@ -1,6 +1,12 @@
-const { ratingQueries, archivesQueries } = require("../../db");
+import { archivesQueries, ratingQueries } from "../../db";
 
-exports.putArchivesRating = async ({ archive_id, user_id, rating } = {}) => {
+export const putArchivesRating = async (
+  { archive_id, user_id, rating } = {} as {
+    archive_id: number;
+    user_id: number;
+    rating: number;
+  },
+) => {
   let status = 200;
   let data, createRatingResults;
 
@@ -27,7 +33,10 @@ exports.putArchivesRating = async ({ archive_id, user_id, rating } = {}) => {
     };
   } else {
     status = 400;
-    data = "Something went wrong!";
+    data = {
+      status: "failure",
+      message: "Something went wrong!",
+    };
   }
 
   return { status, data };

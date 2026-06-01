@@ -1,7 +1,9 @@
-const { userQueries } = require("../../db");
-const { generateSalt, hashPassword } = require("../../utils/password");
+import { userQueries } from "../../db";
+import { generateSalt, hashPassword } from "../../utils/password";
 
-exports.postUsersCreate = async ({ username, password } = {}) => {
+export const postUsersCreate = async (
+  { username, password } = {} as { username: string; password: string },
+) => {
   let data;
   let status = 200;
 
