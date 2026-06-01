@@ -2,7 +2,7 @@ import { archivesQueries } from "../../db";
 import { deleteFile } from "../../utils";
 
 export const deleteArchivesId = async (
-  id: number,
+  id?: number,
   shouldDeleteFile = false,
 ) => {
   if (!id) {

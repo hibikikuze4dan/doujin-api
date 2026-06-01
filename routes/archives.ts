@@ -1,14 +1,15 @@
-const express = require("express");
-const { archivesQueries } = require("../db");
-const { queryUtils } = require("../utils");
-const {
+import express from "express";
+import { archivesQueries } from "../db";
+import { SearchArchivesQuery } from "../types/general";
+import { parseNumericQuery } from "../utils/query";
+import {
+  deleteArchivesId,
   getArchivesIdPages,
   getArchivesIdThumbnail,
   postArchivesAdd,
-  deleteArchivesId,
   putArchivesRating,
-} = require("./utils");
-const { parseNumericQuery } = queryUtils;
+} from "./utils";
+
 var router = express.Router();
 
 // NOTE: TEST ROUTE. NEEDS TO BE CLEANED UP LATER
@@ -62,7 +63,7 @@ router.get("/search", async (req, res, _next) => {
       collection,
       sort_by,
       sort_direction,
-    })?.results ?? [];
+    } as SearchArchivesQuery)?.results ?? [];
 
   const archives = results;
 
@@ -72,17 +73,30 @@ router.get("/search", async (req, res, _next) => {
 router.get("/random", async (req, res, _next) => {
   const count = req?.query?.count ?? 5;
 
-  const archives = archivesQueries.getRandomEntries(count);
+  const archives = archivesQueries.getRandomEntries(
+    parseNumericQuery(count) ?? 5,
+  );
 
   res.json(archives);
 });
 
 router.get("/:id/pages", async (req, res, _next) => {
-  const id = req.params.id;
+  const id = req.params?.id;
 
-  const imageLinks = await getArchivesIdPages(id);
+  if (!id) {
+    res.status(400).send("Invalid archive id provided");
+    return;
+  }
 
-  res.json(imageLinks);
+  const numericId = parseNumericQuery(id);
+
+  if (numericId) {
+    const imageLinks = await getArchivesIdPages(numericId);
+
+    res.json(imageLinks);
+  } else {
+    res.status(400).json("Invalid archive id provided");
+  }
 });
 
 router.get("/:id/thumbnail", async (req, res, _next) => {
@@ -120,7 +134,7 @@ router.delete("/:id", async (req, res, _next) => {
   const id = req.params.id;
   const deleteFile = req?.body?.deleteFile;
 
-  const archive = await deleteArchivesId(id, deleteFile);
+  const archive = await deleteArchivesId(parseNumericQuery(id), deleteFile);
 
   res.json(archive);
 });

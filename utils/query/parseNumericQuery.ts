@@ -1,5 +1,9 @@
-export const parseNumericQuery = (queryValue?: string | number) => {
-  if (!queryValue) {
+import { type ParsedQs } from "qs";
+
+export const parseNumericQuery = (
+  queryValue?: ParsedQs | (ParsedQs | string)[] | string | number,
+) => {
+  if (!queryValue || Array.isArray(queryValue)) {
     return undefined;
   }
 
