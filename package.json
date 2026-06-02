@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "start": "node -r ts-node/register ./bin/www",
+    "start": "node -r ts-node/register/transpile-only ./bin/www",
     "start:js": "node ./bin/www",
     "typecheck": "tsc --noEmit"
   },
@@ -21,7 +21,9 @@
     "jade": "~1.11.0",
     "morgan": "~1.9.1",
     "node-stream-zip": "^1.15.0",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -35,8 +37,6 @@
     "@types/qs": "^6.15.1",
     "@types/sharp": "^0.32.0",
     "eslint": "^10.3.0",
-    "globals": "^17.6.0",
-    "ts-node": "^10.9.2",
-    "typescript": "^6.0.3"
+    "globals": "^17.6.0"
   }
 }
