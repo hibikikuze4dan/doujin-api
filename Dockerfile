@@ -24,11 +24,10 @@ RUN apt-get update \
 COPY --from=build /app/node_modules ./node_modules
 COPY package.json ./
 COPY . .
-RUN mkdir /app/content
-RUN mkdir -p /app/data \
+RUN mkdir -p /app/content /app/data \
   && chown -R node:node /app
 
 EXPOSE 9422
 
-USER node
+USER root
 CMD ["npm", "start"]
