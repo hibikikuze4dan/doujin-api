@@ -15,6 +15,7 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=9422
+ENV APP_DATA=/app/data
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends libvips \
@@ -23,7 +24,8 @@ RUN apt-get update \
 COPY --from=build /app/node_modules ./node_modules
 COPY package.json ./
 COPY . .
-RUN chown -R node:node /app
+RUN mkdir -p /app/data \
+  && chown -R node:node /app
 
 EXPOSE 9422
 

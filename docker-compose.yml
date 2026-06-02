@@ -7,4 +7,7 @@ services:
       - "9422:9422"
     environment:
       PORT: 9422
+      APP_DATA: /app/data
+    volumes:
+      - ./data:/app/data
     restart: unless-stopped
