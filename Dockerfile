@@ -24,6 +24,7 @@ RUN apt-get update \
 COPY --from=build /app/node_modules ./node_modules
 COPY package.json ./
 COPY . .
+RUN mkdir /app/content
 RUN mkdir -p /app/data \
   && chown -R node:node /app
 
