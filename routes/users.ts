@@ -1,7 +1,8 @@
-var express = require("express");
-const { userQueries } = require("../db");
-const { postUsersCreate } = require("./utils");
-var router = express.Router();
+import { Router } from "express";
+import { userQueries } from "../db";
+import { postUsersCreate } from "./utils";
+
+const router = Router();
 
 /* GET users listing. */
 router.get("/", async (req, res, _next) => {
@@ -17,4 +18,4 @@ router.post("/create", async (req, res, _next) => {
   res.status(status).send(data);
 });
 
-module.exports = router;
+export default router;

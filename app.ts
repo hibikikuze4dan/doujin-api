@@ -1,19 +1,19 @@
-require("./db");
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
+import createError from "http-errors";
+import cookieParser from "cookie-parser";
+import express from "express";
+import path from "path";
+import logger from "morgan";
 
-const { configCreation } = require("./utils");
-var indexRouter = require("./routes/index");
-var collectionsRouter = require("./routes/collections");
-var archivesRouter = require("./routes/archives");
-var historyRouter = require("./routes/history");
-var publicRoter = require("./routes/public");
-var tagsRouter = require("./routes/tags");
-var usersRouter = require("./routes/users");
-const { seeds } = require("./db-utils");
+import "./db";
+import { configCreation } from "./utils";
+import indexRouter from "./routes/index";
+import archivesRouter from "./routes/archives";
+import collectionsRouter from "./routes/collections";
+import historyRouter from "./routes/history";
+import publicRouter from "./routes/public";
+import tagsRouter from "./routes/tags";
+import usersRouter from "./routes/users";
+import { seeds } from "./db-utils";
 
 var app = express();
 configCreation();
@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // NOTE: Add middleware that needs to run before requests accessing static content here
-app.use("/", publicRoter);
+app.use("/", publicRouter);
 ///////////////////////////////////////////////////////////////////////////////////////
 app.use("/", express.static("public"));
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ app.use(function (req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// @ts-ignore | error handler
 app.use(function (err, req, res, _next) {
   // set locals, only providing error in development
   res.locals.message = err.message;

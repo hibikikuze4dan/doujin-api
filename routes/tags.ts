@@ -19,4 +19,4 @@ router.get("/search", async (req, res, _next) => {
   }
 });
 
-module.exports = router;
+export default router;

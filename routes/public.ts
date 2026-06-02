@@ -46,4 +46,4 @@ router.get("/images/thumbs/:filename", async (req, res, next) => {
   next();
 });
 
-module.exports = router;
+export default router;

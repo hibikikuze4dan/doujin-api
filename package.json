@@ -25,8 +25,10 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/better-sqlite3": "^7.6.13",
+    "@types/cookie-parser": "^1.4.10",
     "@types/cosmiconfig": "^6.0.3",
     "@types/express": "^5.0.6",
+    "@types/morgan": "^1.9.10",
     "@types/node": "^25.9.1",
     "@types/qs": "^6.15.1",
     "@types/sharp": "^0.32.0",
