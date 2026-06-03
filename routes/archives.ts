@@ -9,6 +9,8 @@ import {
   postArchivesAdd,
   putArchivesRating,
 } from "./utils";
+import { getNumOfNewArchives } from "../db-utils";
+import { getUserConfigs } from "../utils";
 
 const router = express.Router();
 
@@ -112,9 +114,16 @@ router.get("/:id/thumbnail", async (req, res, _next) => {
 });
 
 router.post("/add", async (req, res, _next) => {
-  const archives = await postArchivesAdd();
+  const userConfig = await getUserConfigs();
+  const numberOfNewArchives = await getNumOfNewArchives({
+    contentDirectory: userConfig.content_directory,
+  });
 
-  res.json(archives);
+  postArchivesAdd();
+
+  res.json(
+    `Found ${numberOfNewArchives} new archive(s) to add to library. Check the logs for more details.`,
+  );
 });
 
 // TODO: Update user rating if rating already exists
