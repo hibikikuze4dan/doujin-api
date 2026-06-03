@@ -16,7 +16,10 @@ export const unzipFileContents = async (
   try {
     await createDirectory(outputdir, { recursive: true });
 
-    zip = new StreamZip.async({ file: filepath });
+    zip = new StreamZip.async({
+      file: filepath,
+      skipEntryNameValidation: true,
+    });
 
     const filecount = await zip.extract(null, outputdir);
 

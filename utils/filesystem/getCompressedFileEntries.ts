@@ -11,7 +11,10 @@ export const getCompressedFileEntries = async (
   let zip;
 
   try {
-    zip = new StreamZip.async({ file: filepath });
+    zip = new StreamZip.async({
+      file: filepath,
+      skipEntryNameValidation: true,
+    });
     const entries = await zip?.entries();
 
     return entries;

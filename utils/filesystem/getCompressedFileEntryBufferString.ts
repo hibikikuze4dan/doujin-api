@@ -9,7 +9,10 @@ export const getCompressedFileEntryBufferString = async (
   }
 
   try {
-    const zip = new StreamZip.async({ file: filepath });
+    const zip = new StreamZip.async({
+      file: filepath,
+      skipEntryNameValidation: true,
+    });
 
     const buffer = await zip.entryData(entry.name);
     await zip.close();

@@ -16,7 +16,10 @@ export const extractFirstImage = async (filepath = "", outputDir = "") => {
 
     await createDirectory(resolvedOutputDir, { recursive: true });
 
-    zip = new StreamZip.async({ file: filepath });
+    zip = new StreamZip.async({
+      file: filepath,
+      skipEntryNameValidation: true,
+    });
 
     const entries = await getCompressedFileEntries(filepath);
 
