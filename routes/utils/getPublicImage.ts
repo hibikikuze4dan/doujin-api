@@ -3,6 +3,7 @@ import {
   ARCHIVE_IMAGES_DIRECTORY_PATH,
   IMAGE_EXTENSIONS,
   IMAGE_NOT_FOUND_FILEPATH,
+  THUMBNAIL_IMAGE_DIRECTORY_PATH,
 } from "../../constants";
 import {
   createThumbnailForArchive,
@@ -25,8 +26,14 @@ export const getPublicImage = async ({
   const isImageFile = IMAGE_EXTENSIONS.has(path.extname(filename));
 
   if (archiveId && filename && isImageFile) {
+    const imageDirectoryPathToUse = isThumbnail
+      ? THUMBNAIL_IMAGE_DIRECTORY_PATH
+      : ARCHIVE_IMAGES_DIRECTORY_PATH;
+
+    const pathEnd = isThumbnail ? "" : `${archiveId}`;
+
     const archiveImagesOutputDirectory = path.resolve(
-      path.join(ARCHIVE_IMAGES_DIRECTORY_PATH, `${archiveId}`),
+      path.join(imageDirectoryPathToUse, `${pathEnd}`),
     );
 
     const doesFileExist = await fileExists(
