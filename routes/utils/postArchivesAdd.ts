@@ -1,20 +1,3 @@
-// const path = require("path");
-// const { getUserConfigs } = require("../../utils/configuration");
-// const {
-//   getCompressedFilepaths,
-//   getFileStats,
-//   getCompressedFileImages,
-//   fileExists,
-// } = require("../../utils/filesystem");
-// const {
-//   getLanraragiDatabaseBackup,
-//   getLanraragiTagsByFilename,
-//   getArchiveTags,
-//   createTagsDatabaseInsertArray,
-// } = require("../../utils/tagging");
-// const { createThumbnailForArchive } = require("../../utils/archives");
-// const { archivesQueries, tagsQueries } = require("../../db");
-
 import path from "path";
 import {
   createTagsDatabaseInsertArray,
@@ -53,43 +36,57 @@ export const postArchivesAdd = async () => {
     const newRowIds = [];
     const filepaths = await getCompressedFilepaths(resolvedContentDirectory);
 
-    for (const filepath of filepaths) {
-      const fileStats = await getFileStats(filepath);
+    const newFilepaths = filepaths.filter((filepath) => {
+      const archive = archivesQueries.getArchiveByFilepath(filepath);
+      const archiveExists = !!archive;
+      return !archiveExists;
+    });
 
-      const archiveEntry = archivesQueries.getArchiveByFilepath(filepath);
-      if (!archiveEntry && fileStats) {
-        const filename = path.basename(filepath);
-        const filenameWithoutExtension = path.parse(filepath).name;
+    for (const filepath of newFilepaths) {
+      try {
+        const fileStats = await getFileStats(filepath);
 
-        let tags = "";
+        const archiveEntry = archivesQueries.getArchiveByFilepath(filepath);
+        if (!archiveEntry && fileStats) {
+          const filename = path.basename(filepath);
+          const filenameWithoutExtension = path.parse(filepath).name;
 
-        if (archives) {
-          tags = getLanraragiTagsByFilename({
-            archives,
-            filename: filenameWithoutExtension,
+          let tags = "";
+
+          if (archives) {
+            tags = getLanraragiTagsByFilename({
+              archives,
+              filename: filenameWithoutExtension,
+            });
+          }
+
+          if (!tags) {
+            tags = await getArchiveTags(filepath);
+          }
+
+          const newRowId = archivesQueries.createArchiveEntry({
+            name: filename,
+            filepath,
+            date_created: fileStats.birthtime.toISOString(),
+            pagecount: (await getCompressedFileImages(filepath)).length,
+            size: fileStats.size,
           });
+
+          newRowIds.push(newRowId);
+
+          const tagsArray = createTagsDatabaseInsertArray(
+            newRowId,
+            tags,
+          ).filter((tag) => !!tag);
+          tagsQueries.addTags(tagsArray);
+
+          await createThumbnailForArchive(newRowId, filepath);
         }
-
-        if (!tags) {
-          tags = await getArchiveTags(filepath);
-        }
-
-        const newRowId = archivesQueries.createArchiveEntry({
-          name: filename,
-          filepath,
-          date_created: fileStats.birthtime.toISOString(),
-          pagecount: (await getCompressedFileImages(filepath)).length,
-          size: fileStats.size,
-        });
-
-        newRowIds.push(newRowId);
-
-        const tagsArray = createTagsDatabaseInsertArray(newRowId, tags).filter(
-          (tag) => !!tag,
+      } catch (error) {
+        console.error(
+          `Skipping archive ${filepath} because it failed during import:\n${error}`,
         );
-        tagsQueries.addTags(tagsArray);
-
-        await createThumbnailForArchive(newRowId, filepath);
+        continue;
       }
     }
 
