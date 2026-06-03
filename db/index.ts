@@ -17,9 +17,9 @@ import {
   initTagsQueries,
   initUserQueries,
 } from "../repositories";
+import { DATABASE_FILEPATH } from "../constants";
 
-// TODO: Create database at user supplied location
-const db = new Database(path.join(__dirname, "../data.db"));
+const db = new Database(DATABASE_FILEPATH);
 
 db.exec(ARCHIVES_MIGRATION);
 db.exec(ARCHIVE_HISTORY_MIGRATION);

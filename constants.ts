@@ -27,13 +27,17 @@ export const CONFIG_DEFAULTS = {
   ],
 };
 
-export const CONFIG_DIR = APP_DATA
-  ? path.join(APP_DATA, APP_NAME)
-  : path.join(os.homedir(), ".config", APP_NAME);
+export const CONFIG_DIR = path.resolve(
+  APP_DATA
+    ? path.join(APP_DATA, APP_NAME)
+    : path.join(os.homedir(), ".config", APP_NAME),
+);
 
 export const CONFIG_FILENAME = `.${APP_NAME}rc.json`;
 
 export const CONFIG_FILEPATH = path.join(CONFIG_DIR, CONFIG_FILENAME);
+
+export const DATABASE_FILEPATH = path.join(CONFIG_DIR, "archive_api.db");
 
 export const PUBLIC_FILES_DIRECTORY_PATH = path.resolve(
   path.join(__dirname, "public"),
