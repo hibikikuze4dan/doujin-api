@@ -4,6 +4,7 @@ import http from "http";
 import debug from "debug";
 
 import app from "./app";
+import { logger } from "./utils";
 const log = debug("doujin-api:server");
 
 function normalizePort(val: string | number) {
@@ -44,7 +45,7 @@ function onError(error: NodeJS.ErrnoException) {
 function onListening() {
   const addr = server.address();
   const bind = typeof addr === "string" ? `pipe ${addr}` : `port ${addr?.port}`;
-  log(`Listening on ${bind}`);
+  logger.info(`Listening on ${bind}`);
 }
 
 const port = normalizePort(process.env.PORT || "3000");

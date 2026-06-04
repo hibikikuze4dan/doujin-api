@@ -6,7 +6,7 @@ import path from "path";
 import logger from "morgan";
 
 import "./db";
-import { configCreation } from "./utils";
+import { configCreation, logFolderCreation } from "./utils";
 import indexRouter from "./routes/index";
 import archivesRouter from "./routes/archives";
 import collectionsRouter from "./routes/collections";
@@ -17,7 +17,11 @@ import usersRouter from "./routes/users";
 import { seeds } from "./db-utils";
 
 const app = express();
+
+// DEFAULT FOLDER/FILE CREATIONS ///////////
 configCreation();
+logFolderCreation();
+////////////////////////////////////////////
 
 // view engine setup
 app.set("views", path.join(__dirname, "../views"));

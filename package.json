@@ -5,9 +5,14 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "start": "node -r ts-node/register/transpile-only ./bin/www",
-    "start:js": "node ./bin/www",
+    "start": "node -r ts-node/register/transpile-only ./src/server.ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "typecheck": "tsc --noEmit"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
   },
   "dependencies": {
     "better-sqlite3": "^12.8.0",
@@ -24,7 +29,8 @@
     "sharp": "^0.34.5",
     "ts-node": "^10.9.2",
     "typescript": "^6.0.3",
-    "winston": "^3.19.0"
+    "winston": "^3.19.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -34,11 +40,16 @@
     "@types/cosmiconfig": "^6.0.3",
     "@types/debug": "^4.1.13",
     "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.9.1",
     "@types/qs": "^6.15.1",
     "@types/sharp": "^0.32.0",
+    "@types/supertest": "^7",
     "eslint": "^10.3.0",
-    "globals": "^17.6.0"
+    "globals": "^17.6.0",
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2",
+    "ts-jest": "^29.4.11"
   }
 }

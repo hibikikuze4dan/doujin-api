@@ -4,7 +4,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "lib": ["esnext"],
-    "types": ["node"],
+    "types": ["node", "jest"],
 
     "allowJs": true,
     "checkJs": false,
@@ -21,13 +21,6 @@
     "moduleDetection": "force",
     "forceConsistentCasingInFileNames": true
   },
-  "include": [
-    "**/*.js",
-    "**/*.mjs",
-    "**/*.cjs",
-    "**/*.ts",
-    "utils/archives/createThumbnailForArchive.ts",
-    "utils/configuration/index.ts"
-  ],
+  "include": ["**/*.js", "**/*.mjs", "**/*.cjs", "**/*.ts"],
   "exclude": ["node_modules", "dist", "coverage", ".yarn", "public"]
 }

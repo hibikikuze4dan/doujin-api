@@ -1,4 +1,6 @@
+import { type MakeDirectoryOptions } from "fs";
 import fs from "fs/promises";
+import { logger } from "../logs";
 
 const DEFAULT_OPTIONS = {
   recursive: true,
@@ -6,7 +8,7 @@ const DEFAULT_OPTIONS = {
 
 export const createDirectory = async (
   folderpath = "",
-  options = DEFAULT_OPTIONS,
+  options = DEFAULT_OPTIONS as Partial<MakeDirectoryOptions>,
 ) => {
   if (!folderpath) {
     return false;
@@ -16,7 +18,7 @@ export const createDirectory = async (
     await fs.mkdir(folderpath, { ...DEFAULT_OPTIONS, ...options });
     return true;
   } catch (error) {
-    console.error(
+    logger.error(
       `Something went wrong when trying to create folder ${folderpath}:\n${error}`,
     );
     return false;

@@ -27,15 +27,19 @@ export const CONFIG_DEFAULTS = {
   ],
 };
 
-export const CONFIG_DIR = path.resolve(
+export const APP_DIR = path.resolve(
   APP_DATA
     ? path.join(APP_DATA, APP_NAME)
     : path.join(os.homedir(), ".config", APP_NAME),
 );
 
+export const CONFIG_DIR = APP_DIR;
+
 export const CONFIG_FILENAME = `.${APP_NAME}rc.json`;
 
 export const CONFIG_FILEPATH = path.join(CONFIG_DIR, CONFIG_FILENAME);
+
+export const LOGS_DIR = path.join(APP_DIR, "logs");
 
 export const DATABASE_FILEPATH = path.join(CONFIG_DIR, "archive_api.db");
 
@@ -64,6 +68,18 @@ export const THUMBNAIL_IMAGE_DIRECTORY_PATH = path.join(
   PUBLIC_FILES_DIRECTORY_PATH,
   "images",
   "thumbs",
+);
+
+export const ERROR_LOG_FILEPATH = path.join(LOGS_DIR, "error-%DATE%.log");
+export const ERROR_LOG_AUDIT_FILEPATH = path.join(
+  LOGS_DIR,
+  ".error-audit.json",
+);
+
+export const COMBINED_LOG_FILEPATH = path.join(LOGS_DIR, "combined-%DATE%.log");
+export const COMBINED_LOG_AUDIT_FILEPATH = path.join(
+  LOGS_DIR,
+  ".combined-audit.json",
 );
 
 export const COMPRESSED_EXTENSIONS = new Set([

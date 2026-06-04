@@ -12,3 +12,4 @@ public/archives/*
 public/images/*
 backup.json
 *NOTES*
+*.test.ts

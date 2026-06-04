@@ -1,6 +1,7 @@
 export * from "./archives";
 export * from "./configuration";
 export * from "./filesystem";
+export * from "./logs";
 export * as passwordUtils from "./password";
 export * as queryUtils from "./query";
 export * from "./search";
