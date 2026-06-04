@@ -10,4 +10,5 @@ services:
       APP_DATA: /app/data
     volumes:
       - ./data:/app/data
+      - ./content:/app/content
     restart: unless-stopped

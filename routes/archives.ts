@@ -122,7 +122,7 @@ router.post("/add", async (req, res, _next) => {
   postArchivesAdd();
 
   res.json(
-    `Found ${numberOfNewArchives} new archive(s) to add to library. Check the logs for more details.`,
+    `Found ${numberOfNewArchives} new archive(s). Beggining process of adding new archives to the library. Check the logs for more details.`,
   );
 });
 
