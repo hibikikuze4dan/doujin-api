@@ -5,8 +5,8 @@ import express from "express";
 import path from "path";
 import logger from "morgan";
 
-import "../db";
-import { configCreation } from "../utils";
+import "./db";
+import { configCreation } from "./utils";
 import indexRouter from "./routes/index";
 import archivesRouter from "./routes/archives";
 import collectionsRouter from "./routes/collections";
@@ -14,7 +14,7 @@ import historyRouter from "./routes/history";
 import publicRouter from "./routes/public";
 import tagsRouter from "./routes/tags";
 import usersRouter from "./routes/users";
-import { seeds } from "../db-utils";
+import { seeds } from "./db-utils";
 
 const app = express();
 configCreation();

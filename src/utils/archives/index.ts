@@ -1,1 +1,1 @@
-export * from "../../../utils/archives";
+export * from "./createThumbnailForArchive";

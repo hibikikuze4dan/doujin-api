@@ -1,1 +1,2 @@
-export * from "../../../utils/password";
+export * from "./generateSalt";
+export * from "./hashPassword";

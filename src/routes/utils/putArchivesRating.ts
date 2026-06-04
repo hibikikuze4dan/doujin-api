@@ -1,4 +1,4 @@
-import { archivesQueries, ratingQueries } from "../../../db";
+import { archivesQueries, ratingQueries } from "../../db";
 
 export const putArchivesRating = async (
   { archive_id, user_id, rating } = {} as {

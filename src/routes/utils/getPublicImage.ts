@@ -4,13 +4,13 @@ import {
   IMAGE_EXTENSIONS,
   IMAGE_NOT_FOUND_FILEPATH,
   THUMBNAIL_IMAGE_DIRECTORY_PATH,
-} from "../../../constants";
+} from "../../constants";
 import {
   createThumbnailForArchive,
   fileExists,
   unzipFileContents,
-} from "../../../utils";
-import { archivesQueries } from "../../../db";
+} from "../../utils";
+import { archivesQueries } from "../../db";
 
 export const getPublicImage = async ({
   archiveId = "",

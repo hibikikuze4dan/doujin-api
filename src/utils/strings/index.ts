@@ -1,1 +1,1 @@
-export * from "../../../utils/strings";
+export * from "./splitByComma";

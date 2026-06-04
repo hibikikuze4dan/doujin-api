@@ -1,1 +1,1 @@
-export * from "../../../utils/startup";
+export * from "./configCreation";

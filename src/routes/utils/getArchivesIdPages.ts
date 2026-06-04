@@ -1,11 +1,11 @@
 import path from "path";
-import { archivesQueries, historyQueries } from "../../../db";
-import { ARCHIVE_IMAGES_DIRECTORY_PATH } from "../../../constants";
+import { archivesQueries, historyQueries } from "../../db";
+import { ARCHIVE_IMAGES_DIRECTORY_PATH } from "../../constants";
 import {
   deleteFolderContents,
   getImageFiles,
   unzipFileContents,
-} from "../../../utils";
+} from "../../utils";
 
 export const getArchivesIdPages = async (id: number) => {
   if (!id) {

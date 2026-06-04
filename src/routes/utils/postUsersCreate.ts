@@ -1,5 +1,5 @@
-import { userQueries } from "../../../db";
-import { generateSalt, hashPassword } from "../../../utils/password";
+import { userQueries } from "../../db";
+import { generateSalt, hashPassword } from "../../utils/password";
 
 export const postUsersCreate = async (
   { username, password } = {} as { username: string; password: string },

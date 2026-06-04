@@ -1,6 +1,6 @@
 import path from "path";
-import { THUMBNAIL_IMAGE_DIRECTORY_PATH } from "../../../constants";
-import { createThumbnailForArchive, fileExists } from "../../../utils";
+import { THUMBNAIL_IMAGE_DIRECTORY_PATH } from "../../constants";
+import { createThumbnailForArchive, fileExists } from "../../utils";
 
 export const getArchivesIdThumbnail = async (
   archiveId?: string | number,

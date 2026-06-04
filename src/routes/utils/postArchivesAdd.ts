@@ -10,9 +10,9 @@ import {
   getLanraragiDatabaseBackup,
   getLanraragiTagsByFilename,
   getUserConfigs,
-} from "../../../utils";
-import { LanraragiBackupArchive } from "../../../types/general";
-import { archivesQueries, tagsQueries } from "../../../db";
+} from "../../utils";
+import { LanraragiBackupArchive } from "../../types/general";
+import { archivesQueries, tagsQueries } from "../../db";
 
 export const postArchivesAdd = async () => {
   const newArchives = [];

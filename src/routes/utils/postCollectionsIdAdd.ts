@@ -1,5 +1,5 @@
-import { collectionsQueries } from "../../../db";
-import { getCollectionWithArchives } from "../../../db-utils";
+import { collectionsQueries } from "../../db";
+import { getCollectionWithArchives } from "../../db-utils";
 
 export const postCollectionsIdAdd = async (
   { collectionId, archiveId } = {} as {
