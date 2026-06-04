@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { archivesQueries, historyQueries } from "../../db";
+import { archivesQueries, historyQueries } from "../db";
 
 const router = Router();
 

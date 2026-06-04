@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { userQueries } from "../../db";
+import { userQueries } from "../db";
 import { postUsersCreate } from "./utils";
 
 const router = Router();

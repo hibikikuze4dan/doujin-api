@@ -1,5 +1,5 @@
 import express from "express";
-import { archivesQueries } from "../../db";
+import { archivesQueries } from "../db";
 import { SearchArchivesQuery } from "../../types/general";
 import { parseNumericQuery } from "../../utils/query";
 import {
@@ -9,7 +9,7 @@ import {
   postArchivesAdd,
   putArchivesRating,
 } from "./utils";
-import { getNumOfNewArchives } from "../../db-utils";
+import { getNumOfNewArchives } from "../db-utils";
 import { getUserConfigs } from "../../utils";
 
 const router = express.Router();

@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { collectionsQueries } from "../../db";
-import { getCollectionWithArchives } from "../../db-utils";
+import { collectionsQueries } from "../db";
+import { getCollectionWithArchives } from "../db-utils";
 import { postCollectionsAdd, postCollectionsIdAdd } from "./utils";
 import { parseNumericQuery } from "../../utils/query";
 

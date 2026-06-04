@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { tagsQueries } from "../../db";
+import { tagsQueries } from "../db";
 
 const router = Router();
 
