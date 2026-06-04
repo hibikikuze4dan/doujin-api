@@ -32,6 +32,7 @@
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2",
     "@types/cosmiconfig": "^6.0.3",
+    "@types/debug": "^4.1.13",
     "@types/express": "^5.0.6",
     "@types/morgan": "^1.9.10",
     "@types/node": "^25.9.1",
