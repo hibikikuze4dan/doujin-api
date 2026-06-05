@@ -7,12 +7,18 @@ export const ARCHIVE_SELECT = `
   d.pagecount,
   d.size,
   COALESCE(ar.avg_rating, 0) AS rating,
-  REPLACE(GROUP_CONCAT(DISTINCT CASE WHEN t.namespace = '' THEN t.name ELSE t.namespace || ':' || t.name END), ',', ', ') AS tags
+  REPLACE(GROUP_CONCAT(DISTINCT CASE WHEN t.namespace = '' THEN t.name ELSE t.namespace || ':' || t.name END), ',', ', ') AS tags,
+  tc.tag_count AS tag_count 
 `;
 
 export const ARCHIVE_JOINS = `
   FROM archives d
   LEFT JOIN tags t ON t.archive_id = d.id
+  LEFT JOIN (
+    SELECT archive_id, COUNT(*) AS tag_count
+    FROM tags
+    GROUP BY archive_id
+  ) tc ON tc.archive_id = d.id
   LEFT JOIN (
     SELECT archive_id, AVG(rating) AS avg_rating
     FROM archive_rating
