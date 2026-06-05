@@ -44,8 +44,10 @@ router.get("/search", async (req, res, _next) => {
     collection,
     sort_by,
     sort_direction,
+    page,
   } = req?.query ?? {};
 
+  const configData = await getUserConfigs();
   const results =
     archivesQueries.searchArchives({
       q,
@@ -65,6 +67,8 @@ router.get("/search", async (req, res, _next) => {
       collection,
       sort_by,
       sort_direction,
+      page: parseNumericQuery(page),
+      archivesPerPage: configData.archives_per_page,
     } as SearchArchivesQuery)?.results ?? [];
 
   const archives = results;

@@ -1,14 +1,16 @@
 import os from "os";
 import path from "path";
+import { ConfigData } from "./types/configuration";
 
 export const APP_NAME = "DoujinApi";
 
 export const APP_DATA = process.env.APP_DATA;
 
-export const CONFIG_DEFAULTS = {
+export const CONFIG_DEFAULTS: ConfigData = {
   content_directory: "",
   lrr_database_backup_path: "",
   thumbnail_directory: "",
+  archives_per_page: 20,
   tagging: [
     {
       name: "gallery-dl",

@@ -45,4 +45,6 @@ export interface SearchArchivesQuery {
   collection?: string;
   sort_by?: AllowedSortFields;
   sort_direction?: "asc" | "desc";
+  page?: number;
+  archivesPerPage?: number;
 }

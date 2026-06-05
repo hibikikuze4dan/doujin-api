@@ -31,6 +31,8 @@ export const searchArchives = (db: Database) => {
       collection,
       sort_by = "name",
       sort_direction = "asc",
+      page = 1,
+      archivesPerPage = 20,
     } = parameters;
 
     let conditions: DatabaseQueryConditions = [];
@@ -121,6 +123,10 @@ export const searchArchives = (db: Database) => {
         ? `ORDER BY ${sortField} ${dir}, d.name ${dir}`
         : `ORDER BY ${sortField} ${dir}`;
 
+    // --- Pagination ---
+    const offset = page === 1 ? 0 : (page - 1) * archivesPerPage;
+    const paginationClause = `LIMIT ${archivesPerPage} OFFSET ${offset}`;
+
     const sql = `
       SELECT
         ${ARCHIVE_SELECT}
@@ -128,6 +134,7 @@ export const searchArchives = (db: Database) => {
       ${whereClause}
       GROUP BY d.id
       ${orderClause}
+      ${paginationClause}
     `;
 
     const results = db
