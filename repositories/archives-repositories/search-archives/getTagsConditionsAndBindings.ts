@@ -1,4 +1,4 @@
-import { parseTag, splitByComma } from "../../../utils";
+import { parseTag, splitByComma } from "../../../src/utils";
 import {
   type DatabaseQueryBindings,
   type DatabaseQueryConditions,

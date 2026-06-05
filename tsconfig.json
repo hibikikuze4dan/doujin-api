@@ -21,6 +21,17 @@
     "moduleDetection": "force",
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["**/*.js", "**/*.mjs", "**/*.cjs", "**/*.ts"],
-  "exclude": ["node_modules", "dist", "coverage", ".yarn", "public"]
+  "include": [
+    "app.ts",
+    "bin/**/*.ts",
+    "constants.ts",
+    "db/**/*.ts",
+    "db-utils/**/*.ts",
+    "repositories/**/*.ts",
+    "routes/**/*.ts",
+    "types/**/*.ts",
+    "utils/**/*.ts",
+    "src/**/*.ts"
+  ],
+  "exclude": ["node_modules", "dist", "coverage", ".yarn", "public", "docs"]
 }

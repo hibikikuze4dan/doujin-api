@@ -1,4 +1,6 @@
-export const parseTag = (tag = "") => {
+export const parseTag = (
+  tag = "",
+): { namespace: string | null; name: string } => {
   const colonIndex = tag.indexOf(":");
 
   if (colonIndex === -1) {
