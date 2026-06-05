@@ -12,6 +12,8 @@ type GetRangeBasedConditionsAndBindingsParams = {
   max_size?: number;
   min_rating?: number;
   max_rating?: number;
+  min_tags?: number;
+  max_tags?: number;
 };
 
 export const getRangeBasedConditionsAndBindings = (
@@ -24,6 +26,8 @@ export const getRangeBasedConditionsAndBindings = (
     max_size,
     min_rating,
     max_rating,
+    min_tags,
+    max_tags,
   } = {} as GetRangeBasedConditionsAndBindingsParams,
 ) => {
   // --- Scalar range filters ---
@@ -50,6 +54,14 @@ export const getRangeBasedConditionsAndBindings = (
   if (max_rating !== undefined && !Number.isNaN(max_rating)) {
     conditions.push("COALESCE(ar.avg_rating, 0) <= ?");
     bindings.push(max_rating);
+  }
+  if (min_tags !== undefined && !Number.isNaN(min_tags)) {
+    conditions.push("COALESCE(tc.tag_count, 0) >= ?");
+    bindings.push(min_tags);
+  }
+  if (max_tags !== undefined && !Number.isNaN(max_tags)) {
+    conditions.push("COALESCE(tc.tag_count, 0) <= ?");
+    bindings.push(max_tags);
   }
 
   return { conditions, bindings };

@@ -8,7 +8,7 @@ export const ARCHIVE_SELECT = `
   d.size,
   COALESCE(ar.avg_rating, 0) AS rating,
   REPLACE(GROUP_CONCAT(DISTINCT CASE WHEN t.namespace = '' THEN t.name ELSE t.namespace || ':' || t.name END), ',', ', ') AS tags,
-  tc.tag_count AS tag_count 
+  COALESCE(tc.tag_count, 0) AS tag_count 
 `;
 
 export const ARCHIVE_JOINS = `

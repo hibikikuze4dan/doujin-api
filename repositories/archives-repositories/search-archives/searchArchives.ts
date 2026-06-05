@@ -24,6 +24,8 @@ export const searchArchives = (db: Database) => {
       max_size,
       min_rating,
       max_rating,
+      min_tags,
+      max_tags,
       added_after,
       added_before,
       created_after,
@@ -68,6 +70,8 @@ export const searchArchives = (db: Database) => {
       max_size: parseNumericQuery(max_size),
       min_rating: parseNumericQuery(min_rating),
       max_rating: parseNumericQuery(max_rating),
+      min_tags: parseNumericQuery(min_tags),
+      max_tags: parseNumericQuery(max_tags),
     });
     conditions = newConditionsAndBindings?.conditions;
     bindings = newConditionsAndBindings?.bindings;

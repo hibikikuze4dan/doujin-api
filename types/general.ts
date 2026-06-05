@@ -39,6 +39,8 @@ export interface SearchArchivesQuery {
   max_size?: string | number;
   min_rating?: string | number;
   max_rating?: string | number;
+  min_tags?: string | number;
+  max_tags?: string | number;
   added_after?: string;
   added_before?: string;
   created_after?: string;
