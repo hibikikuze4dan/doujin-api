@@ -113,6 +113,7 @@ export const searchArchives = (db: Database) => {
       date_added: "d.date_added",
       date_created: "d.date_created",
       rating: "COALESCE(ar.avg_rating, 0)",
+      random: "RANDOM()",
     };
 
     const sortField = allowedSortFields[sort_by] || allowedSortFields.name;

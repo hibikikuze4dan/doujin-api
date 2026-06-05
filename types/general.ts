@@ -26,7 +26,8 @@ type AllowedSortFields =
   | "pagecount"
   | "date_added"
   | "date_created"
-  | "rating";
+  | "rating"
+  | "random";
 export interface SearchArchivesQuery {
   q?: string;
   q_mode?: "and" | "or";
