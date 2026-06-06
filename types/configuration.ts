@@ -9,5 +9,6 @@ export type ConfigData = {
   content_directory: string;
   lrr_database_backup_path: string;
   thumbnail_directory: string;
+  auth_token: string;
   tagging: TaggingData[];
 };

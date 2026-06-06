@@ -11,6 +11,7 @@ import {
 } from "./utils";
 import { getNumOfNewArchives } from "../db-utils";
 import { getUserConfigs } from "../utils";
+import { authenticateToken } from "./middleware";
 
 const router = express.Router();
 
@@ -145,11 +146,14 @@ router.put("/rating", async (req, res, _next) => {
   res.status(status).json(data);
 });
 
-router.delete("/:id", async (req, res, _next) => {
+router.delete("/:id", authenticateToken, async (req, res, _next) => {
   const id = req.params.id;
-  const deleteFile = req?.body?.deleteFile;
+  const delete_file = req?.body?.delete_file;
 
-  const archive = await deleteArchivesId(parseNumericQuery(id), deleteFile);
+  const archive = await deleteArchivesId(
+    parseNumericQuery(id),
+    delete_file === true,
+  );
 
   res.json(archive);
 });

@@ -11,6 +11,7 @@ export const CONFIG_DEFAULTS: ConfigData = {
   lrr_database_backup_path: "",
   thumbnail_directory: "",
   archives_per_page: 20,
+  auth_token: "",
   tagging: [
     {
       name: "gallery-dl",

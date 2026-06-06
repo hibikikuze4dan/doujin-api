@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { CONFIG_DEFAULTS, CONFIG_DIR, CONFIG_FILEPATH } from "../../constants";
 import { createDirectory, createFile, fileExists } from "../filesystem";
 
@@ -6,6 +7,16 @@ export const configCreation = async () => {
 
   const configFileExists = await fileExists(CONFIG_FILEPATH);
   if (!configFileExists) {
-    await createFile(CONFIG_FILEPATH, JSON.stringify(CONFIG_DEFAULTS));
+    await createFile(
+      CONFIG_FILEPATH,
+      JSON.stringify(
+        {
+          ...CONFIG_DEFAULTS,
+          auth_token: crypto.randomBytes(32).toString("base64"),
+        },
+        null,
+        2,
+      ),
+    );
   }
 };
