@@ -16,7 +16,7 @@ export const searchArchives = (db: Database) => {
     const {
       q,
       q_mode = "and",
-      tag,
+      tags,
       tag_mode = "and",
       min_pages,
       max_pages,
@@ -54,7 +54,7 @@ export const searchArchives = (db: Database) => {
     newConditionsAndBindings = getTagsConditionsAndBindings({
       bindings,
       conditions,
-      tag,
+      tags,
       tag_mode,
     });
     conditions = newConditionsAndBindings?.conditions;
@@ -132,7 +132,7 @@ export const searchArchives = (db: Database) => {
     const offset = page === 1 ? 0 : (page - 1) * archivesPerPage;
     const paginationClause = `LIMIT ${archivesPerPage} OFFSET ${offset}`;
 
-    const sql = `
+    const sqlForArchives = `
       SELECT
         ${ARCHIVE_SELECT}
       ${ARCHIVE_JOINS}  
@@ -142,10 +142,21 @@ export const searchArchives = (db: Database) => {
       ${paginationClause}
     `;
 
-    const results = db
-      .prepare(sql)
+    const sqlForNumberOfResults = `
+      SELECT COUNT(DISTINCT d.id) AS totalResults
+      ${ARCHIVE_JOINS}  
+      ${whereClause}
+    `;
+
+    const archives = db
+      .prepare(sqlForArchives)
       .all(bindings) as ArchiveWithConnectedTableData[];
-    return { results };
+
+    const { totalResults } = db
+      .prepare(sqlForNumberOfResults)
+      .get(bindings) as { totalResults: number };
+
+    return { archives, totalResults };
   };
 
   return func;

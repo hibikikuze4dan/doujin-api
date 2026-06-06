@@ -31,7 +31,7 @@ type AllowedSortFields =
 export interface SearchArchivesQuery {
   q?: string;
   q_mode?: "and" | "or";
-  tag?: string;
+  tags?: string;
   tag_mode?: "and" | "or";
   min_pages?: string | number;
   max_pages?: string | number;

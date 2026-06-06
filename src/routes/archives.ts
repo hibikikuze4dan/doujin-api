@@ -29,7 +29,7 @@ router.get("/search", async (req, res, _next) => {
   const {
     q,
     q_mode,
-    tag,
+    tags,
     tag_mode,
     min_pages,
     max_pages,
@@ -50,11 +50,11 @@ router.get("/search", async (req, res, _next) => {
   } = req?.query ?? {};
 
   const configData = await getUserConfigs();
-  const results =
+  const { archives, totalResults } =
     archivesQueries.searchArchives({
       q,
       q_mode,
-      tag,
+      tags,
       tag_mode,
       min_pages: min_pages,
       max_pages: max_pages,
@@ -73,11 +73,9 @@ router.get("/search", async (req, res, _next) => {
       sort_direction,
       page: parseNumericQuery(page),
       archivesPerPage: configData.archives_per_page,
-    } as SearchArchivesQuery)?.results ?? [];
+    } as SearchArchivesQuery) ?? {};
 
-  const archives = results;
-
-  res.json(archives);
+  res.json({ archives, totalResults });
 });
 
 router.get("/random", async (req, res, _next) => {

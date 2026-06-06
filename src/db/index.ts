@@ -19,7 +19,7 @@ import {
 } from "../repositories";
 import { DATABASE_FILEPATH } from "../constants";
 
-const db = new Database(DATABASE_FILEPATH);
+const db = new Database(DATABASE_FILEPATH, { verbose: console.log });
 
 db.exec(ARCHIVES_MIGRATION);
 db.exec(ARCHIVE_HISTORY_MIGRATION);

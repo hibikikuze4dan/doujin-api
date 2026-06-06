@@ -7,15 +7,15 @@ import {
 export const getTagsConditionsAndBindings = ({
   bindings = [] as DatabaseQueryBindings,
   conditions = [] as DatabaseQueryConditions,
-  tag = "",
+  tags = "",
   tag_mode = "and",
 } = {}) => {
-  const tags = splitByComma(tag).map(parseTag);
+  const splitTags = splitByComma(tags).map(parseTag);
 
-  if (tags.length > 0) {
+  if (splitTags.length > 0) {
     if (tag_mode === "or") {
       // At least one tag must match — a single EXISTS with OR inside
-      const tagClauses = tags.map(({ namespace, name }) => {
+      const tagClauses = splitTags.map(({ namespace, name }) => {
         if (namespace) {
           bindings.push(namespace, name);
           return `(t2.namespace = ? AND t2.name = ? COLLATE NOCASE)`;
@@ -34,7 +34,7 @@ export const getTagsConditionsAndBindings = ({
       `);
     } else {
       // AND mode — one EXISTS per tag, all must be satisfied
-      for (const { namespace, name } of tags) {
+      for (const { namespace, name } of splitTags) {
         if (namespace) {
           bindings.push(namespace, name);
           conditions.push(`
