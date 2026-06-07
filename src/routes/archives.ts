@@ -89,6 +89,24 @@ router.get("/random", async (req, res, _next) => {
   res.json(archives);
 });
 
+router.get("/:id", async (req, res, _next) => {
+  const archive_id = req.params.id;
+
+  if (!archive_id) {
+    res.status(400).send("Please provide a valid archive ID");
+    return;
+  }
+
+  const archive = archivesQueries.getArchiveById(archive_id);
+
+  if (!archive) {
+    res.status(400).send("No archive found with the supplied archive ID");
+    return;
+  }
+
+  res.send(archive);
+});
+
 router.get("/:id/pages", async (req, res, _next) => {
   const id = req.params?.id;
 
