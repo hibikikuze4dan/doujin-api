@@ -17,7 +17,7 @@ export const createTagsDatabaseInsertObject = (
   }
 
   if (colonIndex === -1) {
-    return { archive_id: numericArchiveId, name: tag, namespace: "" };
+    return { archive_id: numericArchiveId, name: tag.trim(), namespace: "" };
   }
 
   const namespace = tag.slice(0, colonIndex).trim();
