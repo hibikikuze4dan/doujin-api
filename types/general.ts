@@ -51,3 +51,5 @@ export interface SearchArchivesQuery {
   page?: number;
   archivesPerPage?: number;
 }
+
+export type AddOrRemove = "add" | "remove";

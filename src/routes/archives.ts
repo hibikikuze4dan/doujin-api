@@ -1,16 +1,17 @@
 import express from "express";
-import { archivesQueries } from "../db";
+import { archivesQueries, tagsQueries } from "../db";
 import { SearchArchivesQuery } from "../../types/general";
-import { parseNumericQuery } from "../utils/query";
+import { parseAddOrRemove, parseNumericQuery } from "../utils/query";
 import {
   deleteArchivesId,
   getArchivesIdPages,
   getArchivesIdThumbnail,
   postArchivesAdd,
   putArchivesRating,
+  putArchiveTagsAddOrRemove,
 } from "./utils";
 import { getNumOfNewArchives } from "../db-utils";
-import { getUserConfigs } from "../utils";
+import { createTagsDatabaseInsertObject, getUserConfigs } from "../utils";
 import { authenticateToken } from "./middleware";
 
 const router = express.Router();
@@ -163,6 +164,30 @@ router.put("/rating", async (req, res, _next) => {
 
   res.status(status).json(data);
 });
+
+router.put(
+  "/:id/tags/:addOrRemove",
+  authenticateToken,
+  async (req, res, _next) => {
+    const archive_id = req?.params?.id;
+    const arcId = Array.isArray(archive_id)
+      ? (archive_id[0] ?? "")
+      : `${archive_id ?? ""}`;
+
+    const AOR = req?.params?.addOrRemove ?? "";
+    const addOrRemove = Array.isArray(AOR) ? "" : AOR;
+
+    const tags: string[] = req?.body?.tags ?? [];
+
+    const results = await putArchiveTagsAddOrRemove({
+      archiveId: parseNumericQuery(arcId),
+      addOrRemove,
+      tags,
+    });
+
+    res.json(results);
+  },
+);
 
 router.delete("/:id", authenticateToken, async (req, res, _next) => {
   const id = req.params.id;

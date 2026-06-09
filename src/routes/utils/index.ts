@@ -6,4 +6,5 @@ export * from "./postArchivesAdd";
 export * from "./postCollectionsAdd";
 export * from "./postCollectionsIdAdd";
 export * from "./postUsersCreate";
+export * from "./putArchiveTagsAddOrRemove";
 export * from "./putArchivesRating";
