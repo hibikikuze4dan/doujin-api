@@ -36,6 +36,21 @@ const getTagsByArchiveId = (db: Database) => {
   return (archive_id: number) => stmt.all(archive_id) as Tag[];
 };
 
+const getTagsByArchiveIdNameAndNamespace = (db: Database) => {
+  const stmt = db.prepare(
+    `SELECT * FROM tags WHERE archive_id = ? AND name = ? AND namespace = ?`,
+  );
+  return ({
+    archive_id,
+    name,
+    namespace,
+  }: {
+    archive_id: number;
+    name: string;
+    namespace: string;
+  }) => stmt.get(archive_id, name, namespace);
+};
+
 const getTagsByName = (db: Database) => {
   const stmt = db.prepare(`SELECT * FROM tags WHERE name = ?`);
   return (name: string) => stmt.all(name) as Tag[];
@@ -102,13 +117,30 @@ const deleteTagByNameAndNamespace = (db: Database) => {
   return (name = "", namespace = "") => stmt.run(name, namespace);
 };
 
+const deleteTagByArchiveIdAndTagData = (db: Database) => {
+  const stmt = db.prepare(
+    `DELETE FROM tags WHERE archive_id = ? AND name = ? AND namespace = ?`,
+  );
+  return ({
+    archive_id,
+    name,
+    namespace,
+  }: {
+    archive_id: number;
+    name: string;
+    namespace: string;
+  }) => stmt.run(archive_id, name, namespace);
+};
+
 export const initTagsQueries = (db: Database) => ({
   addTag: addTag(db),
   addTags: addTags(db),
   deleteTag: deleteTag(db),
   deleteTagsByArchiveId: deleteTagsByArchiveId(db),
+  deleteTagByArchiveIdAndTagData: deleteTagByArchiveIdAndTagData(db),
   deleteTagByNameAndNamespace: deleteTagByNameAndNamespace(db),
   getTagsByArchiveId: getTagsByArchiveId(db),
+  getTagsByArchiveIdNameAndNamespace: getTagsByArchiveIdNameAndNamespace(db),
   getTagsByName: getTagsByName(db),
   getTagByNameAndNamespace: getTagByNameAndNamespace(db),
   getTagsByNamespace: getTagsByNamespace(db),
