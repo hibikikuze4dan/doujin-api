@@ -116,7 +116,7 @@ export const searchArchives = (db: Database) => {
       pagecount: "d.pagecount",
       date_added: "d.date_added",
       date_created: "d.date_created",
-      rating: "COALESCE(ar.avg_rating, 0)",
+      rating: "d.rating",
       random: "RANDOM()",
     };
 
@@ -124,15 +124,16 @@ export const searchArchives = (db: Database) => {
     let dir = (sort_direction || "asc").toLowerCase();
     dir = dir === "desc" ? "DESC" : "ASC";
     const orderClause =
-      sort_by === "rating"
-        ? `ORDER BY ${sortField} ${dir}, d.name ${dir}, d.id ${dir}`
+      sort_by === "random"
+        ? `ORDER BY RANDOM()`
         : `ORDER BY ${sortField} ${dir}, d.id ${dir}`;
 
     // --- Pagination ---
     const offset = page === 1 ? 0 : (page - 1) * archivesPerPage;
     const paginationClause = `LIMIT ${archivesPerPage} OFFSET ${offset}`;
 
-    const sqlForArchives = `
+    const explain = `
+      EXPLAIN QUERY PLAN
       SELECT
         ${ARCHIVE_SELECT}
       ${ARCHIVE_JOINS}  
@@ -142,11 +143,42 @@ export const searchArchives = (db: Database) => {
       ${paginationClause}
     `;
 
-    const sqlForNumberOfResults = `
-      SELECT COUNT(DISTINCT d.id) AS totalResults
-      ${ARCHIVE_JOINS}  
+    const sqlForPagedIds = `
+      SELECT d.id
+      ${ARCHIVE_JOINS}
       ${whereClause}
+      GROUP BY d.id
+      ${orderClause}
+      ${paginationClause}
     `;
+
+    const sqlForArchives = `
+      SELECT
+        ${ARCHIVE_SELECT}
+      FROM (${sqlForPagedIds}) paged
+      JOIN archives d ON d.id = paged.id
+      LEFT JOIN tags t ON t.archive_id = d.id
+      LEFT JOIN (
+        SELECT archive_id, COUNT(*) AS tag_count
+        FROM tags
+        GROUP BY archive_id
+      ) tc ON tc.archive_id = d.id
+      GROUP BY d.id
+      ${orderClause}
+    `;
+
+    const sqlForNumberOfResults = `
+      SELECT COUNT(*) AS totalResults
+      FROM (
+        SELECT d.id
+        ${ARCHIVE_JOINS}
+        ${whereClause}
+        GROUP BY d.id
+      ) filtered
+    `;
+
+    // const explainstr = db.prepare(explain).all(bindings);
+    // console.log(explainstr, "explained");
 
     const archives = db
       .prepare(sqlForArchives)

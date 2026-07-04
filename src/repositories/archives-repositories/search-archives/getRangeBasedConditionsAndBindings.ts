@@ -48,11 +48,11 @@ export const getRangeBasedConditionsAndBindings = (
     bindings.push(max_size);
   }
   if (min_rating !== undefined && !Number.isNaN(min_rating)) {
-    conditions.push("COALESCE(ar.avg_rating, 0) >= ?");
+    conditions.push("COALESCE(d.rating, 0) >= ?");
     bindings.push(min_rating);
   }
   if (max_rating !== undefined && !Number.isNaN(max_rating)) {
-    conditions.push("COALESCE(ar.avg_rating, 0) <= ?");
+    conditions.push("COALESCE(d.rating, 0) <= ?");
     bindings.push(max_rating);
   }
   if (min_tags !== undefined && !Number.isNaN(min_tags)) {

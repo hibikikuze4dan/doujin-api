@@ -20,6 +20,35 @@ export const ARCHIVE_INDEX_MIGRATION = `
   CREATE INDEX IF NOT EXISTS idx_archives_rating ON archives(rating, id);
 `;
 
+export const ARCHIVE_FTS_MIGRATION = `
+  CREATE VIRTUAL TABLE IF NOT EXISTS archives_fts USING fts5(
+    name,
+    content='archives',
+    content_rowid='id',
+    tokenize='trigram'
+  );
+
+  INSERT INTO archives_fts(rowid, name)
+  SELECT id, name
+  FROM archives
+  WHERE id NOT IN (SELECT rowid FROM archives_fts);
+`;
+
+export const ARCHIVE_FTS_TRIGGERS_MIGRATION = `
+  CREATE TRIGGER IF NOT EXISTS archives_fts_ai AFTER INSERT ON archives BEGIN
+    INSERT INTO archives_fts(rowid, name) VALUES (new.id, new.name);
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archives_fts_ad AFTER DELETE ON archives BEGIN
+    INSERT INTO archives_fts(archives_fts, rowid, name) VALUES ('delete', old.id, old.name);
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archives_fts_au AFTER UPDATE ON archives BEGIN
+    INSERT INTO archives_fts(archives_fts, rowid, name) VALUES ('delete', old.id, old.name);
+    INSERT INTO archives_fts(rowid, name) VALUES (new.id, new.name);
+  END;
+`;
+
 export const TAGS_MIGRATION = `
   CREATE TABLE IF NOT EXISTS tags (
     id          INTEGER PRIMARY KEY,
@@ -29,6 +58,38 @@ export const TAGS_MIGRATION = `
     FOREIGN KEY (archive_id) REFERENCES archives(id) ON DELETE CASCADE,
     UNIQUE (archive_id, name, namespace)
   )
+`;
+
+export const TAGS_FTS_MIGRATION = `
+  CREATE VIRTUAL TABLE IF NOT EXISTS tags_fts USING fts5(
+    tag_text,
+    content='',
+    tokenize='trigram'
+  );
+
+  INSERT INTO tags_fts(rowid, tag_text)
+  SELECT id, CASE WHEN namespace = '' THEN name ELSE namespace || ':' || name END
+  FROM tags
+  WHERE id NOT IN (SELECT rowid FROM tags_fts);
+`;
+
+export const TAGS_FTS_TRIGGERS_MIGRATION = `
+  CREATE TRIGGER IF NOT EXISTS tags_fts_ai AFTER INSERT ON tags BEGIN
+    INSERT INTO tags_fts(rowid, tag_text)
+    VALUES (new.id, CASE WHEN new.namespace = '' THEN new.name ELSE new.namespace || ':' || new.name END);
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS tags_fts_ad AFTER DELETE ON tags BEGIN
+    INSERT INTO tags_fts(tags_fts, rowid, tag_text)
+    VALUES ('delete', old.id, CASE WHEN old.namespace = '' THEN old.name ELSE old.namespace || ':' || old.name END);
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS tags_fts_au AFTER UPDATE ON tags BEGIN
+    INSERT INTO tags_fts(tags_fts, rowid, tag_text)
+    VALUES ('delete', old.id, CASE WHEN old.namespace = '' THEN old.name ELSE old.namespace || ':' || old.name END);
+    INSERT INTO tags_fts(rowid, tag_text)
+    VALUES (new.id, CASE WHEN new.namespace = '' THEN new.name ELSE new.namespace || ':' || new.name END);
+  END;
 `;
 
 export const ARCHIVE_HISTORY_MIGRATION = `
