@@ -1,5 +1,5 @@
 import { type Database } from "better-sqlite3";
-import { User } from "../types/database";
+import { User } from "../../types/database";
 
 const createUser = (db: Database) => {
   const stmt = db.prepare(

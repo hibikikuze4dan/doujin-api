@@ -1,4 +1,4 @@
-import { splitByComma } from "../../../src/utils";
+import { splitByComma } from "../../../utils";
 import {
   type DatabaseQueryBindings,
   type DatabaseQueryConditions,

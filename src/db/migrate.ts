@@ -1,6 +1,7 @@
 export const ARCHIVES_MIGRATION = `
   CREATE TABLE IF NOT EXISTS archives (
     id          INTEGER PRIMARY KEY,
+    avg_rating  INTEGER NOT NULL DEFAULT 0,
     name        TEXT    NOT NULL,
     filepath     TEXT    NOT NULL UNIQUE,
     date_added  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
@@ -8,6 +9,15 @@ export const ARCHIVES_MIGRATION = `
     pagecount   INTEGER NOT NULL,
     size        INTEGER NOT NULL
   )
+`;
+
+export const ARCHIVE_INDEX_MIGRATION = `
+  CREATE INDEX IF NOT EXISTS idx_archives_name ON archives(name, id);
+  CREATE INDEX IF NOT EXISTS idx_archives_size ON archives(size, id);
+  CREATE INDEX IF NOT EXISTS idx_archives_pagecount ON archives(pagecount, id);
+  CREATE INDEX IF NOT EXISTS idx_archives_date_added ON archives(date_added, id);
+  CREATE INDEX IF NOT EXISTS idx_archives_date_created ON archives(date_created, id);
+  CREATE INDEX IF NOT EXISTS idx_archives_avg_rating ON archives(avg_rating, id);
 `;
 
 export const TAGS_MIGRATION = `
@@ -51,6 +61,32 @@ export const ARCHIVE_RATING_MIGRATION = `
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (archive_id) REFERENCES archives(id) ON DELETE CASCADE
   )
+`;
+
+export const AVERAGE_ARCHIVE_RATING_TRIGGER_UPDATE_MIGRATION = `
+  CREATE TRIGGER IF NOT EXISTS trg_rating_after_insert
+  AFTER INSERT ON archive_rating
+  BEGIN
+    UPDATE archives
+    SET avg_rating = (SELECT COALESCE(AVG(rating), 0) FROM archive_rating WHERE archive_id = NEW.archive_id)
+    WHERE id = NEW.archive_id;
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS trg_rating_after_update
+  AFTER UPDATE ON archive_rating
+  BEGIN
+    UPDATE archives
+    SET avg_rating = (SELECT COALESCE(AVG(rating), 0) FROM archive_rating WHERE archive_id = NEW.archive_id)
+    WHERE id = NEW.archive_id;
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS trg_rating_after_delete
+  AFTER DELETE ON archive_rating
+  BEGIN
+    UPDATE archives
+    SET avg_rating = (SELECT COALESCE(AVG(rating), 0) FROM archive_rating WHERE archive_id = OLD.archive_id)
+    WHERE id = OLD.archive_id;
+  END;
 `;
 
 export const COLLECTIONS_MIGRATION = `

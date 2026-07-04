@@ -5,7 +5,7 @@ import {
   ArchiveTableAllRespnse,
   ArchiveTableGetResponse,
   ArchiveWithConnectedTableData,
-} from "../../types/database";
+} from "../../../types/database";
 import { ArchiveEntryParams } from "./types";
 
 const getAllArchives = (db: Database) => {

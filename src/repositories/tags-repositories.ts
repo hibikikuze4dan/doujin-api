@@ -1,5 +1,5 @@
 import { type Database } from "better-sqlite3";
-import { type Tag } from "../types/database";
+import { type Tag } from "../../types/database";
 
 const addTag = (db: Database) => {
   const stmt = db.prepare(`

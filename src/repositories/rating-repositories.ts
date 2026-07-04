@@ -1,5 +1,5 @@
 import { type Database } from "better-sqlite3";
-import { type ArchiveRating } from "../types/database";
+import { type ArchiveRating } from "../../types/database";
 
 const getAllRatings = (db: Database) => {
   const stmt = db.prepare(

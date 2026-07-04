@@ -8,3 +8,4 @@ public/images/*
 node_modules
 backup.json
 .yarnrc.yml
+docs

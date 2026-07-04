@@ -6,7 +6,7 @@ import {
 import {
   type ArchiveTableAllRespnse,
   type Collection,
-} from "../types/database";
+} from "../../types/database";
 
 const createCollection = (db: Database) => {
   const stmt = db.prepare(`

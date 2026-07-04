@@ -1,5 +1,5 @@
 import { type Database } from "better-sqlite3";
-import { type ArchiveHistory } from "../types/database";
+import { type ArchiveHistory } from "../../types/database";
 
 const getAllHistory = (db: Database) => {
   const stmt = db.prepare(`

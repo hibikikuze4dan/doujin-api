@@ -7,9 +7,9 @@ import { getQueryConditionsAndBindings } from "./getQueryConditionsAndBindings";
 import { getTagsConditionsAndBindings } from "./getTagsConditionsAndBindings";
 import { getRangeBasedConditionsAndBindings } from "./getRangeBasedConditionsAndBindings";
 import { ARCHIVE_JOINS, ARCHIVE_SELECT } from "../constants";
-import { type SearchArchivesQuery } from "../../../types/general";
-import { parseNumericQuery } from "../../../src/utils/query";
-import { type ArchiveWithConnectedTableData } from "../../../types/database";
+import { type SearchArchivesQuery } from "../../../../types/general";
+import { parseNumericQuery } from "../../../utils/query";
+import { type ArchiveWithConnectedTableData } from "../../../../types/database";
 
 export const searchArchives = (db: Database) => {
   const func = (parameters = {} as SearchArchivesQuery) => {
