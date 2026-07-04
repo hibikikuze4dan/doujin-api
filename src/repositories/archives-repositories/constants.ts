@@ -6,7 +6,7 @@ export const ARCHIVE_SELECT = `
   d.date_created,
   d.pagecount,
   d.size,
-  COALESCE(ar.avg_rating, 0) AS rating,
+  d.rating,
   REPLACE(GROUP_CONCAT(DISTINCT CASE WHEN t.namespace = '' THEN t.name ELSE t.namespace || ':' || t.name END), ',', ', ') AS tags,
   COALESCE(tc.tag_count, 0) AS tag_count 
 `;
@@ -19,9 +19,4 @@ export const ARCHIVE_JOINS = `
     FROM tags
     GROUP BY archive_id
   ) tc ON tc.archive_id = d.id
-  LEFT JOIN (
-    SELECT archive_id, AVG(rating) AS avg_rating
-    FROM archive_rating
-    GROUP BY archive_id
-  ) ar ON ar.archive_id = d.id
 `;

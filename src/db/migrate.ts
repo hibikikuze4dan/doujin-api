@@ -1,7 +1,7 @@
 export const ARCHIVES_MIGRATION = `
   CREATE TABLE IF NOT EXISTS archives (
     id          INTEGER PRIMARY KEY,
-    avg_rating  INTEGER NOT NULL DEFAULT 0,
+    rating  INTEGER NOT NULL DEFAULT 0,
     name        TEXT    NOT NULL,
     filepath     TEXT    NOT NULL UNIQUE,
     date_added  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
@@ -17,7 +17,7 @@ export const ARCHIVE_INDEX_MIGRATION = `
   CREATE INDEX IF NOT EXISTS idx_archives_pagecount ON archives(pagecount, id);
   CREATE INDEX IF NOT EXISTS idx_archives_date_added ON archives(date_added, id);
   CREATE INDEX IF NOT EXISTS idx_archives_date_created ON archives(date_created, id);
-  CREATE INDEX IF NOT EXISTS idx_archives_avg_rating ON archives(avg_rating, id);
+  CREATE INDEX IF NOT EXISTS idx_archives_rating ON archives(rating, id);
 `;
 
 export const TAGS_MIGRATION = `
@@ -68,7 +68,7 @@ export const AVERAGE_ARCHIVE_RATING_TRIGGER_UPDATE_MIGRATION = `
   AFTER INSERT ON archive_rating
   BEGIN
     UPDATE archives
-    SET avg_rating = (SELECT COALESCE(AVG(rating), 0) FROM archive_rating WHERE archive_id = NEW.archive_id)
+    SET rating = (SELECT COALESCE(AVG(rating), 0) FROM archive_rating WHERE archive_id = NEW.archive_id)
     WHERE id = NEW.archive_id;
   END;
 
@@ -76,7 +76,7 @@ export const AVERAGE_ARCHIVE_RATING_TRIGGER_UPDATE_MIGRATION = `
   AFTER UPDATE ON archive_rating
   BEGIN
     UPDATE archives
-    SET avg_rating = (SELECT COALESCE(AVG(rating), 0) FROM archive_rating WHERE archive_id = NEW.archive_id)
+    SET rating = (SELECT COALESCE(AVG(rating), 0) FROM archive_rating WHERE archive_id = NEW.archive_id)
     WHERE id = NEW.archive_id;
   END;
 
@@ -84,7 +84,7 @@ export const AVERAGE_ARCHIVE_RATING_TRIGGER_UPDATE_MIGRATION = `
   AFTER DELETE ON archive_rating
   BEGIN
     UPDATE archives
-    SET avg_rating = (SELECT COALESCE(AVG(rating), 0) FROM archive_rating WHERE archive_id = OLD.archive_id)
+    SET rating = (SELECT COALESCE(AVG(rating), 0) FROM archive_rating WHERE archive_id = OLD.archive_id)
     WHERE id = OLD.archive_id;
   END;
 `;

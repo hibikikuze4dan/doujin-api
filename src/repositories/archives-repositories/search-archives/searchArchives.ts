@@ -125,8 +125,8 @@ export const searchArchives = (db: Database) => {
     dir = dir === "desc" ? "DESC" : "ASC";
     const orderClause =
       sort_by === "rating"
-        ? `ORDER BY ${sortField} ${dir}, d.name ${dir}`
-        : `ORDER BY ${sortField} ${dir}`;
+        ? `ORDER BY ${sortField} ${dir}, d.name ${dir}, d.id ${dir}`
+        : `ORDER BY ${sortField} ${dir}, d.id ${dir}`;
 
     // --- Pagination ---
     const offset = page === 1 ? 0 : (page - 1) * archivesPerPage;
