@@ -156,7 +156,7 @@ export const COLLECTIONS_MIGRATION = `
     name        TEXT    NOT NULL UNIQUE,
     description TEXT    NOT NULL DEFAULT '',
     date_added  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
-  );
+    );
 `;
 
 export const COLLECTION_ARCHIVES_MIGRATION = `
@@ -164,6 +164,12 @@ export const COLLECTION_ARCHIVES_MIGRATION = `
     collection_id INTEGER NOT NULL REFERENCES collections(id) ON DELETE CASCADE,
     archive_id     INTEGER NOT NULL REFERENCES archives(id)     ON DELETE CASCADE,
     date_added    TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+    position    REAL    NOT NULL DEFAULT 0,
     PRIMARY KEY (collection_id, archive_id)
   );
+`;
+
+export const COLLECTION_ARCHIVES_INDEX_MIGRATION = `
+  CREATE INDEX IF NOT EXISTS idx_collection_archives_position
+    ON collection_archives(collection_id, position);
 `;

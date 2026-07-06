@@ -109,3 +109,6 @@ export const IMAGE_EXTENSIONS = new Set([
   ".tiff",
   ".ico",
 ]);
+
+export const EPSILON = 1e-6;
+export const REBALANCE_SPACING = 1000;

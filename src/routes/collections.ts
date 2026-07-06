@@ -82,6 +82,45 @@ router.put("/:collectionId/remove", async (req, res, _next) => {
   res.json(collection);
 });
 
+router.patch("/:collectionId/reorder", async (req, res, _next) => {
+  const collectionId = parseNumericQuery(req?.params?.collectionId);
+  const archiveId = parseNumericQuery(req?.body?.arcid);
+  const beforeArchiveId = parseNumericQuery(req?.body?.before_arcid);
+
+  let errorMessage = "";
+  let result;
+
+  if (!collectionId) {
+    errorMessage = "Please provide a valid collection ID";
+  } else if (!archiveId) {
+    errorMessage = "Please provide a valid archive ID";
+  } else if (!beforeArchiveId) {
+    errorMessage = "Please provide a valide archive ID to move before";
+  }
+
+  if (errorMessage) {
+    res.status(400).json(errorMessage);
+    return;
+  }
+
+  if (collectionId && archiveId && beforeArchiveId) {
+    result = collectionsQueries.reorderArchiveInCollection(
+      collectionId,
+      archiveId,
+      beforeArchiveId,
+    );
+  }
+
+  if (result?.changes && collectionId) {
+    res.send(await getCollectionWithArchives(collectionId));
+    return;
+  } else {
+    errorMessage = "Something went wrong!";
+  }
+
+  res.status(400).json(errorMessage);
+});
+
 router.delete("/", async (req, res, _next) => {
   const { id: collectionId } = req?.body ?? {};
 
