@@ -35,7 +35,7 @@ export const createThumbnail = async (
     const imageFilename = filename ? filename : path.basename(imagePath);
     const outputThumbnailPath = path.join(
       outputDir,
-      `${prefix}${imageFilename}.jpeg`,
+      `${prefix}${imageFilename}.webp`,
     );
 
     await sharp(imagePath)
@@ -44,7 +44,7 @@ export const createThumbnail = async (
         withoutEnlargement: true,
         ...otherResizeOptions,
       })
-      .jpeg({ quality })
+      .webp({ quality })
       .toFile(outputThumbnailPath);
 
     return outputThumbnailPath;
