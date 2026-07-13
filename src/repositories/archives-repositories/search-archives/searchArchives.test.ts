@@ -63,6 +63,48 @@ describe("searchArchives", () => {
     expect(archives[0]?.name).toBe("demon slayer");
   });
 
+  it("supports multi-word search queries with combined FTS", () => {
+    const db = new Database(":memory:");
+
+    db.exec(ARCHIVES_MIGRATION);
+    db.exec(ARCHIVE_INDEX_MIGRATION);
+    db.exec(ARCHIVE_HISTORY_MIGRATION);
+    db.exec(USERS_MIGRATION);
+    db.exec(ARCHIVE_RATING_MIGRATION);
+    db.exec(AVERAGE_ARCHIVE_RATING_TRIGGER_UPDATE_MIGRATION);
+    db.exec(COLLECTIONS_MIGRATION);
+    db.exec(COLLECTION_ARCHIVES_MIGRATION);
+    db.exec(TAGS_MIGRATION);
+    db.exec(ARCHIVE_FTS_MIGRATION);
+    db.exec(ARCHIVE_FTS_TRIGGERS_MIGRATION);
+    db.exec(ARCHIVES_TAGS_FTS_MIGRATION);
+    db.exec(ARCHIVES_TAGS_FTS_TRIGGERS_MIGRATION);
+    db.exec(TAGS_FTS_MIGRATION);
+    db.exec(TAGS_FTS_TRIGGERS_MIGRATION);
+
+    const insertArchive = db.prepare(`
+      INSERT INTO archives (id, name, filepath, pagecount, size, rating)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+
+    insertArchive.run(1, "demon slayer", "/a.cbz", 10, 100, 9);
+    insertArchive.run(2, "slayer demon", "/b.cbz", 12, 200, 8);
+    insertArchive.run(3, "demon king", "/c.cbz", 8, 150, 7);
+
+    const search = searchArchives(db);
+    const { archives, totalResults } = search({
+      q: "demon slayer",
+      q_mode: "and",
+      page: 1,
+      archivesPerPage: 10,
+    });
+
+    expect(totalResults).toBe(2);
+    expect(archives.map((archive) => archive.name).sort()).toEqual(
+      ["demon slayer", "slayer demon"].sort(),
+    );
+  });
+
   it("uses the FTS indexing tables in the generated SQL", () => {
     const db = new Database(":memory:");
 

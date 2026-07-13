@@ -16,6 +16,7 @@ export const searchArchives = (db: Database) => {
     const {
       q,
       q_mode = "and",
+      q_match_mode = "prefix",
       tags,
       tag_mode = "and",
       min_pages,
@@ -46,6 +47,7 @@ export const searchArchives = (db: Database) => {
       bindings,
       conditions,
       q_mode,
+      q_match_mode,
       q,
     });
     conditions = newConditionsAndBindings?.conditions;

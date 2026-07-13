@@ -51,6 +51,7 @@ export interface SearchArchivesQuery {
   page?: number;
   archivesPerPage?: number;
   include_total_results?: boolean;
+  q_match_mode?: "prefix" | "phrase";
 }
 
 export type AddOrRemove = "add" | "remove";

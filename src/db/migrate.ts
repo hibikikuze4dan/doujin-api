@@ -101,7 +101,7 @@ export const ARCHIVES_TAGS_FTS_MIGRATION = `
     name,
     tags,
     content='',
-    tokenize='trigram'
+    tokenize='unicode61'
   );
 
   INSERT INTO archives_tags_fts(rowid, name, tags)

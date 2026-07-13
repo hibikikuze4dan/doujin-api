@@ -50,6 +50,7 @@ router.get("/search", async (req, res, _next) => {
     sort_direction,
     page,
     include_total_results,
+    q_match_mode,
   } = req?.query ?? {};
 
   const configData = await getUserConfigs();
@@ -82,6 +83,7 @@ router.get("/search", async (req, res, _next) => {
       collection,
       sort_by,
       sort_direction,
+      q_match_mode,
       page: pageNumberToUse,
       archivesPerPage: configData.archives_per_page,
       include_total_results: includeTotalResults,
