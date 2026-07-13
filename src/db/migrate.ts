@@ -21,17 +21,22 @@ export const ARCHIVE_INDEX_MIGRATION = `
 `;
 
 export const ARCHIVE_FTS_MIGRATION = `
-  CREATE VIRTUAL TABLE IF NOT EXISTS archives_fts USING fts5(
+  DROP TRIGGER IF EXISTS archives_fts_ai;
+  DROP TRIGGER IF EXISTS archives_fts_ad;
+  DROP TRIGGER IF EXISTS archives_fts_au;
+  DROP TABLE IF EXISTS archives_fts;
+
+  CREATE VIRTUAL TABLE archives_fts USING fts5(
     name,
     content='archives',
     content_rowid='id',
-    tokenize='trigram'
+    tokenize='trigram',
+    prefix='2 3 4 5 6'
   );
 
   INSERT INTO archives_fts(rowid, name)
   SELECT id, name
-  FROM archives
-  WHERE id NOT IN (SELECT rowid FROM archives_fts);
+  FROM archives;
 `;
 
 export const ARCHIVE_FTS_TRIGGERS_MIGRATION = `
@@ -65,16 +70,21 @@ export const TAGS_MIGRATION = `
 `;
 
 export const TAGS_FTS_MIGRATION = `
-  CREATE VIRTUAL TABLE IF NOT EXISTS tags_fts USING fts5(
+  DROP TRIGGER IF EXISTS tags_fts_ai;
+  DROP TRIGGER IF EXISTS tags_fts_ad;
+  DROP TRIGGER IF EXISTS tags_fts_au;
+  DROP TABLE IF EXISTS tags_fts;
+
+  CREATE VIRTUAL TABLE tags_fts USING fts5(
     tag_text,
     content='',
-    tokenize='trigram'
+    tokenize='trigram',
+    prefix='2 3 4 5 6'
   );
 
   INSERT INTO tags_fts(rowid, tag_text)
   SELECT id, CASE WHEN namespace = '' THEN name ELSE namespace || ':' || name END
-  FROM tags
-  WHERE id NOT IN (SELECT rowid FROM tags_fts);
+  FROM tags;
 `;
 
 export const TAGS_FTS_TRIGGERS_MIGRATION = `
@@ -97,11 +107,20 @@ export const TAGS_FTS_TRIGGERS_MIGRATION = `
 `;
 
 export const ARCHIVES_TAGS_FTS_MIGRATION = `
-  CREATE VIRTUAL TABLE IF NOT EXISTS archives_tags_fts USING fts5(
+  DROP TRIGGER IF EXISTS archives_tags_fts_ai;
+  DROP TRIGGER IF EXISTS archives_tags_fts_ad;
+  DROP TRIGGER IF EXISTS archives_tags_fts_au;
+  DROP TRIGGER IF EXISTS archives_tags_fts_tags_ai;
+  DROP TRIGGER IF EXISTS archives_tags_fts_tags_ad;
+  DROP TRIGGER IF EXISTS archives_tags_fts_tags_au;
+  DROP TABLE IF EXISTS archives_tags_fts;
+
+  CREATE VIRTUAL TABLE archives_tags_fts USING fts5(
     name,
     tags,
     content='',
-    tokenize='unicode61'
+    tokenize='unicode61',
+    prefix='2 3 4 5 6'
   );
 
   INSERT INTO archives_tags_fts(rowid, name, tags)
@@ -114,7 +133,6 @@ export const ARCHIVES_TAGS_FTS_MIGRATION = `
     )
   FROM archives a
   LEFT JOIN tags t ON t.archive_id = a.id
-  WHERE a.id NOT IN (SELECT rowid FROM archives_tags_fts)
   GROUP BY a.id;
 `;
 

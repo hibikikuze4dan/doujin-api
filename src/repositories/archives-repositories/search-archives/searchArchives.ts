@@ -171,6 +171,10 @@ export const searchArchives = (db: Database) => {
       ${orderClause}
     `;
 
+    const shouldCountResults =
+      include_total_results === true &&
+      (q === undefined || q === "" || String(q).split(",").length <= 2);
+
     const sqlForNumberOfResults = `
       SELECT COUNT(*) AS totalResults
       FROM archives d
@@ -185,7 +189,7 @@ export const searchArchives = (db: Database) => {
       .prepare(sqlForArchives)
       .all(bindings) as ArchiveWithConnectedTableData[];
 
-    const totalResults = include_total_results
+    const totalResults = shouldCountResults
       ? (
           db.prepare(sqlForNumberOfResults).get(bindings) as {
             totalResults: number;
