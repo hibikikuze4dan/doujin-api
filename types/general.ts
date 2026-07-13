@@ -50,6 +50,7 @@ export interface SearchArchivesQuery {
   sort_direction?: "asc" | "desc";
   page?: number;
   archivesPerPage?: number;
+  include_total_results?: boolean;
 }
 
 export type AddOrRemove = "add" | "remove";

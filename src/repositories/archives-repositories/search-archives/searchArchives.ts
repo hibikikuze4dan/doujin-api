@@ -35,6 +35,7 @@ export const searchArchives = (db: Database) => {
       sort_direction = "asc",
       page = 1,
       archivesPerPage = 20,
+      include_total_results = true,
     } = parameters;
 
     let conditions: DatabaseQueryConditions = [];
@@ -182,9 +183,13 @@ export const searchArchives = (db: Database) => {
       .prepare(sqlForArchives)
       .all(bindings) as ArchiveWithConnectedTableData[];
 
-    const { totalResults } = db
-      .prepare(sqlForNumberOfResults)
-      .get(bindings) as { totalResults: number };
+    const totalResults = include_total_results
+      ? (
+          db.prepare(sqlForNumberOfResults).get(bindings) as {
+            totalResults: number;
+          }
+        ).totalResults
+      : undefined;
 
     return { archives, totalResults };
   };

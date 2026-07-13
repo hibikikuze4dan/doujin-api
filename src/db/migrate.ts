@@ -59,6 +59,7 @@ export const TAGS_MIGRATION = `
     UNIQUE (archive_id, name, namespace)
   );
   CREATE INDEX IF NOT EXISTS idx_tags_archive_id ON tags(archive_id);
+  CREATE INDEX IF NOT EXISTS idx_tags_archive_id_name ON tags(archive_id, name COLLATE NOCASE);
   CREATE INDEX IF NOT EXISTS idx_tags_namespace_name ON tags(namespace COLLATE NOCASE, name COLLATE NOCASE);
   CREATE INDEX IF NOT EXISTS idx_tags_archive_id_name_namespace ON tags(archive_id, namespace COLLATE NOCASE, name COLLATE NOCASE);
 `;
@@ -92,6 +93,103 @@ export const TAGS_FTS_TRIGGERS_MIGRATION = `
     VALUES ('delete', old.id, CASE WHEN old.namespace = '' THEN old.name ELSE old.namespace || ':' || old.name END);
     INSERT INTO tags_fts(rowid, tag_text)
     VALUES (new.id, CASE WHEN new.namespace = '' THEN new.name ELSE new.namespace || ':' || new.name END);
+  END;
+`;
+
+export const ARCHIVES_TAGS_FTS_MIGRATION = `
+  CREATE VIRTUAL TABLE IF NOT EXISTS archives_tags_fts USING fts5(
+    name,
+    tags,
+    content='',
+    tokenize='trigram'
+  );
+
+  INSERT INTO archives_tags_fts(rowid, name, tags)
+  SELECT
+    a.id,
+    a.name,
+    COALESCE(
+      GROUP_CONCAT(CASE WHEN t.namespace = '' THEN t.name ELSE t.namespace || ':' || t.name END, ' '),
+      ''
+    )
+  FROM archives a
+  LEFT JOIN tags t ON t.archive_id = a.id
+  WHERE a.id NOT IN (SELECT rowid FROM archives_tags_fts)
+  GROUP BY a.id;
+`;
+
+export const ARCHIVES_TAGS_FTS_TRIGGERS_MIGRATION = `
+  CREATE TRIGGER IF NOT EXISTS archives_tags_fts_ai AFTER INSERT ON archives BEGIN
+    INSERT INTO archives_tags_fts(rowid, name, tags)
+    VALUES (
+      new.id,
+      new.name,
+      COALESCE(
+        (SELECT GROUP_CONCAT(CASE WHEN namespace = '' THEN name ELSE namespace || ':' || name END, ' ') FROM tags WHERE archive_id = new.id),
+        ''
+      )
+    );
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archives_tags_fts_ad AFTER DELETE ON archives BEGIN
+    INSERT INTO archives_tags_fts(archives_tags_fts, rowid, name, tags)
+    VALUES ('delete', old.id, old.name, '');
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archives_tags_fts_au AFTER UPDATE ON archives BEGIN
+    INSERT INTO archives_tags_fts(archives_tags_fts, rowid, name, tags)
+    VALUES ('delete', old.id, old.name, '');
+    INSERT INTO archives_tags_fts(rowid, name, tags)
+    VALUES (
+      new.id,
+      new.name,
+      COALESCE(
+        (SELECT GROUP_CONCAT(CASE WHEN namespace = '' THEN name ELSE namespace || ':' || name END, ' ') FROM tags WHERE archive_id = new.id),
+        ''
+      )
+    );
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archives_tags_fts_tags_ai AFTER INSERT ON tags BEGIN
+    INSERT INTO archives_tags_fts(archives_tags_fts, rowid, name, tags)
+    VALUES ('delete', NEW.archive_id, '', '');
+    INSERT INTO archives_tags_fts(rowid, name, tags)
+    VALUES (
+      NEW.archive_id,
+      COALESCE((SELECT name FROM archives WHERE id = NEW.archive_id), ''),
+      COALESCE(
+        (SELECT GROUP_CONCAT(CASE WHEN namespace = '' THEN name ELSE namespace || ':' || name END, ' ') FROM tags WHERE archive_id = NEW.archive_id),
+        ''
+      )
+    );
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archives_tags_fts_tags_ad AFTER DELETE ON tags BEGIN
+    INSERT INTO archives_tags_fts(archives_tags_fts, rowid, name, tags)
+    VALUES ('delete', OLD.archive_id, '', '');
+    INSERT INTO archives_tags_fts(rowid, name, tags)
+    VALUES (
+      OLD.archive_id,
+      COALESCE((SELECT name FROM archives WHERE id = OLD.archive_id), ''),
+      COALESCE(
+        (SELECT GROUP_CONCAT(CASE WHEN namespace = '' THEN name ELSE namespace || ':' || name END, ' ') FROM tags WHERE archive_id = OLD.archive_id),
+        ''
+      )
+    );
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archives_tags_fts_tags_au AFTER UPDATE ON tags BEGIN
+    INSERT INTO archives_tags_fts(archives_tags_fts, rowid, name, tags)
+    VALUES ('delete', OLD.archive_id, '', '');
+    INSERT INTO archives_tags_fts(rowid, name, tags)
+    VALUES (
+      NEW.archive_id,
+      COALESCE((SELECT name FROM archives WHERE id = NEW.archive_id), ''),
+      COALESCE(
+        (SELECT GROUP_CONCAT(CASE WHEN namespace = '' THEN name ELSE namespace || ':' || name END, ' ') FROM tags WHERE archive_id = NEW.archive_id),
+        ''
+      )
+    );
   END;
 `;
 

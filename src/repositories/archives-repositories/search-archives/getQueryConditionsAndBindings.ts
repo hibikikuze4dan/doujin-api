@@ -15,28 +15,19 @@ export const getQueryConditionsAndBindings = ({
     .filter(Boolean);
 
   if (terms.length > 0) {
-    const termClauses = terms.map((term) => {
-      bindings.push(term, term);
+    const joinWord = q_mode === "or" ? " OR " : " ";
+    const queryValue = terms.join(joinWord);
 
-      return `(
-        EXISTS (
-          SELECT 1
-          FROM archives_fts af
-          WHERE af.rowid = d.id
-          AND af.name MATCH ?
-        )
-        OR EXISTS (
-          SELECT 1
-          FROM tags t2
-          JOIN tags_fts tf ON tf.rowid = t2.id
-          WHERE t2.archive_id = d.id
-          AND tf.tag_text MATCH ?
-        )
-      )`;
-    });
+    bindings.push(queryValue);
 
-    const joinWord = q_mode === "or" ? " OR " : " AND ";
-    conditions.push(`(${termClauses.join(joinWord)})`);
+    conditions.push(`
+      EXISTS (
+        SELECT 1
+        FROM archives_tags_fts
+        WHERE rowid = d.id
+        AND archives_tags_fts MATCH ?
+      )
+    `);
   }
 
   return { conditions, bindings };

@@ -2,6 +2,8 @@ import Database from "better-sqlite3";
 import {
   ARCHIVE_FTS_MIGRATION,
   ARCHIVE_FTS_TRIGGERS_MIGRATION,
+  ARCHIVES_TAGS_FTS_MIGRATION,
+  ARCHIVES_TAGS_FTS_TRIGGERS_MIGRATION,
   ARCHIVE_HISTORY_MIGRATION,
   ARCHIVE_INDEX_MIGRATION,
   ARCHIVE_RATING_MIGRATION,
@@ -31,6 +33,8 @@ describe("searchArchives", () => {
     db.exec(TAGS_MIGRATION);
     db.exec(ARCHIVE_FTS_MIGRATION);
     db.exec(ARCHIVE_FTS_TRIGGERS_MIGRATION);
+    db.exec(ARCHIVES_TAGS_FTS_MIGRATION);
+    db.exec(ARCHIVES_TAGS_FTS_TRIGGERS_MIGRATION);
     db.exec(TAGS_FTS_MIGRATION);
     db.exec(TAGS_FTS_TRIGGERS_MIGRATION);
 
@@ -43,17 +47,6 @@ describe("searchArchives", () => {
     insertArchive.run(2, "demon slayer", "/b.cbz", 12, 200, 7);
     insertArchive.run(3, "dragon ball z", "/c.cbz", 8, 150, 9);
     insertArchive.run(4, "demon king", "/d.cbz", 30, 500, 9);
-
-    db.prepare(
-      `INSERT INTO archives_fts(rowid, name) SELECT id, name FROM archives`,
-    ).run();
-    db.prepare(
-      `
-      INSERT INTO tags_fts(rowid, tag_text)
-      SELECT id, CASE WHEN namespace = '' THEN name ELSE namespace || ':' || name END
-      FROM tags
-    `,
-    ).run();
 
     const search = searchArchives(db);
     const { archives, totalResults } = search({
@@ -84,6 +77,8 @@ describe("searchArchives", () => {
     db.exec(TAGS_MIGRATION);
     db.exec(ARCHIVE_FTS_MIGRATION);
     db.exec(ARCHIVE_FTS_TRIGGERS_MIGRATION);
+    db.exec(ARCHIVES_TAGS_FTS_MIGRATION);
+    db.exec(ARCHIVES_TAGS_FTS_TRIGGERS_MIGRATION);
     db.exec(TAGS_FTS_MIGRATION);
     db.exec(TAGS_FTS_TRIGGERS_MIGRATION);
 
@@ -117,7 +112,6 @@ describe("searchArchives", () => {
 
     const sqlText = preparedStatements.join("\n");
 
-    expect(sqlText).toContain("archives_fts");
-    expect(sqlText).toContain("tags_fts");
+    expect(sqlText).toContain("archives_tags_fts");
   });
 });

@@ -49,11 +49,17 @@ router.get("/search", async (req, res, _next) => {
     sort_by,
     sort_direction,
     page,
+    include_total_results,
   } = req?.query ?? {};
 
   const configData = await getUserConfigs();
   const pageNumber = parseNumericQuery(page);
   const pageNumberToUse = pageNumber ? pageNumber : 1;
+
+  const includeTotalResults =
+    include_total_results === "false" || include_total_results === "0"
+      ? false
+      : true;
 
   const { archives, totalResults } =
     archivesQueries.searchArchives({
@@ -78,6 +84,7 @@ router.get("/search", async (req, res, _next) => {
       sort_direction,
       page: pageNumberToUse,
       archivesPerPage: configData.archives_per_page,
+      include_total_results: includeTotalResults,
     } as SearchArchivesQuery) ?? {};
 
   res.json({ archives, totalResults, page: pageNumberToUse });
