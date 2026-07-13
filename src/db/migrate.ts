@@ -57,7 +57,10 @@ export const TAGS_MIGRATION = `
     namespace   TEXT    NOT NULL DEFAULT '',
     FOREIGN KEY (archive_id) REFERENCES archives(id) ON DELETE CASCADE,
     UNIQUE (archive_id, name, namespace)
-  )
+  );
+  CREATE INDEX IF NOT EXISTS idx_tags_archive_id ON tags(archive_id);
+  CREATE INDEX IF NOT EXISTS idx_tags_namespace_name ON tags(namespace COLLATE NOCASE, name COLLATE NOCASE);
+  CREATE INDEX IF NOT EXISTS idx_tags_archive_id_name_namespace ON tags(archive_id, namespace COLLATE NOCASE, name COLLATE NOCASE);
 `;
 
 export const TAGS_FTS_MIGRATION = `
@@ -172,4 +175,8 @@ export const COLLECTION_ARCHIVES_MIGRATION = `
 export const COLLECTION_ARCHIVES_INDEX_MIGRATION = `
   CREATE INDEX IF NOT EXISTS idx_collection_archives_position
     ON collection_archives(collection_id, position);
+  CREATE INDEX IF NOT EXISTS idx_collection_archives_archive_id
+    ON collection_archives(archive_id, collection_id);
+  CREATE INDEX IF NOT EXISTS idx_collection_archives_collection_id
+    ON collection_archives(collection_id, archive_id);
 `;

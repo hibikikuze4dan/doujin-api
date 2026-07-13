@@ -6,7 +6,7 @@ import {
 import { getQueryConditionsAndBindings } from "./getQueryConditionsAndBindings";
 import { getTagsConditionsAndBindings } from "./getTagsConditionsAndBindings";
 import { getRangeBasedConditionsAndBindings } from "./getRangeBasedConditionsAndBindings";
-import { ARCHIVE_JOINS, ARCHIVE_SELECT } from "../constants";
+import { ARCHIVE_SELECT } from "../constants";
 import { type SearchArchivesQuery } from "../../../../types/general";
 import { parseNumericQuery } from "../../../utils/query";
 import { type ArchiveWithConnectedTableData } from "../../../../types/database";
@@ -132,22 +132,23 @@ export const searchArchives = (db: Database) => {
     const offset = page === 1 ? 0 : (page - 1) * archivesPerPage;
     const paginationClause = `LIMIT ${archivesPerPage} OFFSET ${offset}`;
 
-    const explain = `
-      EXPLAIN QUERY PLAN
-      SELECT
-        ${ARCHIVE_SELECT}
-      ${ARCHIVE_JOINS}  
-      ${whereClause}
-      GROUP BY d.id
-      ${orderClause}
-      ${paginationClause}
-    `;
+    const filterByTagCount = min_tags !== undefined || max_tags !== undefined;
+
+    const tagCountJoin = filterByTagCount
+      ? `
+          LEFT JOIN (
+            SELECT archive_id, COUNT(*) AS tag_count
+            FROM tags
+            GROUP BY archive_id
+          ) tc ON tc.archive_id = d.id
+        `
+      : "";
 
     const sqlForPagedIds = `
       SELECT d.id
-      ${ARCHIVE_JOINS}
+      FROM archives d
+      ${tagCountJoin}
       ${whereClause}
-      GROUP BY d.id
       ${orderClause}
       ${paginationClause}
     `;
@@ -169,12 +170,9 @@ export const searchArchives = (db: Database) => {
 
     const sqlForNumberOfResults = `
       SELECT COUNT(*) AS totalResults
-      FROM (
-        SELECT d.id
-        ${ARCHIVE_JOINS}
-        ${whereClause}
-        GROUP BY d.id
-      ) filtered
+      FROM archives d
+      ${tagCountJoin}
+      ${whereClause}
     `;
 
     // const explainstr = db.prepare(explain).all(bindings);
