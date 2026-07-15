@@ -42,6 +42,15 @@ export const searchArchives = (db: Database) => {
     let conditions: DatabaseQueryConditions = [];
     let bindings: DatabaseQueryBindings = [];
 
+    const normalizedTerms = String(q || "")
+      .split(",")
+      .flatMap((term) => term.split(/\s+/))
+      .map((term) => term.trim().toLowerCase())
+      .filter(Boolean)
+      .filter((term, index, array) => array.indexOf(term) === index)
+      .filter((term) => term.length > 1);
+    const useTokenIndex = normalizedTerms.length >= 3;
+
     // --- Text search (q) ---
     let newConditionsAndBindings = getQueryConditionsAndBindings({
       bindings,
@@ -49,6 +58,7 @@ export const searchArchives = (db: Database) => {
       q_mode,
       q_match_mode,
       q,
+      useTokenIndex,
     });
     conditions = newConditionsAndBindings?.conditions;
     bindings = newConditionsAndBindings?.bindings;

@@ -1,3 +1,5 @@
+import { type Database } from "better-sqlite3";
+
 export const ARCHIVES_MIGRATION = `
   CREATE TABLE IF NOT EXISTS archives (
     id          INTEGER PRIMARY KEY,
@@ -210,6 +212,110 @@ export const ARCHIVES_TAGS_FTS_TRIGGERS_MIGRATION = `
     );
   END;
 `;
+
+export const ARCHIVE_SEARCH_TOKENS_MIGRATION = `
+  CREATE TABLE IF NOT EXISTS archive_search_tokens (
+    archive_id INTEGER NOT NULL,
+    token TEXT NOT NULL,
+    PRIMARY KEY (archive_id, token)
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_archive_search_tokens_token
+    ON archive_search_tokens(token, archive_id);
+`;
+
+export const ARCHIVE_SEARCH_TOKENS_TRIGGERS_MIGRATION = `
+  CREATE TRIGGER IF NOT EXISTS archive_search_tokens_ai AFTER INSERT ON archives BEGIN
+    DELETE FROM archive_search_tokens WHERE archive_id = NEW.id;
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archive_search_tokens_au AFTER UPDATE ON archives BEGIN
+    DELETE FROM archive_search_tokens WHERE archive_id = NEW.id;
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archive_search_tokens_ad AFTER DELETE ON archives BEGIN
+    DELETE FROM archive_search_tokens WHERE archive_id = OLD.id;
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archive_search_tokens_tags_ai AFTER INSERT ON tags BEGIN
+    DELETE FROM archive_search_tokens WHERE archive_id = NEW.archive_id;
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archive_search_tokens_tags_au AFTER UPDATE ON tags BEGIN
+    DELETE FROM archive_search_tokens WHERE archive_id = NEW.archive_id;
+  END;
+
+  CREATE TRIGGER IF NOT EXISTS archive_search_tokens_tags_ad AFTER DELETE ON tags BEGIN
+    DELETE FROM archive_search_tokens WHERE archive_id = OLD.archive_id;
+  END;
+`;
+
+export const populateArchiveSearchTokens = (db: Database) => {
+  db.exec(ARCHIVE_SEARCH_TOKENS_MIGRATION);
+  db.exec(ARCHIVE_SEARCH_TOKENS_TRIGGERS_MIGRATION);
+
+  const deleteStmt = db.prepare(`DELETE FROM archive_search_tokens`);
+  const insertStmt = db.prepare(
+    `INSERT INTO archive_search_tokens (archive_id, token) VALUES (?, ?)`,
+  );
+
+  const tokenize = (value: string) =>
+    value
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .filter((token) => token.length > 1);
+
+  const archives = db.prepare(`SELECT id, name FROM archives`).all() as Array<{
+    id: number;
+    name: string;
+  }>;
+  const tags = db
+    .prepare(`SELECT archive_id, name, namespace FROM tags`)
+    .all() as Array<{ archive_id: number; name: string; namespace: string }>;
+
+  deleteStmt.run();
+
+  const rows: Array<{ archive_id: number; token: string }> = [];
+
+  for (const archive of archives) {
+    for (const token of tokenize(archive.name)) {
+      rows.push({ archive_id: archive.id, token });
+    }
+  }
+
+  for (const tag of tags) {
+    for (const token of tokenize(tag.name)) {
+      rows.push({ archive_id: tag.archive_id, token });
+    }
+    if (tag.namespace) {
+      for (const token of tokenize(tag.namespace)) {
+        rows.push({ archive_id: tag.archive_id, token });
+      }
+    }
+  }
+
+  const uniqueRows = rows.filter(
+    (row, index, array) =>
+      array.findIndex(
+        (candidate) =>
+          candidate.archive_id === row.archive_id &&
+          candidate.token === row.token,
+      ) === index,
+  );
+
+  const insertMany = db.transaction(
+    (items: Array<{ archive_id: number; token: string }>) => {
+      for (const item of items) {
+        insertStmt.run(item.archive_id, item.token);
+      }
+    },
+  );
+
+  insertMany(uniqueRows);
+};
 
 export const ARCHIVE_HISTORY_MIGRATION = `
   CREATE TABLE IF NOT EXISTS archive_history (

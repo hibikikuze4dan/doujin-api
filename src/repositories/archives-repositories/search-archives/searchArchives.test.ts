@@ -7,10 +7,13 @@ import {
   ARCHIVE_HISTORY_MIGRATION,
   ARCHIVE_INDEX_MIGRATION,
   ARCHIVE_RATING_MIGRATION,
+  ARCHIVE_SEARCH_TOKENS_MIGRATION,
+  ARCHIVE_SEARCH_TOKENS_TRIGGERS_MIGRATION,
   ARCHIVES_MIGRATION,
   AVERAGE_ARCHIVE_RATING_TRIGGER_UPDATE_MIGRATION,
   COLLECTION_ARCHIVES_MIGRATION,
   COLLECTIONS_MIGRATION,
+  populateArchiveSearchTokens,
   TAGS_FTS_MIGRATION,
   TAGS_FTS_TRIGGERS_MIGRATION,
   TAGS_MIGRATION,
@@ -61,6 +64,55 @@ describe("searchArchives", () => {
     expect(totalResults).toBe(2);
     expect(archives).toHaveLength(1);
     expect(archives[0]?.name).toBe("demon slayer");
+  });
+
+  it("uses the dedicated token index for long multi-term searches", () => {
+    const db = new Database(":memory:");
+
+    db.exec(ARCHIVES_MIGRATION);
+    db.exec(ARCHIVE_INDEX_MIGRATION);
+    db.exec(ARCHIVE_HISTORY_MIGRATION);
+    db.exec(USERS_MIGRATION);
+    db.exec(ARCHIVE_RATING_MIGRATION);
+    db.exec(AVERAGE_ARCHIVE_RATING_TRIGGER_UPDATE_MIGRATION);
+    db.exec(COLLECTIONS_MIGRATION);
+    db.exec(COLLECTION_ARCHIVES_MIGRATION);
+    db.exec(TAGS_MIGRATION);
+    db.exec(ARCHIVE_FTS_MIGRATION);
+    db.exec(ARCHIVE_FTS_TRIGGERS_MIGRATION);
+    db.exec(ARCHIVES_TAGS_FTS_MIGRATION);
+    db.exec(ARCHIVES_TAGS_FTS_TRIGGERS_MIGRATION);
+    db.exec(TAGS_FTS_MIGRATION);
+    db.exec(TAGS_FTS_TRIGGERS_MIGRATION);
+
+    const insertArchive = db.prepare(`
+      INSERT INTO archives (id, name, filepath, pagecount, size, rating)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+
+    insertArchive.run(1, "demon slayer", "/a.cbz", 10, 100, 9);
+    insertArchive.run(2, "slayer demon", "/b.cbz", 12, 200, 8);
+
+    populateArchiveSearchTokens(db);
+
+    const preparedStatements: string[] = [];
+    const originalPrepare = db.prepare.bind(db);
+
+    db.prepare = ((sql: string) => {
+      preparedStatements.push(sql);
+      return originalPrepare(sql);
+    }) as typeof db.prepare;
+
+    searchArchives(db)({
+      q: "demon slayer swords",
+      q_mode: "and",
+      page: 1,
+      archivesPerPage: 10,
+    });
+
+    const sqlText = preparedStatements.join("\n");
+
+    expect(sqlText).toContain("archive_search_tokens");
   });
 
   it("supports multi-word search queries with combined FTS", () => {
@@ -130,6 +182,8 @@ describe("searchArchives", () => {
     `);
 
     insertArchive.run(1, "demon slayer", "/a.cbz", 10, 100, 9);
+    db.exec(ARCHIVE_SEARCH_TOKENS_MIGRATION);
+    db.exec(ARCHIVE_SEARCH_TOKENS_TRIGGERS_MIGRATION);
 
     const preparedStatements: string[] = [];
     const originalPrepare = db.prepare.bind(db);
