@@ -112,3 +112,12 @@ export const IMAGE_EXTENSIONS = new Set([
 
 export const EPSILON = 1e-6;
 export const REBALANCE_SPACING = 1000;
+
+export const ALLOWED_SORT_COLLUMNS = [
+  "name",
+  "rating",
+  "pagecount",
+  "size",
+  "date_added",
+  "date_created",
+];
