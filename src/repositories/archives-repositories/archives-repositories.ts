@@ -7,6 +7,7 @@ import {
   ArchiveWithConnectedTableData,
 } from "../../../types/database";
 import { ArchiveEntryParams } from "./types";
+import { searchArchivesV2 } from "./search-archives-v2";
 
 const getAllArchives = (db: Database) => {
   const stmt = db.prepare(
@@ -130,4 +131,5 @@ export const initArchivesQueries = (db: Database) => ({
   removeArchiveEntry: removeArchiveEntry(db),
   removeArchiveByFilepath: removeArchiveByFilepath(db),
   searchArchives: searchArchives(db),
+  searchArchivesV2: searchArchivesV2(db),
 });

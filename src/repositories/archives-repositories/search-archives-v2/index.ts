@@ -4,7 +4,7 @@ import { countArchives } from "./countArchives";
 import { searchArchives } from "./searchArchives";
 import { SearchArchivesParams } from "../types";
 
-export const createArchiveSearch = (db: Database) => {
+export const searchArchivesV2 = (db: Database) => {
   const allowedSortColumns = new Set(ALLOWED_SORT_COLLUMNS);
 
   function searchArchivesWithMeta(params: SearchArchivesParams) {
