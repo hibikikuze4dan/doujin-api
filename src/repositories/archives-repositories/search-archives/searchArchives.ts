@@ -159,7 +159,7 @@ export const searchArchives = (db: Database) => {
 
     const sqlForPagedIds = `
       SELECT d.id
-      FROM archives d
+      FROM archive d
       ${tagCountJoin}
       ${whereClause}
       ${orderClause}
@@ -170,7 +170,7 @@ export const searchArchives = (db: Database) => {
       SELECT
         ${ARCHIVE_SELECT}
       FROM (${sqlForPagedIds}) paged
-      JOIN archives d ON d.id = paged.id
+      JOIN archive d ON d.id = paged.id
       LEFT JOIN tags t ON t.archive_id = d.id
       LEFT JOIN (
         SELECT archive_id, COUNT(*) AS tag_count
@@ -187,7 +187,7 @@ export const searchArchives = (db: Database) => {
 
     const sqlForNumberOfResults = `
       SELECT COUNT(*) AS totalResults
-      FROM archives d
+      FROM archive d
       ${tagCountJoin}
       ${whereClause}
     `;

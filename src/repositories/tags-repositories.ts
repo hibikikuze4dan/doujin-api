@@ -1,26 +1,21 @@
 import { type Database } from "better-sqlite3";
 import { type Tag } from "../../types/database";
+import { type GetTagsSearchByParameter } from "./types";
 
 const addTag = (db: Database) => {
   const stmt = db.prepare(`
-    INSERT INTO tags (archive_id, name, namespace)
-    VALUES (@archive_id, @name, @namespace)
+    INSERT INTO tag (id, category_id, name)
+    VALUES (@id, @category_id, @name)
   `);
-  return ({
-    archive_id,
-    name,
-    namespace = "",
-  }: {
-    archive_id: number;
-    name: string;
-    namespace: string;
-  }) => stmt.run({ archive_id, name, namespace });
+  return ({ category_id, name }: { category_id: number; name: string }) =>
+    stmt.run({ category_id, name });
 };
 
+//TODO: Make a util for adding multiple tag + tag categories at once
 const addTags = (db: Database) => {
   const stmt = db.prepare(`
-    INSERT INTO tags (archive_id, name, namespace)
-    VALUES (@archive_id, @name, @namespace)
+    INSERT INTO tag (id, name)
+    VALUES (@id, @name)
   `);
   const insertMany = db.transaction((tags) => {
     for (const tag of tags) {
@@ -31,64 +26,47 @@ const addTags = (db: Database) => {
     insertMany(tags);
 };
 
-const getTagsByArchiveId = (db: Database) => {
-  const stmt = db.prepare(`SELECT * FROM tags WHERE archive_id = ?`);
-  return (archive_id: number) => stmt.all(archive_id) as Tag[];
+const getTag = (db: Database) => {
+  const stmt = db.prepare(`SELECT * FROM tag WHERE id = ?`);
+  return (id: number) => stmt.get(id) as Tag | undefined;
 };
 
-const getTagsByArchiveIdNameAndNamespace = (db: Database) => {
-  const stmt = db.prepare(
-    `SELECT * FROM tags WHERE archive_id = ? AND name = ? AND namespace = ?`,
-  );
-  return ({
-    archive_id,
-    name,
-    namespace,
-  }: {
-    archive_id: number;
-    name: string;
-    namespace: string;
-  }) => stmt.get(archive_id, name, namespace);
+const getTags = (db: Database) => {
+  const categoryStmt = db.prepare(`
+    SELECT t.* FROM tag t
+    WHERE category_id = (SELECT id FROM tag_category WHERE name = ?)
+  `);
+  const categoryIdStmt = db.prepare(`
+    SELECT t.* FROM tag t WHERE category_id = ?
+  `);
+  const nameStmt = db.prepare(`
+    SELECT t.* FROM tag t WHERE name = ?
+  `);
+
+  return (searchBy: GetTagsSearchByParameter, value: string | number) => {
+    if (searchBy === "category") {
+      return categoryStmt.all(value) as Tag[];
+    } else if (searchBy === "category_id") {
+      return categoryIdStmt.all(value) as Tag[];
+    } else if (searchBy === "name") {
+      return nameStmt.all(value) as Tag[];
+    } else {
+      return [];
+    }
+  };
 };
 
-const getTagsByName = (db: Database) => {
-  const stmt = db.prepare(`SELECT * FROM tags WHERE name = ?`);
-  return (name: string) => stmt.all(name) as Tag[];
-};
-
-const getTagsByNamespace = (db: Database) => {
-  const stmt = db.prepare(`SELECT * FROM tags WHERE namespace = ?`);
-  return (namespace: string) => stmt.all(namespace) as Tag[];
-};
-
+//TODO: Make a util for getting a tag by its name and namespace
 const getTagByNameAndNamespace = (db: Database) => {
-  const stmt = db.prepare(
-    `SELECT * FROM tags WHERE name = ? AND namespace = ?`,
-  );
+  const stmt = db.prepare(`SELECT * FROM tag WHERE name = ?`);
   return (name = "", namespace = "") =>
     stmt.get(name, namespace) as Tag | undefined;
 };
 
-const searchTags = (db: Database) => {
-  const stmt = db.prepare(`
-    SELECT namespace, name, MIN(id) as id, MIN(archive_id) as archive_id
-    FROM tags
-    WHERE name LIKE ?
-      OR namespace LIKE ?
-      OR (namespace || ':' || name) LIKE ?
-    GROUP BY namespace, name
-    ORDER BY namespace ASC, name ASC
-  `);
-  return (tagQuery: string) => {
-    const pattern = `%${tagQuery}%`;
-    return stmt.all(pattern, pattern, pattern) as Tag[];
-  };
-};
-
 const updateTag = (db: Database) => {
   const stmt = db.prepare(`
-    UPDATE tags
-    SET name = @name, namespace = @namespace
+    UPDATE tag
+    SET name = @name
     WHERE id = @id
   `);
   return ({
@@ -103,24 +81,22 @@ const updateTag = (db: Database) => {
 };
 
 const deleteTag = (db: Database) => {
-  const stmt = db.prepare(`DELETE FROM tags WHERE id = ?`);
+  const stmt = db.prepare(`DELETE FROM tag WHERE id = ?`);
   return (id: number) => stmt.run(id);
 };
 
 const deleteTagsByArchiveId = (db: Database) => {
-  const stmt = db.prepare(`DELETE FROM tags WHERE archive_id = ?`);
+  const stmt = db.prepare(`DELETE FROM tag WHERE id = ?`);
   return (archive_id: number) => stmt.run(archive_id);
 };
 
 const deleteTagByNameAndNamespace = (db: Database) => {
-  const stmt = db.prepare(`DELETE FROM tags WHERE name = ? AND namespace = ?`);
+  const stmt = db.prepare(`DELETE FROM tag WHERE name = ?`);
   return (name = "", namespace = "") => stmt.run(name, namespace);
 };
 
 const deleteTagByArchiveIdAndTagData = (db: Database) => {
-  const stmt = db.prepare(
-    `DELETE FROM tags WHERE archive_id = ? AND name = ? AND namespace = ?`,
-  );
+  const stmt = db.prepare(`DELETE FROM tag WHERE id = ? AND name = ?`);
   return ({
     archive_id,
     name,
@@ -139,11 +115,8 @@ export const initTagsQueries = (db: Database) => ({
   deleteTagsByArchiveId: deleteTagsByArchiveId(db),
   deleteTagByArchiveIdAndTagData: deleteTagByArchiveIdAndTagData(db),
   deleteTagByNameAndNamespace: deleteTagByNameAndNamespace(db),
-  getTagsByArchiveId: getTagsByArchiveId(db),
-  getTagsByArchiveIdNameAndNamespace: getTagsByArchiveIdNameAndNamespace(db),
-  getTagsByName: getTagsByName(db),
+  getTag: getTag(db),
+  getTags: getTags(db),
   getTagByNameAndNamespace: getTagByNameAndNamespace(db),
-  getTagsByNamespace: getTagsByNamespace(db),
-  searchTags: searchTags(db),
   updateTag: updateTag(db),
 });

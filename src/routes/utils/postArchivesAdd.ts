@@ -46,8 +46,7 @@ export const postArchivesAdd = async () => {
       try {
         const fileStats = await getFileStats(filepath);
 
-        const archiveEntry = archivesQueries.getArchiveByFilepath(filepath);
-        if (!archiveEntry && fileStats) {
+        if (fileStats) {
           const filename = path.basename(filepath);
           const filenameWithoutExtension = path.parse(filepath).name;
 

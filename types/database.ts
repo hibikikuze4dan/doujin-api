@@ -19,10 +19,14 @@ export type ArchiveTableAllRespnse = ArchiveWithConnectedTableData[];
 
 export interface Tag {
   id: number;
-  archive_id: number;
+  category_id: number;
   name: string;
-  namespace: string;
 }
+
+export type TagCategory = {
+  id: number;
+  name: string;
+};
 
 export interface ArchiveHistory {
   id: number;

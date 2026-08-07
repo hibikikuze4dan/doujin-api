@@ -27,7 +27,7 @@ export const getTagsConditionsAndBindings = ({
 
       conditions.push(`
         EXISTS (
-          SELECT 1 FROM tags t2
+          SELECT 1 FROM tag t2
           WHERE t2.archive_id = d.id
           AND (${tagClauses.join(" OR ")})
         )
@@ -39,7 +39,7 @@ export const getTagsConditionsAndBindings = ({
           bindings.push(namespace, name);
           conditions.push(`
             EXISTS (
-              SELECT 1 FROM tags t2
+              SELECT 1 FROM tag t2
               WHERE t2.archive_id = d.id
               AND t2.namespace = ? COLLATE NOCASE
               AND t2.name = ? COLLATE NOCASE
@@ -49,7 +49,7 @@ export const getTagsConditionsAndBindings = ({
           bindings.push(name);
           conditions.push(`
             EXISTS (
-              SELECT 1 FROM tags t2
+              SELECT 1 FROM tag t2
               WHERE t2.archive_id = d.id
               AND t2.name = ? COLLATE NOCASE
             )

@@ -1,4 +1,4 @@
-export const ARCHIVE_MIGRATION_v2 = `
+export const ARCHIVE_MIGRATION = `
   CREATE TABLE IF NOT EXISTS archive (
     id          INTEGER PRIMARY KEY,
     rating  INTEGER NOT NULL DEFAULT 0,

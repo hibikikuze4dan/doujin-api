@@ -25,7 +25,7 @@ const getArchiveById = (db: Database) => {
 
 const getArchiveByFilepath = (db: Database) => {
   const stmt = db.prepare(
-    `SELECT ${ARCHIVE_SELECT} ${ARCHIVE_JOINS} WHERE d.filepath = ? GROUP BY d.id`,
+    `SELECT a.id, a.filepath FROM archive a WHERE a.filepath = ? GROUP BY a.id`,
   );
   return (filepath: string) => stmt.get(filepath) as ArchiveTableGetResponse;
 };
@@ -59,7 +59,7 @@ const getNumberOfNewArchivesByFilepaths = (db: Database) => {
       .prepare(
         `
         SELECT COUNT(*) as count FROM archive_filepaths_to_search
-        WHERE value NOT IN (SELECT filepath FROM archives)
+        WHERE value NOT IN (SELECT filepath FROM archive)
       `,
       )
       .get() as { count: number };
@@ -80,7 +80,7 @@ const getRandomEntries = (db: Database) => {
 
 const createArchiveEntry = (db: Database) => {
   const stmt = db.prepare(`
-    INSERT INTO archives (name, filepath, date_created, pagecount, size)
+    INSERT INTO archive (name, filepath, date_created, pagecount, size)
     VALUES (@name, @filepath, @date_created, @pagecount, @size)
   `);
   return ({
@@ -95,12 +95,12 @@ const createArchiveEntry = (db: Database) => {
 };
 
 const removeArchiveEntry = (db: Database) => {
-  const stmt = db.prepare(`DELETE FROM archives WHERE id = ?`);
+  const stmt = db.prepare(`DELETE FROM archive WHERE id = ?`);
   return (id: string | number) => stmt.run(id).changes > 0;
 };
 
 const removeArchiveByFilepath = (db: Database) => {
-  const stmt = db.prepare(`DELETE FROM archives WHERE filepath = ?`);
+  const stmt = db.prepare(`DELETE FROM archive WHERE filepath = ?`);
   return (filepath: string) => stmt.run(filepath).changes > 0;
 };
 
