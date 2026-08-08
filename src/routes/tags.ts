@@ -10,8 +10,8 @@ router.get("/search", async (req, res, _next) => {
 
   if (tagQuery) {
     const tags = tagsQueries
-      .searchTags(tagQuery)
-      ?.map((tag) => ({ name: tag?.name, namespace: tag?.namespace }));
+      .getTags("name", tagQuery)
+      ?.map((tag) => ({ name: tag?.name, namespace: tag?.category_id }));
 
     res.send(tags);
   } else {

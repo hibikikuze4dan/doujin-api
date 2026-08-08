@@ -25,15 +25,17 @@ import {
 } from "./migrate";
 import {
   initArchivesQueries,
+  initArchiveTagQueries,
   initCollectionQueries,
   initHistoryQueries,
   initRatingRepositories,
+  initTagCategoryQueries,
   initTagsQueries,
   initUserQueries,
 } from "../repositories";
 import { DATABASE_FILEPATH } from "../constants";
 
-const db = new Database(DATABASE_FILEPATH, { verbose: console.log });
+const db = new Database(DATABASE_FILEPATH, {});
 
 db.exec(ARCHIVE_MIGRATION);
 db.exec(ARCHIVE_INDEXES);
@@ -63,7 +65,9 @@ console.log("Migrations complete");
 export const database = db;
 export const collectionsQueries = initCollectionQueries(db);
 export const archivesQueries = initArchivesQueries(db);
+export const archiveTagQueries = initArchiveTagQueries(db);
 export const historyQueries = initHistoryQueries(db);
 export const ratingQueries = initRatingRepositories(db);
 export const tagsQueries = initTagsQueries(db);
+export const tagCategoryQueries = initTagCategoryQueries(db);
 export const userQueries = initUserQueries(db);

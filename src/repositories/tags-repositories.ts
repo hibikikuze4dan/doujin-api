@@ -4,11 +4,16 @@ import { type GetTagsSearchByParameter } from "./types";
 
 const addTag = (db: Database) => {
   const stmt = db.prepare(`
-    INSERT INTO tag (id, category_id, name)
-    VALUES (@id, @category_id, @name)
+    INSERT OR IGNORE INTO tag (category_id, name)
+    VALUES (@category_id, @name)
   `);
-  return ({ category_id, name }: { category_id: number; name: string }) =>
-    stmt.run({ category_id, name });
+  return ({
+    category_id,
+    name,
+  }: {
+    category_id: number | null;
+    name: string;
+  }) => stmt.run({ category_id, name });
 };
 
 //TODO: Make a util for adding multiple tag + tag categories at once
@@ -28,7 +33,31 @@ const addTags = (db: Database) => {
 
 const getTag = (db: Database) => {
   const stmt = db.prepare(`SELECT * FROM tag WHERE id = ?`);
-  return (id: number) => stmt.get(id) as Tag | undefined;
+  const nameAndCategoryStmt = db.prepare(`
+    SELECT * FROM tag
+    WHERE name = @name
+      AND category_id = @category_id
+  `);
+
+  return (
+    searchBy: "id" | "[name, category_id]",
+    value: number | bigint | [string, number | bigint | null],
+  ) => {
+    if (searchBy === "id") {
+      return stmt.get(value) as Tag | undefined;
+    } else if (searchBy === "[name, category_id]") {
+      if (Array.isArray(value)) {
+        return nameAndCategoryStmt.get({
+          name: value[0],
+          category_id: value[1],
+        }) as Tag | undefined;
+      } else {
+        return undefined;
+      }
+    } else {
+      return undefined;
+    }
+  };
 };
 
 const getTags = (db: Database) => {
@@ -66,18 +95,18 @@ const getTagByNameAndNamespace = (db: Database) => {
 const updateTag = (db: Database) => {
   const stmt = db.prepare(`
     UPDATE tag
-    SET name = @name
+    SET name = @name, category_id = @category_id
     WHERE id = @id
   `);
   return ({
     id,
     name,
-    namespace = "",
+    category_id,
   }: {
     id: number;
     name: string;
-    namespace: string;
-  }) => stmt.run({ id, name, namespace });
+    category_id: number | null;
+  }) => stmt.run({ id, name, category_id });
 };
 
 const deleteTag = (db: Database) => {
@@ -85,36 +114,10 @@ const deleteTag = (db: Database) => {
   return (id: number) => stmt.run(id);
 };
 
-const deleteTagsByArchiveId = (db: Database) => {
-  const stmt = db.prepare(`DELETE FROM tag WHERE id = ?`);
-  return (archive_id: number) => stmt.run(archive_id);
-};
-
-const deleteTagByNameAndNamespace = (db: Database) => {
-  const stmt = db.prepare(`DELETE FROM tag WHERE name = ?`);
-  return (name = "", namespace = "") => stmt.run(name, namespace);
-};
-
-const deleteTagByArchiveIdAndTagData = (db: Database) => {
-  const stmt = db.prepare(`DELETE FROM tag WHERE id = ? AND name = ?`);
-  return ({
-    archive_id,
-    name,
-    namespace,
-  }: {
-    archive_id: number;
-    name: string;
-    namespace: string;
-  }) => stmt.run(archive_id, name, namespace);
-};
-
 export const initTagsQueries = (db: Database) => ({
   addTag: addTag(db),
   addTags: addTags(db),
   deleteTag: deleteTag(db),
-  deleteTagsByArchiveId: deleteTagsByArchiveId(db),
-  deleteTagByArchiveIdAndTagData: deleteTagByArchiveIdAndTagData(db),
-  deleteTagByNameAndNamespace: deleteTagByNameAndNamespace(db),
   getTag: getTag(db),
   getTags: getTags(db),
   getTagByNameAndNamespace: getTagByNameAndNamespace(db),

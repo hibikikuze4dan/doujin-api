@@ -10,9 +10,10 @@ import {
   getLanraragiDatabaseBackup,
   getLanraragiTagsByFilename,
   getUserConfigs,
-} from "../../utils";
-import { LanraragiBackupArchive } from "../../types/general";
-import { archivesQueries, tagsQueries } from "../../db";
+} from "../../../utils";
+import { LanraragiBackupArchive } from "../../../types/general";
+import { archivesQueries, tagsQueries } from "../../../db";
+import { addArchiveTagsToDatabase } from "./addArchiveTagsToDatabase";
 
 export const postArchivesAdd = async () => {
   const newArchives = [];
@@ -39,7 +40,8 @@ export const postArchivesAdd = async () => {
     const newFilepaths = filepaths.filter((filepath) => {
       const archive = archivesQueries.getArchiveByFilepath(filepath);
       const archiveExists = !!archive;
-      return !archiveExists;
+      // return !archiveExists;
+      return true;
     });
 
     for (const filepath of newFilepaths) {
@@ -77,7 +79,8 @@ export const postArchivesAdd = async () => {
             newRowId,
             tags,
           ).filter((tag) => !!tag);
-          tagsQueries.addTags(tagsArray);
+
+          addArchiveTagsToDatabase(tagsArray);
 
           await createThumbnailForArchive(newRowId, filepath);
         }

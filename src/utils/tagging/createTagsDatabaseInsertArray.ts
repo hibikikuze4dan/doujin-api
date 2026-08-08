@@ -11,8 +11,8 @@ export const createTagsDatabaseInsertArray = (
   const tagsArray = tagsString
     .split(",")
     .map((tag) => tag.trim())
-    .filter((tag) => tag.length > 0)
-    .map((tag) => createTagsDatabaseInsertObject(archiveId, tag));
+    .map((tag) => createTagsDatabaseInsertObject(archiveId, tag))
+    .filter((tag) => !!tag);
 
   return tagsArray;
 };

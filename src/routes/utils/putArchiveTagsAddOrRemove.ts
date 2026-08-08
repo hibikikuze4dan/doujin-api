@@ -46,16 +46,16 @@ export const putArchiveTagsAddOrRemove = async ({
   for (const tag of tags) {
     const tagInsertObject = createTagsDatabaseInsertObject(archiveId, tag);
 
-    if (tagInsertObject) {
-      const tagExists =
-        tagsQueries.getTagsByArchiveIdNameAndNamespace(tagInsertObject);
+    // if (tagInsertObject) {
+    //   const tagExists =
+    //     tagsQueries.getTagsByArchiveIdNameAndNamespace(tagInsertObject);
 
-      if (!tagExists && shouldAddOrRemove === "add") {
-        tagsQueries.addTag(tagInsertObject);
-      } else if (tagExists && shouldAddOrRemove === "remove") {
-        tagsQueries.deleteTagByArchiveIdAndTagData(tagInsertObject);
-      }
-    }
+    //   if (!tagExists && shouldAddOrRemove === "add") {
+    //     tagsQueries.addTag(tagInsertObject);
+    //   } else if (tagExists && shouldAddOrRemove === "remove") {
+    //     tagsQueries.deleteTagByArchiveIdAndTagData(tagInsertObject);
+    //   }
+    // }
   }
 
   const updatedArchive = archivesQueries.getArchiveById(archiveId);

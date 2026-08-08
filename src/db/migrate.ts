@@ -59,7 +59,7 @@ export const TAG_MIGRATION = `
   CREATE TABLE IF NOT EXISTS tag (
     id           INTEGER     PRIMARY KEY,
     name         TEXT        NOT NULL,
-    category_id  INTEGER     NOT NULL, 
+    category_id  INTEGER     DEFAULT NULL, 
     FOREIGN KEY (category_id) REFERENCES tag_category(id) ON DELETE CASCADE,
     UNIQUE (category_id, name)
   )

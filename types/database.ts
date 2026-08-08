@@ -19,9 +19,15 @@ export type ArchiveTableAllRespnse = ArchiveWithConnectedTableData[];
 
 export interface Tag {
   id: number;
-  category_id: number;
+  category_id: number | null;
   name: string;
 }
+
+export type ArchiveTag = {
+  id: number | bigint;
+  archive_id: number | bigint;
+  tag_id: number | bigint;
+};
 
 export type TagCategory = {
   id: number;

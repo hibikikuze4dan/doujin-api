@@ -17,11 +17,11 @@ export const createTagsDatabaseInsertObject = (
   }
 
   if (colonIndex === -1) {
-    return { archive_id: numericArchiveId, name: tag.trim(), namespace: "" };
+    return { archive_id: numericArchiveId, name: tag.trim(), category: "" };
   }
 
-  const namespace = tag.slice(0, colonIndex).trim();
+  const category = tag.slice(0, colonIndex).trim();
   const name = tag.slice(colonIndex + 1).trim();
 
-  return { archive_id: numericArchiveId, name, namespace };
+  return { archive_id: numericArchiveId, name, category };
 };

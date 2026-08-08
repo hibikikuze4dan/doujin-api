@@ -80,7 +80,7 @@ const getRandomEntries = (db: Database) => {
 
 const createArchiveEntry = (db: Database) => {
   const stmt = db.prepare(`
-    INSERT INTO archive (name, filepath, date_created, pagecount, size)
+    INSERT OR IGNORE INTO archive (name, filepath, date_created, pagecount, size)
     VALUES (@name, @filepath, @date_created, @pagecount, @size)
   `);
   return ({

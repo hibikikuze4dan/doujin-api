@@ -1,6 +1,14 @@
 import { type Database } from "better-sqlite3";
 import { type TagCategory } from "../../types/database";
 
+const getAllTagCategoryRows = (db: Database) => {
+  const stmt = db.prepare(`
+    SELECT t.id, t.name FROM tag_category t
+  `);
+
+  return () => stmt.all() as TagCategory[];
+};
+
 const getTagCategory = (db: Database) => {
   const idStmt = db.prepare(`
     SELECT t.id, t.name FROM tag_category t WHERE id = ?
@@ -9,7 +17,7 @@ const getTagCategory = (db: Database) => {
     SELECT t.id, t.name FROM tag_category t WHERE name = ?
   `);
 
-  return ({ id, name }: { id?: number; name?: string }) => {
+  return ({ id, name }: { id?: number | bigint; name?: string }) => {
     if (!Number.isNaN(id)) {
       return idStmt.get(id) as TagCategory;
     } else if (name) {
@@ -22,7 +30,7 @@ const getTagCategory = (db: Database) => {
 
 const addTagCategory = (db: Database) => {
   const stmt = db.prepare(`
-    INSERT INTO tag_category (name)
+    INSERT OR IGNORE INTO tag_category (name)
     VALUES (@name)
   `);
 
@@ -51,5 +59,6 @@ const deleteTagCategory = (db: Database) => {
 export const initTagCategoryQueries = (db: Database) => ({
   addTagCategory: addTagCategory(db),
   deleteTagCategory: deleteTagCategory(db),
+  getAllTagCategoryRows: getAllTagCategoryRows(db),
   getTagCategory: getTagCategory(db),
 });
