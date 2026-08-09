@@ -62,34 +62,9 @@ router.get("/search", async (req, res, _next) => {
       ? false
       : true;
 
-  const { archives, totalResults } =
-    archivesQueries.searchArchives({
-      q,
-      q_mode,
-      tags,
-      tag_mode,
-      min_pages: min_pages,
-      max_pages: max_pages,
-      min_size: min_size,
-      max_size: max_size,
-      min_rating: min_rating,
-      max_rating: max_rating,
-      min_tags,
-      max_tags,
-      added_after,
-      added_before,
-      created_after,
-      created_before,
-      collection,
-      sort_by,
-      sort_direction,
-      q_match_mode,
-      page: pageNumberToUse,
-      archivesPerPage: configData.archives_per_page,
-      include_total_results: includeTotalResults,
-    } as SearchArchivesQuery) ?? {};
+  const results = archivesQueries.searchArchivesV2({ query: q as string });
 
-  res.json({ archives, totalResults, page: pageNumberToUse });
+  res.json(results);
 });
 
 router.get("/random", async (req, res, _next) => {

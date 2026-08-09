@@ -539,6 +539,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^10.5.0":
+  version: 10.5.0
+  resolution: "@faker-js/faker@npm:10.5.0"
+  checksum: 10c0/2de3c7b8f41592d52cefc3ab4c99536656249bca78d5ad184a3b7ac43ecc9d946056cef2c4d37060373ef06ad992d82530de08479fabe16fdbe77b911d842446
+  languageName: node
+  linkType: hard
+
 "@gar/promise-retry@npm:^1.0.0":
   version: 1.0.3
   resolution: "@gar/promise-retry@npm:1.0.3"
@@ -2879,6 +2886,7 @@ __metadata:
   resolution: "doujin-api@workspace:."
   dependencies:
     "@eslint/js": "npm:^10.0.1"
+    "@faker-js/faker": "npm:^10.5.0"
     "@types/better-sqlite3": "npm:^7.6.13"
     "@types/cookie-parser": "npm:^1.4.10"
     "@types/cors": "npm:^2"

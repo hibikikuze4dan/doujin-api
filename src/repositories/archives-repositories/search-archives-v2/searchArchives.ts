@@ -10,7 +10,7 @@ export const searchArchives = ({
   archivesPerPage = 50,
   ...filters
 }: SearchArchivesParams) => {
-  if (!allowedSortColumns.has(sortBy)) sortBy = "date_added";
+  if (!allowedSortColumns?.has(sortBy)) sortBy = "date_added";
   sortDir = sortDir.toUpperCase() === "ASC" ? "ASC" : "DESC";
   resultsPage = Math.max(1, resultsPage | 0);
   archivesPerPage = Math.max(1, archivesPerPage | 0);
@@ -55,5 +55,7 @@ export const searchArchives = ({
       ORDER BY ${outerOrderBy}
     `;
 
-  return db.prepare(sql).all(...innerParams);
+  const results = db?.prepare(sql).all(...innerParams);
+
+  return results;
 };

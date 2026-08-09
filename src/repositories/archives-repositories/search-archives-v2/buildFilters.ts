@@ -18,27 +18,29 @@ export const buildFilters = ({
   const conditions = [];
   const params = [];
 
-  if (minRating !== null) {
+  const badValues: (null | undefined | string)[] = [null, undefined];
+
+  if (!badValues.includes(minRating)) {
     conditions.push("a.rating >= ?");
     params.push(minRating);
   }
-  if (maxRating !== null) {
+  if (!badValues.includes(maxRating)) {
     conditions.push("a.rating <= ?");
     params.push(maxRating);
   }
-  if (minPagecount !== null) {
+  if (!badValues.includes(minPagecount)) {
     conditions.push("a.pagecount >= ?");
     params.push(minPagecount);
   }
-  if (maxPagecount !== null) {
+  if (!badValues.includes(maxPagecount)) {
     conditions.push("a.pagecount <= ?");
     params.push(maxPagecount);
   }
-  if (minSize !== null) {
+  if (!badValues.includes(minSize)) {
     conditions.push("a.size >= ?");
     params.push(minSize);
   }
-  if (maxSize !== null) {
+  if (!badValues.includes(maxSize)) {
     conditions.push("a.size <= ?");
     params.push(maxSize);
   }

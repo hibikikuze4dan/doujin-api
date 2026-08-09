@@ -12,6 +12,7 @@ export const searchArchivesV2 = (db: Database) => {
     const total = countArchives({ ...params, db });
     const totalPages = Math.max(1, Math.ceil(total / archivesPerPage));
     const results = searchArchives({ ...params, allowedSortColumns, db });
+
     return {
       results,
       total,

@@ -27,8 +27,8 @@ export type BuildFiltersParams = {
 };
 
 export type SearchArchivesParams = {
-  allowedSortColumns: Set<string>;
-  db: Database;
+  allowedSortColumns?: Set<string>;
+  db?: Database;
   sortBy?: string;
   sortDir?: string;
   resultsPage?: number;

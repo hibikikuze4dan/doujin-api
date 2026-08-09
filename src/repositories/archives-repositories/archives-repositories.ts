@@ -119,17 +119,20 @@ const updateArchive = (db: Database) => {
   };
 };
 
-export const initArchivesQueries = (db: Database) => ({
-  getAllArchives: getAllArchives(db),
-  getArchiveById: getArchiveById(db),
-  getArchiveByFilepath: getArchiveByFilepath(db),
-  getArchivesByName: getArchivesByName(db),
-  getNumberOfNewArchivesByFilepaths: getNumberOfNewArchivesByFilepaths(db),
-  getRandomEntries: getRandomEntries(db),
-  createArchiveEntry: createArchiveEntry(db),
-  updateArchive: updateArchive(db),
-  removeArchiveEntry: removeArchiveEntry(db),
-  removeArchiveByFilepath: removeArchiveByFilepath(db),
-  searchArchives: searchArchives(db),
-  searchArchivesV2: searchArchivesV2(db),
-});
+export const initArchivesQueries = (db: Database) => {
+  const saV2 = searchArchivesV2(db);
+  return {
+    getAllArchives: getAllArchives(db),
+    getArchiveById: getArchiveById(db),
+    getArchiveByFilepath: getArchiveByFilepath(db),
+    getArchivesByName: getArchivesByName(db),
+    getNumberOfNewArchivesByFilepaths: getNumberOfNewArchivesByFilepaths(db),
+    getRandomEntries: getRandomEntries(db),
+    createArchiveEntry: createArchiveEntry(db),
+    updateArchive: updateArchive(db),
+    removeArchiveEntry: removeArchiveEntry(db),
+    removeArchiveByFilepath: removeArchiveByFilepath(db),
+    searchArchives: searchArchives(db),
+    searchArchivesV2: saV2.searchArchivesWithMeta,
+  };
+};
