@@ -62,7 +62,10 @@ router.get("/search", async (req, res, _next) => {
       ? false
       : true;
 
-  const results = archivesQueries.searchArchivesV2({ query: q as string });
+  const results = archivesQueries.searchArchivesV2({
+    query: q as string,
+    resultsPage: pageNumber,
+  });
 
   res.json(results);
 });

@@ -3,6 +3,7 @@ import { ALLOWED_SORT_COLLUMNS } from "../../../constants";
 import { countArchives } from "./countArchives";
 import { searchArchives } from "./searchArchives";
 import { SearchArchivesParams } from "../types";
+import { type Archive } from "../../../../types/database";
 
 export const searchArchivesV2 = (db: Database) => {
   const allowedSortColumns = new Set(ALLOWED_SORT_COLLUMNS);
@@ -11,7 +12,11 @@ export const searchArchivesV2 = (db: Database) => {
     const archivesPerPage = Math.max(1, (params.archivesPerPage ?? 50) | 0);
     const total = countArchives({ ...params, db });
     const totalPages = Math.max(1, Math.ceil(total / archivesPerPage));
-    const results = searchArchives({ ...params, allowedSortColumns, db });
+    const results = searchArchives({
+      ...params,
+      allowedSortColumns,
+      db,
+    }) as Archive[];
 
     return {
       results,

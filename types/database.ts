@@ -6,6 +6,7 @@ export interface Archive {
   date_added: string;
   pagecount: number;
   size: number;
+  tags: string;
 }
 
 export interface ArchiveWithConnectedTableData extends Archive {

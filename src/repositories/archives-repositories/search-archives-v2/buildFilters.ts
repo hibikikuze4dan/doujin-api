@@ -4,12 +4,12 @@ import { type BuildFiltersParams } from "../types";
 // Shared by both search and count so filter logic can't drift out of sync.
 export const buildFilters = ({
   query,
-  minRating,
-  maxRating,
-  minPagecount,
-  maxPagecount,
-  minSize,
-  maxSize,
+  min_rating,
+  max_rating,
+  min_pages,
+  max_pages,
+  min_size,
+  max_size,
   dateAddedFrom,
   dateAddedTo,
   dateCreatedFrom,
@@ -20,29 +20,29 @@ export const buildFilters = ({
 
   const badValues: (null | undefined | string)[] = [null, undefined];
 
-  if (!badValues.includes(minRating)) {
+  if (!badValues.includes(min_rating)) {
     conditions.push("a.rating >= ?");
-    params.push(minRating);
+    params.push(min_rating);
   }
-  if (!badValues.includes(maxRating)) {
+  if (!badValues.includes(max_rating)) {
     conditions.push("a.rating <= ?");
-    params.push(maxRating);
+    params.push(max_rating);
   }
-  if (!badValues.includes(minPagecount)) {
+  if (!badValues.includes(min_pages)) {
     conditions.push("a.pagecount >= ?");
-    params.push(minPagecount);
+    params.push(min_pages);
   }
-  if (!badValues.includes(maxPagecount)) {
+  if (!badValues.includes(max_pages)) {
     conditions.push("a.pagecount <= ?");
-    params.push(maxPagecount);
+    params.push(max_pages);
   }
-  if (!badValues.includes(minSize)) {
+  if (!badValues.includes(min_size)) {
     conditions.push("a.size >= ?");
-    params.push(minSize);
+    params.push(min_size);
   }
-  if (!badValues.includes(maxSize)) {
+  if (!badValues.includes(max_size)) {
     conditions.push("a.size <= ?");
-    params.push(maxSize);
+    params.push(max_size);
   }
   if (dateAddedFrom) {
     conditions.push("a.date_added >= ?");

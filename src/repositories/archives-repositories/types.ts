@@ -14,12 +14,12 @@ export interface ArchiveEntryParams {
 
 export type BuildFiltersParams = {
   query?: string | null;
-  minRating?: string | null;
-  maxRating?: string | null;
-  minPagecount?: string | null;
-  maxPagecount?: string | null;
-  minSize?: string | null;
-  maxSize?: string | null;
+  min_rating?: string | null;
+  max_rating?: string | null;
+  min_pages?: string | null;
+  max_pages?: string | null;
+  min_size?: string | null;
+  max_size?: string | null;
   dateAddedFrom?: string | null;
   dateAddedTo?: string | null;
   dateCreatedFrom?: string | null;
