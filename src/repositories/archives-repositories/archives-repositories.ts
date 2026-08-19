@@ -10,16 +10,12 @@ import { ArchiveEntryParams } from "./types";
 import { searchArchivesV2 } from "./search-archives-v2";
 
 const getAllArchives = (db: Database) => {
-  const stmt = db.prepare(
-    `SELECT ${ARCHIVE_SELECT} ${ARCHIVE_JOINS} GROUP BY d.id`,
-  );
+  const stmt = db.prepare(`SELECT * FROM archive GROUP BY id`);
   return () => stmt.all() as ArchiveWithConnectedTableData[];
 };
 
 const getArchiveById = (db: Database) => {
-  const stmt = db.prepare(
-    `SELECT ${ARCHIVE_SELECT} ${ARCHIVE_JOINS} WHERE d.id = ? GROUP BY d.id`,
-  );
+  const stmt = db.prepare(`SELECT * FROM archive WHERE id = ?`);
   return (id: string | number) => stmt.get(id) as ArchiveTableGetResponse;
 };
 
@@ -28,13 +24,6 @@ const getArchiveByFilepath = (db: Database) => {
     `SELECT a.id, a.filepath FROM archive a WHERE a.filepath = ? GROUP BY a.id`,
   );
   return (filepath: string) => stmt.get(filepath) as ArchiveTableGetResponse;
-};
-
-const getArchivesByName = (db: Database) => {
-  const stmt = db.prepare(
-    `SELECT ${ARCHIVE_SELECT} ${ARCHIVE_JOINS} WHERE d.name LIKE ? GROUP BY d.id ORDER BY d.name`,
-  );
-  return (name: string) => stmt.all(`%${name}%`) as ArchiveTableAllRespnse;
 };
 
 const getNumberOfNewArchivesByFilepaths = (db: Database) => {
@@ -72,7 +61,7 @@ const getNumberOfNewArchivesByFilepaths = (db: Database) => {
 
 const getRandomEntries = (db: Database) => {
   const stmt = db.prepare(
-    `SELECT ${ARCHIVE_SELECT} ${ARCHIVE_JOINS} GROUP BY d.id ORDER BY RANDOM() LIMIT ?`,
+    `SELECT * FROM archive a GROUP BY a.id ORDER BY RANDOM() LIMIT ?`,
   );
 
   return (limit: number) => stmt.all(limit) as ArchiveTableAllRespnse;
@@ -125,7 +114,6 @@ export const initArchivesQueries = (db: Database) => {
     getAllArchives: getAllArchives(db),
     getArchiveById: getArchiveById(db),
     getArchiveByFilepath: getArchiveByFilepath(db),
-    getArchivesByName: getArchivesByName(db),
     getNumberOfNewArchivesByFilepaths: getNumberOfNewArchivesByFilepaths(db),
     getRandomEntries: getRandomEntries(db),
     createArchiveEntry: createArchiveEntry(db),

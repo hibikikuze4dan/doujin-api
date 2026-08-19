@@ -1,3 +1,4 @@
+import { QueryParameter } from "../../../types/general";
 import { toFtsQuery } from "../../../utils";
 import { type BuildFiltersParams } from "../types";
 
@@ -10,15 +11,17 @@ export const buildFilters = ({
   max_pages,
   min_size,
   max_size,
-  dateAddedFrom,
-  dateAddedTo,
-  dateCreatedFrom,
-  dateCreatedTo,
+  max_tags,
+  min_tags,
+  created_after,
+  created_before,
+  added_after,
+  added_before,
 }: BuildFiltersParams) => {
   const conditions = [];
   const params = [];
 
-  const badValues: (null | undefined | string)[] = [null, undefined];
+  const badValues: QueryParameter[] = [null, undefined];
 
   if (!badValues.includes(min_rating)) {
     conditions.push("a.rating >= ?");
@@ -44,29 +47,40 @@ export const buildFilters = ({
     conditions.push("a.size <= ?");
     params.push(max_size);
   }
-  if (dateAddedFrom) {
+  if (!badValues.includes(min_tags)) {
+    conditions.push("a.tag_count >= ?");
+    params.push(min_tags);
+  }
+  if (!badValues.includes(max_tags)) {
+    conditions.push("a.tag_count <= ?");
+    params.push(max_tags);
+  }
+  if (added_after) {
     conditions.push("a.date_added >= ?");
-    params.push(dateAddedFrom);
+    params.push(added_after);
   }
-  if (dateAddedTo) {
+  if (added_before) {
     conditions.push("a.date_added <= ?");
-    params.push(dateAddedTo);
+    params.push(added_before);
   }
-  if (dateCreatedFrom) {
+  if (created_after) {
     conditions.push("a.date_created >= ?");
-    params.push(dateCreatedFrom);
+    params.push(created_after);
   }
-  if (dateCreatedTo) {
+  if (created_before) {
     conditions.push("a.date_created <= ?");
-    params.push(dateCreatedTo);
+    params.push(created_before);
   }
 
-  const hasQuery = query && query.trim().length > 0;
+  const isString = typeof query === "string";
+  const validateStrignQuery = isString ? query.trim().length > 0 : true;
+
+  const hasQuery = query && validateStrignQuery;
   if (hasQuery) conditions.unshift("archive_fts MATCH ?");
 
   return {
     hasQuery,
     conditions,
-    params: hasQuery ? [toFtsQuery(query), ...params] : params,
+    params: hasQuery && isString ? [toFtsQuery(query), ...params] : params,
   };
 };

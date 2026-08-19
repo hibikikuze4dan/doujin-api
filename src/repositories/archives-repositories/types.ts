@@ -1,4 +1,6 @@
 import { type Database } from "better-sqlite3";
+import { type ParsedQs } from "qs";
+import { QueryParameter } from "../../types/general";
 
 export type DatabaseQueryBindings = (string | number | null)[];
 
@@ -13,24 +15,26 @@ export interface ArchiveEntryParams {
 }
 
 export type BuildFiltersParams = {
-  query?: string | null;
-  min_rating?: string | null;
-  max_rating?: string | null;
-  min_pages?: string | null;
-  max_pages?: string | null;
-  min_size?: string | null;
-  max_size?: string | null;
-  dateAddedFrom?: string | null;
-  dateAddedTo?: string | null;
-  dateCreatedFrom?: string | null;
-  dateCreatedTo?: string | null;
+  query?: QueryParameter;
+  min_rating?: QueryParameter;
+  max_rating?: QueryParameter;
+  min_pages?: QueryParameter;
+  max_pages?: QueryParameter;
+  min_size?: QueryParameter;
+  max_size?: QueryParameter;
+  min_tags?: QueryParameter;
+  max_tags?: QueryParameter;
+  added_after?: QueryParameter;
+  added_before?: QueryParameter;
+  created_after?: QueryParameter;
+  created_before?: QueryParameter;
 };
 
 export type SearchArchivesParams = {
-  allowedSortColumns?: Set<string>;
+  allowedSortColumns?: Set<QueryParameter>;
   db?: Database;
-  sortBy?: string;
-  sortDir?: string;
+  sort_by?: QueryParameter;
+  sort_dir?: QueryParameter;
   resultsPage?: number;
   archivesPerPage?: number;
 } & BuildFiltersParams;

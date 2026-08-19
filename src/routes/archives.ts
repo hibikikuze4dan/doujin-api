@@ -47,7 +47,7 @@ router.get("/search", async (req, res, _next) => {
     created_before,
     collection,
     sort_by,
-    sort_direction,
+    sort_dir,
     page,
     include_total_results,
     q_match_mode,
@@ -65,6 +65,20 @@ router.get("/search", async (req, res, _next) => {
   const results = archivesQueries.searchArchivesV2({
     query: q as string,
     resultsPage: pageNumber,
+    min_tags,
+    max_tags,
+    min_size,
+    max_size,
+    min_rating,
+    max_rating,
+    min_pages,
+    max_pages,
+    added_after,
+    added_before,
+    created_after,
+    created_before,
+    sort_by,
+    sort_dir,
   });
 
   res.json(results);

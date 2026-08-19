@@ -5,6 +5,7 @@ export const ARCHIVE_MIGRATION = `
     name        TEXT    NOT NULL,
     filepath     TEXT   NOT NULL UNIQUE,
     tags        TEXT    NOT NULL DEFAULT '',
+    tag_count   INTEGER NOT NULL DEFAULT 0,
     date_added  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
     date_created TEXT   NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
     pagecount   INTEGER NOT NULL,
@@ -15,6 +16,7 @@ export const ARCHIVE_MIGRATION = `
 export const ARCHIVE_INDEXES = `
   CREATE INDEX IF NOT EXISTS archive_index_rating ON archive(rating);
   CREATE INDEX IF NOT EXISTS archive_index_pagecount ON archive(pagecount);
+  CREATE INDEX IF NOT EXISTS archive_index_tag_count ON archive(tag_count);
   CREATE INDEX IF NOT EXISTS archive_index_size ON archive(size);
   CREATE INDEX IF NOT EXISTS archive_index_date_added ON archive(date_added);
   CREATE INDEX IF NOT EXISTS archive_index_date_created ON archive(date_created);
@@ -96,7 +98,12 @@ export const ARCHIVE_TAG_TRIGGER_AFTER_INSERT = `
       ), '')
       FROM archive_tag at
       JOIN tag t ON t.id = at.tag_id
-      JOIN tag_category tc ON tc.id = t.category_id
+      LEFT JOIN tag_category tc ON tc.id = t.category_id
+      WHERE at.archive_id = NEW.archive_id
+    ),
+    tag_count = (
+      SELECT COUNT(*)
+      FROM archive_tag at
       WHERE at.archive_id = NEW.archive_id
     )
     WHERE id = NEW.archive_id;
@@ -113,7 +120,12 @@ export const ARCHIVE_TAG_TRIGGER_AFTER_DELETE = `
       ), '')
       FROM archive_tag at
       JOIN tag t ON t.id = at.tag_id
-      JOIN tag_category tc ON tc.id = t.category_id
+      LEFT JOIN tag_category tc ON tc.id = t.category_id
+      WHERE at.archive_id = OLD.archive_id
+    ),
+    tag_count = (
+      SELECT COUNT(*)
+      FROM archive_tag at
       WHERE at.archive_id = OLD.archive_id
     )
     WHERE id = OLD.archive_id;
@@ -130,7 +142,12 @@ export const ARCHIVE_TAG_TRIGGER_AFTER_UPDATE = `
       ), '')
       FROM archive_tag at
       JOIN tag t ON t.id = at.tag_id
-      JOIN tag_category tc ON tc.id = t.category_id
+      LEFT JOIN tag_category tc ON tc.id = t.category_id
+      WHERE at.archive_id = NEW.archive_id
+    ),
+    tag_count = (
+      SELECT COUNT(*)
+      FROM archive_tag at
       WHERE at.archive_id = NEW.archive_id
     )
     WHERE id = NEW.archive_id;
@@ -141,7 +158,12 @@ export const ARCHIVE_TAG_TRIGGER_AFTER_UPDATE = `
       ), '')
       FROM archive_tag at
       JOIN tag t ON t.id = at.tag_id
-      JOIN tag_category tc ON tc.id = t.category_id
+      LEFT JOIN tag_category tc ON tc.id = t.category_id
+      WHERE at.archive_id = OLD.archive_id
+    ),
+    tag_count = (
+      SELECT COUNT(*)
+      FROM archive_tag at
       WHERE at.archive_id = OLD.archive_id
     )
     WHERE id = OLD.archive_id AND OLD.archive_id != NEW.archive_id;
@@ -175,6 +197,7 @@ export const ARCHIVE_RATING_MIGRATION = `
     user_id      INTEGER NOT NULL,
     rating       INTEGER NOT NULL CHECK (rating >= 0 AND rating <= 10),
     rated_at     TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),
+    UNIQUE (archive_id, user_id),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (archive_id) REFERENCES archive(id) ON DELETE CASCADE
   )

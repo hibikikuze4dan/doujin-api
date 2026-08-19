@@ -1,4 +1,5 @@
 import StreamZip from "node-stream-zip";
+import { type ParsedQs } from "qs";
 
 export type JSONValue =
   | string
@@ -28,6 +29,14 @@ type AllowedSortFields =
   | "date_created"
   | "rating"
   | "random";
+
+export type QueryParameter =
+  | string
+  | ParsedQs
+  | (string | ParsedQs)[]
+  | null
+  | undefined;
+
 export interface SearchArchivesQuery {
   q?: string;
   q_mode?: "and" | "or";
